@@ -103,13 +103,23 @@ export default {
     const count = addressSearchRes.data.count
 
     let address = null
+    let addressShape = null
     if (query.code) {
       const addressRes = await axios.get(`${GEO_API}/addresses/${query.code}`)
       address = addressRes.data
+
+      // TODO: レベル3のポリゴンデータが未作成のため一旦コメントアウト
+      if (query.code.length <= 5) {
+        const geoAddressRes = await axios.get(
+          `${GEO_API}/geo_addresses/${query.code}`
+        )
+        addressShape = geoAddressRes.data
+      }
     }
 
     return {
       address,
+      addressShape,
       addresses,
       count,
       page
@@ -151,6 +161,18 @@ export default {
         zoomControl: true
       })
       this.martker = new window.google.maps.Marker({ position, map: this.map })
+
+      this.map.data.addGeoJson(this.addressShape)
+      this.map.data.setStyle({
+        strokeWeight: 1,
+        strokeColor: '#409eff',
+        fillColor: '#409eff',
+        fillOpacity: 0.2
+      })
+
+      // TODO: fitBoundを使って自動ズーム調整
+      // https://lab.syncer.jp/Web/API/Google_Maps/JavaScript/Map/fitBounds/
+      // https://developers.google.com/maps/documentation/javascript/reference/map#Map.fitBounds
     },
 
     getMapStyles() {
