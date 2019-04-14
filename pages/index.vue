@@ -68,6 +68,13 @@ import axios from 'axios'
 const GEO_API = 'http://localhost:4000/v1'
 const GOOGLE_MAP_API =
   'https://maps.googleapis.com/maps/api/js?key=AIzaSyBCXUZlw5JVLxyRiNTA9rFZxRiOJj9FXN0'
+
+// TODO: ローディング追加
+// TODO: 画面遷移後最上部に移動
+// TODO: 最下層までいったときの表示制御
+// TODO: ヘッダーの検索ボックス有効化
+// TODO: パンくずリスト追加
+
 export default {
   head() {
     return { script: [{ src: GOOGLE_MAP_API }] }
@@ -144,6 +151,7 @@ export default {
     },
 
     createMap() {
+      // TODO: 地図コンポーネント化
       if (this.address === null) {
         return
       }
