@@ -2,13 +2,20 @@
   <el-container>
     <el-header class="header">
       <h1>
-        <router-link :to="{ path: '/' }">Address</router-link>
+        <router-link :to="{ path: '/' }">Address Search</router-link>
       </h1>
+      <el-input
+        v-model="word"
+        class="address-search"
+        placeholder="Type address name"
+        prefix-icon="el-icon-search"
+      >
+      </el-input>
     </el-header>
     <el-main>
       <el-row v-if="address">
         <h2 class="address-name">{{ address.name }}</h2>
-        <div id="map">MAP</div>
+        <div id="map"></div>
       </el-row>
       <el-row>
         <el-table
@@ -19,7 +26,7 @@
           <el-table-column
             prop="code"
             label="Code"
-            width="120"
+            width="130"
           ></el-table-column>
           <el-table-column
             prop="level"
@@ -57,10 +64,31 @@
 <script>
 import axios from 'axios'
 
+// TODO: 設定ファイルに移行
+const GEO_API = 'http://localhost:4000/v1'
+const GOOGLE_MAP_API =
+  'https://maps.googleapis.com/maps/api/js?key=AIzaSyBCXUZlw5JVLxyRiNTA9rFZxRiOJj9FXN0'
 export default {
+  head() {
+    return { script: [{ src: GOOGLE_MAP_API }] }
+  },
+
+  data() {
+    return {
+      word: '',
+      map: null,
+      marker: null,
+      shape: null
+    }
+  },
+
+  watch: {
+    address() {
+      this.$nextTick(() => this.createMap())
+    }
+  },
+
   async asyncData({ query }) {
-    // TODO: 設定ファイルに移行
-    const GEO_API = 'http://localhost:4000/v1'
     const limit = 20
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
@@ -90,6 +118,10 @@ export default {
 
   watchQuery: ['code', 'page'],
 
+  mounted() {
+    this.createMap()
+  },
+
   methods: {
     clickAddress(address) {
       const code = address.code
@@ -99,6 +131,205 @@ export default {
     changePage(page) {
       const code = this.address ? this.address.code : undefined
       this.$router.push({ path: '/', query: { code, page } })
+    },
+
+    createMap() {
+      if (this.address === null) {
+        return
+      }
+      const position = new window.google.maps.LatLng(
+        this.address.coordinate.latitude,
+        this.address.coordinate.longitude
+      )
+      this.map = new window.google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: position,
+        mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+        styles: this.getMapStyles(),
+        clickableIcons: false,
+        disableDefaultUI: true,
+        zoomControl: true
+      })
+      this.martker = new window.google.maps.Marker({ position, map: this.map })
+    },
+
+    getMapStyles() {
+      return [
+        {
+          featureType: 'water',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#e9e9e9'
+            },
+            {
+              lightness: 17
+            }
+          ]
+        },
+        {
+          featureType: 'landscape',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#f5f5f5'
+            },
+            {
+              lightness: 20
+            }
+          ]
+        },
+        {
+          featureType: 'road.highway',
+          elementType: 'geometry.fill',
+          stylers: [
+            {
+              color: '#ffffff'
+            },
+            {
+              lightness: 17
+            }
+          ]
+        },
+        {
+          featureType: 'road.highway',
+          elementType: 'geometry.stroke',
+          stylers: [
+            {
+              color: '#ffffff'
+            },
+            {
+              lightness: 29
+            },
+            {
+              weight: 0.2
+            }
+          ]
+        },
+        {
+          featureType: 'road.arterial',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#ffffff'
+            },
+            {
+              lightness: 18
+            }
+          ]
+        },
+        {
+          featureType: 'road.local',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#ffffff'
+            },
+            {
+              lightness: 16
+            }
+          ]
+        },
+        {
+          featureType: 'poi',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#f5f5f5'
+            },
+            {
+              lightness: 21
+            }
+          ]
+        },
+        {
+          featureType: 'poi.park',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#dedede'
+            },
+            {
+              lightness: 21
+            }
+          ]
+        },
+        {
+          elementType: 'labels.text.stroke',
+          stylers: [
+            {
+              visibility: 'on'
+            },
+            {
+              color: '#ffffff'
+            },
+            {
+              lightness: 16
+            }
+          ]
+        },
+        {
+          elementType: 'labels.text.fill',
+          stylers: [
+            {
+              saturation: 36
+            },
+            {
+              color: '#333333'
+            },
+            {
+              lightness: 40
+            }
+          ]
+        },
+        {
+          elementType: 'labels.icon',
+          stylers: [
+            {
+              visibility: 'off'
+            }
+          ]
+        },
+        {
+          featureType: 'transit',
+          elementType: 'geometry',
+          stylers: [
+            {
+              color: '#f2f2f2'
+            },
+            {
+              lightness: 19
+            }
+          ]
+        },
+        {
+          featureType: 'administrative',
+          elementType: 'geometry.fill',
+          stylers: [
+            {
+              color: '#fefefe'
+            },
+            {
+              lightness: 20
+            }
+          ]
+        },
+        {
+          featureType: 'administrative',
+          elementType: 'geometry.stroke',
+          stylers: [
+            {
+              color: '#fefefe'
+            },
+            {
+              lightness: 17
+            },
+            {
+              weight: 1.2
+            }
+          ]
+        }
+      ]
     }
   }
 }
@@ -114,6 +345,11 @@ export default {
 .header .nuxt-link-active {
   text-decoration: none;
   color: #333;
+}
+
+.address-search {
+  width: 250px;
+  margin-left: auto;
 }
 
 .address-name {
