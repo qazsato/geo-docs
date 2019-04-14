@@ -63,6 +63,7 @@
 
 <script>
 import axios from 'axios'
+import _ from 'lodash'
 
 // TODO: 設定ファイルに移行
 const GEO_API = 'http://localhost:4000/v1'
@@ -84,8 +85,7 @@ export default {
     return {
       word: '',
       map: null,
-      marker: null,
-      shape: null
+      marker: null
     }
   },
 
@@ -160,7 +160,7 @@ export default {
         this.address.coordinate.longitude
       )
       this.map = new window.google.maps.Map(document.getElementById('map'), {
-        zoom: 15,
+        zoom: 18,
         center: position,
         mapTypeId: window.google.maps.MapTypeId.ROADMAP,
         styles: this.getMapStyles(),
@@ -168,7 +168,7 @@ export default {
         disableDefaultUI: true,
         zoomControl: true
       })
-      this.martker = new window.google.maps.Marker({ position, map: this.map })
+      this.marker = new window.google.maps.Marker({ position, map: this.map })
 
       this.map.data.addGeoJson(this.addressShape)
       this.map.data.setStyle({
@@ -178,9 +178,32 @@ export default {
         fillOpacity: 0.2
       })
 
-      // TODO: fitBoundを使って自動ズーム調整
-      // https://lab.syncer.jp/Web/API/Google_Maps/JavaScript/Map/fitBounds/
-      // https://developers.google.com/maps/documentation/javascript/reference/map#Map.fitBounds
+      if (this.addressShape) {
+        const features = this.addressShape.features
+        let coords = []
+        for (const feature of features) {
+          const coordinates = feature.geometry.coordinates
+          if (feature.geometry.type === 'MultiPolygon') {
+            for (const c of coordinates) {
+              coords = coords.concat(_.flatten(c))
+            }
+          } else if (feature.geometry.type === 'Polygon') {
+            coords = coords.concat(_.flatten(coordinates))
+          }
+        }
+        const northernmost = _.maxBy(coords, c => c[1])
+        const southernmost = _.minBy(coords, c => c[1])
+        const westernmost = _.minBy(coords, c => c[0])
+        const easternmost = _.maxBy(coords, c => c[0])
+
+        // 南西と北西のポイントを指定
+        // https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLngBounds.constructor
+        const shapeBounds = new window.google.maps.LatLngBounds(
+          new window.google.maps.LatLng(southernmost[1], westernmost[0]),
+          new window.google.maps.LatLng(northernmost[1], easternmost[0])
+        )
+        this.map.fitBounds(shapeBounds)
+      }
     },
 
     getMapStyles() {
