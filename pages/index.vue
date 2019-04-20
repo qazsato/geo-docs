@@ -118,7 +118,7 @@ export default {
       // TODO: レベル3のポリゴンデータが未作成のため一旦コメントアウト
       if (query.code.length <= 5) {
         const geoAddressRes = await axios.get(
-          `${GEO_API}/geo_addresses/${query.code}`
+          `${GEO_API}/addresses/shapes/${query.code}`
         )
         addressShape = geoAddressRes.data
       }
