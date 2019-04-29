@@ -62,13 +62,9 @@
 </template>
 
 <script>
+import config from '@/config'
 import axios from 'axios'
 import _ from 'lodash'
-
-// TODO: 設定ファイルに移行
-const GEO_API = 'http://localhost:4000/v1'
-const GOOGLE_MAP_API =
-  'https://maps.googleapis.com/maps/api/js?key=AIzaSyBCXUZlw5JVLxyRiNTA9rFZxRiOJj9FXN0'
 
 // TODO: ローディング追加
 // TODO: 画面遷移後最上部に移動
@@ -78,7 +74,7 @@ const GOOGLE_MAP_API =
 
 export default {
   head() {
-    return { script: [{ src: GOOGLE_MAP_API }] }
+    return { script: [{ src: config.google_maps_api_url }] }
   },
 
   data() {
@@ -99,26 +95,31 @@ export default {
     const limit = 20
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
-    const addressSearchRes = await axios.get(`${GEO_API}/addresses/search`, {
-      params: {
-        code: query.code,
-        limit,
-        offset
+    const addressSearchRes = await axios.get(
+      `${config.api_url}/addresses/search`,
+      {
+        params: {
+          code: query.code,
+          limit,
+          offset
+        }
       }
-    })
+    )
     const addresses = addressSearchRes.data.items
     const count = addressSearchRes.data.count
 
     let address = null
     let addressShape = null
     if (query.code) {
-      const addressRes = await axios.get(`${GEO_API}/addresses/${query.code}`)
+      const addressRes = await axios.get(
+        `${config.api_url}/addresses/${query.code}`
+      )
       address = addressRes.data
 
       // TODO: レベル3のポリゴンデータが未作成のため一旦コメントアウト
       if (query.code.length <= 5) {
         const geoAddressRes = await axios.get(
-          `${GEO_API}/addresses/shapes/${query.code}`
+          `${config.api_url}/addresses/shapes/${query.code}`
         )
         addressShape = geoAddressRes.data
       }
