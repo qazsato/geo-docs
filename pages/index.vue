@@ -21,3 +21,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.parameters-col_name,
+.response-col_status {
+  width: 180px;
+}
+</style>
