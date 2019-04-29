@@ -142,12 +142,12 @@ export default {
   methods: {
     clickAddress(address) {
       const code = address.code
-      this.$router.push({ path: '/', query: { code } })
+      this.$router.push({ path: '/address', query: { code } })
     },
 
     changePage(page) {
       const code = this.address ? this.address.code : undefined
-      this.$router.push({ path: '/', query: { code, page } })
+      this.$router.push({ path: '/address', query: { code, page } })
     },
 
     createMap() {
