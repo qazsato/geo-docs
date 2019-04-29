@@ -15,7 +15,8 @@ export default {
       url: config.geo.api_docs_url,
       dom_id: '#swagger-ui',
       presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
-      layout: 'StandaloneLayout'
+      layout: 'StandaloneLayout',
+      deepLinking: true
     })
   }
 }
