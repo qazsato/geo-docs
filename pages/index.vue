@@ -6,6 +6,7 @@
 import config from '@/config'
 import SwaggerUI from 'swagger-ui-dist'
 import 'swagger-ui-dist/swagger-ui.css'
+import 'swagger-ui-themes/themes/3.x/theme-flattop.css'
 
 export default {
   mounted() {
@@ -23,6 +24,14 @@ export default {
 </script>
 
 <style>
+.swagger-ui .topbar {
+  display: none;
+}
+
+.swagger-ui .info {
+  margin: 20px 0;
+}
+
 .parameters-col_name,
 .response-col_status {
   width: 180px;
