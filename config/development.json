@@ -1,5 +1,6 @@
 {
-  "api_url": "http://localhost:4000/v1",
-  "api_docs_url": "http://localhost:4000/v1/apidocs",
-  "google_maps_api_url": "https://maps.googleapis.com/maps/api/js?key=AIzaSyBCXUZlw5JVLxyRiNTA9rFZxRiOJj9FXN0"
+  "geo": {
+    "api_url": "http://localhost:4000/v1",
+    "api_docs_url": "http://localhost:4000/v1/apidocs"
+  }
 }

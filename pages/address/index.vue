@@ -74,7 +74,7 @@ import _ from 'lodash'
 
 export default {
   head() {
-    return { script: [{ src: config.google_maps_api_url }] }
+    return { script: [{ src: config.google_maps.api_url }] }
   },
 
   data() {
@@ -96,7 +96,7 @@ export default {
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
     const addressSearchRes = await axios.get(
-      `${config.api_url}/addresses/search`,
+      `${config.geo.api_url}/addresses/search`,
       {
         params: {
           code: query.code,
@@ -112,14 +112,14 @@ export default {
     let addressShape = null
     if (query.code) {
       const addressRes = await axios.get(
-        `${config.api_url}/addresses/${query.code}`
+        `${config.geo.api_url}/addresses/${query.code}`
       )
       address = addressRes.data
 
       // TODO: レベル3のポリゴンデータが未作成のため一旦コメントアウト
       if (query.code.length <= 5) {
         const geoAddressRes = await axios.get(
-          `${config.api_url}/addresses/shapes/${query.code}`
+          `${config.geo.api_url}/addresses/shapes/${query.code}`
         )
         addressShape = geoAddressRes.data
       }
@@ -164,7 +164,7 @@ export default {
         zoom: 18,
         center: position,
         mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-        styles: this.getMapStyles(),
+        styles: config.google_maps.styles,
         clickableIcons: false,
         disableDefaultUI: true,
         zoomControl: true
@@ -205,185 +205,6 @@ export default {
         )
         this.map.fitBounds(shapeBounds)
       }
-    },
-
-    getMapStyles() {
-      return [
-        {
-          featureType: 'water',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#e9e9e9'
-            },
-            {
-              lightness: 17
-            }
-          ]
-        },
-        {
-          featureType: 'landscape',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#f5f5f5'
-            },
-            {
-              lightness: 20
-            }
-          ]
-        },
-        {
-          featureType: 'road.highway',
-          elementType: 'geometry.fill',
-          stylers: [
-            {
-              color: '#ffffff'
-            },
-            {
-              lightness: 17
-            }
-          ]
-        },
-        {
-          featureType: 'road.highway',
-          elementType: 'geometry.stroke',
-          stylers: [
-            {
-              color: '#ffffff'
-            },
-            {
-              lightness: 29
-            },
-            {
-              weight: 0.2
-            }
-          ]
-        },
-        {
-          featureType: 'road.arterial',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#ffffff'
-            },
-            {
-              lightness: 18
-            }
-          ]
-        },
-        {
-          featureType: 'road.local',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#ffffff'
-            },
-            {
-              lightness: 16
-            }
-          ]
-        },
-        {
-          featureType: 'poi',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#f5f5f5'
-            },
-            {
-              lightness: 21
-            }
-          ]
-        },
-        {
-          featureType: 'poi.park',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#dedede'
-            },
-            {
-              lightness: 21
-            }
-          ]
-        },
-        {
-          elementType: 'labels.text.stroke',
-          stylers: [
-            {
-              visibility: 'on'
-            },
-            {
-              color: '#ffffff'
-            },
-            {
-              lightness: 16
-            }
-          ]
-        },
-        {
-          elementType: 'labels.text.fill',
-          stylers: [
-            {
-              saturation: 36
-            },
-            {
-              color: '#333333'
-            },
-            {
-              lightness: 40
-            }
-          ]
-        },
-        {
-          elementType: 'labels.icon',
-          stylers: [
-            {
-              visibility: 'off'
-            }
-          ]
-        },
-        {
-          featureType: 'transit',
-          elementType: 'geometry',
-          stylers: [
-            {
-              color: '#f2f2f2'
-            },
-            {
-              lightness: 19
-            }
-          ]
-        },
-        {
-          featureType: 'administrative',
-          elementType: 'geometry.fill',
-          stylers: [
-            {
-              color: '#fefefe'
-            },
-            {
-              lightness: 20
-            }
-          ]
-        },
-        {
-          featureType: 'administrative',
-          elementType: 'geometry.stroke',
-          stylers: [
-            {
-              color: '#fefefe'
-            },
-            {
-              lightness: 17
-            },
-            {
-              weight: 1.2
-            }
-          ]
-        }
-      ]
     }
   }
 }
