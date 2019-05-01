@@ -24,12 +24,30 @@ export default {
 </script>
 
 <style>
+.swagger-ui .info .title small {
+  top: 5px;
+  left: 5px;
+}
+
 .swagger-ui .topbar {
   display: none;
 }
 
 .swagger-ui .info {
   margin: 20px 0;
+}
+
+.swagger-ui .download-contents {
+  width: 85px;
+}
+
+.swagger-ui .parameter__name.required:after {
+  top: -3px;
+}
+
+.swagger-ui .parameter__name.required span {
+  position: relative;
+  top: 4px;
 }
 
 .parameters-col_name,
