@@ -35,12 +35,12 @@
           ></el-table-column>
           <el-table-column prop="name" label="Name"></el-table-column>
           <el-table-column
-            prop="coordinate.latitude"
+            prop="location.lat"
             label="Latitude"
             width="130"
           ></el-table-column>
           <el-table-column
-            prop="coordinate.longitude"
+            prop="location.lng"
             label="Longitude"
             width="130"
           ></el-table-column>
@@ -160,8 +160,8 @@ export default {
         return
       }
       const position = new window.google.maps.LatLng(
-        this.address.coordinate.latitude,
-        this.address.coordinate.longitude
+        this.address.location.lat,
+        this.address.location.lng
       )
       this.map = new window.google.maps.Map(document.getElementById('map'), {
         zoom: 18,
