@@ -105,9 +105,12 @@ export default {
         }
       }
     )
-    const addresses = addressSearchRes.data.items
-    const count = addressSearchRes.data.count
-
+    const addresses = addressSearchRes.data
+    const count = {
+      limit,
+      offset,
+      total: Number(addressSearchRes.headers['x-total-count'])
+    }
     let address = null
     let addressShape = null
     if (query.code) {
