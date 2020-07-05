@@ -12,11 +12,11 @@
             <span>全国</span>
           </el-breadcrumb-item>
           <el-breadcrumb-item
-            v-for="(address, index) in address.addresses"
+            v-for="(detail, index) in address.details"
             :key="index"
-            :to="{ path: '/address?code=' + address.code }"
+            :to="{ path: '/address?code=' + detail.code }"
           >
-            <span>{{ address.name }}</span>
+            <span>{{ detail.name }}</span>
           </el-breadcrumb-item>
         </el-breadcrumb>
         <h2 class="address-name">{{ address.name }}</h2>
