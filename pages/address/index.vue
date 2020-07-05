@@ -2,7 +2,7 @@
   <el-container>
     <el-header class="header">
       <h1>
-        <router-link :to="{ path: '/' }">Address Search</router-link>
+        <router-link :to="{ path: '/address' }">住所検索</router-link>
       </h1>
       <el-input
         v-model="word"
@@ -14,49 +14,63 @@
     </el-header>
     <el-main>
       <el-row v-if="address">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item :to="{ path: '/address' }">
+            <span>全国</span>
+          </el-breadcrumb-item>
+          <el-breadcrumb-item
+            v-for="(address, index) in address.addresses"
+            :key="index"
+            :to="{ path: '/address?code=' + address.code }"
+          >
+            <span>{{ address.name }}</span>
+          </el-breadcrumb-item>
+        </el-breadcrumb>
         <h2 class="address-name">{{ address.name }}</h2>
         <div id="map"></div>
       </el-row>
-      <el-row>
-        <el-table
-          :data="addresses"
-          class="address-table"
-          @row-click="clickAddress"
-        >
-          <el-table-column
-            prop="code"
-            label="Code"
-            width="130"
-          ></el-table-column>
-          <el-table-column
-            prop="level"
-            label="Level"
-            width="80"
-          ></el-table-column>
-          <el-table-column prop="name" label="Name"></el-table-column>
-          <el-table-column
-            prop="location.lat"
-            label="Latitude"
-            width="130"
-          ></el-table-column>
-          <el-table-column
-            prop="location.lng"
-            label="Longitude"
-            width="130"
-          ></el-table-column>
-        </el-table>
-      </el-row>
-      <el-row>
-        <el-pagination
-          v-if="count"
-          layout="prev, pager, next"
-          :page-size="count.limit"
-          :total="count.total"
-          :current-page="page"
-          class="address-pager"
-          @current-change="changePage"
-        ></el-pagination>
-      </el-row>
+      <template v-if="addresses.length > 0">
+        <el-row>
+          <el-table
+            :data="addresses"
+            class="address-table"
+            @row-click="clickAddress"
+          >
+            <el-table-column
+              prop="code"
+              label="Code"
+              width="130"
+            ></el-table-column>
+            <el-table-column
+              prop="level"
+              label="Level"
+              width="80"
+            ></el-table-column>
+            <el-table-column prop="name" label="Name"></el-table-column>
+            <el-table-column
+              prop="location.lat"
+              label="Latitude"
+              width="130"
+            ></el-table-column>
+            <el-table-column
+              prop="location.lng"
+              label="Longitude"
+              width="130"
+            ></el-table-column>
+          </el-table>
+        </el-row>
+        <el-row>
+          <el-pagination
+            v-if="count"
+            layout="prev, pager, next"
+            :page-size="count.limit"
+            :total="count.total"
+            :current-page="page"
+            class="address-pager"
+            @current-change="changePage"
+          ></el-pagination>
+        </el-row>
+      </template>
     </el-main>
   </el-container>
 </template>
@@ -70,7 +84,6 @@ import _ from 'lodash'
 // TODO: 画面遷移後最上部に移動
 // TODO: 最下層までいったときの表示制御
 // TODO: ヘッダーの検索ボックス有効化
-// TODO: パンくずリスト追加
 
 export default {
   head() {
@@ -229,6 +242,7 @@ export default {
 
 .address-name {
   color: #333;
+  padding-top: 15px;
 }
 
 #map {
