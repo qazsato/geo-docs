@@ -4,13 +4,6 @@
       <h1>
         <router-link :to="{ path: '/address' }">住所検索</router-link>
       </h1>
-      <el-input
-        v-model="word"
-        class="address-search"
-        placeholder="Type address name"
-        prefix-icon="el-icon-search"
-      >
-      </el-input>
     </el-header>
     <el-main>
       <el-row v-if="address">
@@ -80,11 +73,6 @@ import config from '@/config'
 import axios from 'axios'
 import _ from 'lodash'
 
-// TODO: ローディング追加
-// TODO: 画面遷移後最上部に移動
-// TODO: 最下層までいったときの表示制御
-// TODO: ヘッダーの検索ボックス有効化
-
 export default {
   head() {
     return { script: [{ src: config.google_maps.api_url }] }
@@ -92,7 +80,6 @@ export default {
 
   data() {
     return {
-      word: '',
       map: null,
       marker: null
     }
@@ -157,11 +144,13 @@ export default {
     clickAddress(address) {
       const code = address.code
       this.$router.push({ path: '/address', query: { code } })
+      window.scrollTo(0, 0)
     },
 
     changePage(page) {
       const code = this.address ? this.address.code : undefined
       this.$router.push({ path: '/address', query: { code, page } })
+      window.scrollTo(0, 0)
     },
 
     createMap() {
