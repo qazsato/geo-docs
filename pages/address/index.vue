@@ -115,14 +115,14 @@ export default {
     let addressShape = null
     if (query.code) {
       const addressRes = await axios.get(
-        `${config.geo.api_url}/addresses/${query.code}`
+        `${config.geo.api_url}/addresses?codes=${query.code}`
       )
-      address = addressRes.data
+      address = addressRes.data[0]
 
       const geoAddressRes = await axios.get(
-        `${config.geo.api_url}/addresses/shapes/${query.code}`
+        `${config.geo.api_url}/addresses/shapes?codes=${query.code}`
       )
-      addressShape = geoAddressRes.data
+      addressShape = geoAddressRes.data[0]
     }
 
     return {
