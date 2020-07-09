@@ -70,9 +70,10 @@ export default {
     createMap() {
       const position = new window.google.maps.LatLng(35.689568, 139.691717)
       this.map = new window.google.maps.Map(document.getElementById('map'), {
-        zoom: 15,
+        zoom: 14,
         center: position,
         mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+        styles: config.google_maps.theme.dark,
         clickableIcons: false,
         disableDefaultUI: true,
         zoomControl: true
@@ -92,12 +93,13 @@ export default {
 
 .header .nuxt-link-active {
   text-decoration: none;
-  color: #333;
+  font-size: 18px;
+  color: #303133;
 }
 
 #map {
   width: 100%;
-  height: 300px;
+  height: 500px;
   background-color: #ebeef5;
   display: flex;
   justify-content: center;

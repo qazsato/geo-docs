@@ -166,7 +166,7 @@ export default {
         zoom: 18,
         center: position,
         mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-        styles: config.google_maps.styles,
+        styles: config.google_maps.theme.silver,
         clickableIcons: false,
         disableDefaultUI: true,
         zoomControl: true
@@ -221,7 +221,8 @@ export default {
 
 .header .nuxt-link-active {
   text-decoration: none;
-  color: #333;
+  font-size: 18px;
+  color: #303133;
 }
 
 .address-search {
@@ -230,7 +231,8 @@ export default {
 }
 
 .address-name {
-  color: #333;
+  font-size: 18px;
+  color: #303133;
   padding-top: 15px;
 }
 
