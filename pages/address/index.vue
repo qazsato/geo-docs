@@ -1,9 +1,7 @@
 <template>
   <el-container>
-    <el-header class="header">
-      <h1>
-        <router-link :to="{ path: '/address' }">住所検索</router-link>
-      </h1>
+    <el-header>
+      <Header title="住所検索" active="/address" />
     </el-header>
     <el-main>
       <el-row v-if="address">
@@ -72,8 +70,13 @@
 import config from '@/config'
 import axios from 'axios'
 import _ from 'lodash'
+import Header from '@/components/Header'
 
 export default {
+  components: {
+    Header
+  },
+
   head() {
     return { script: [{ src: config.google_maps.api_url }] }
   },
@@ -213,18 +216,6 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ebeef5;
-}
-
-.header .nuxt-link-active {
-  text-decoration: none;
-  font-size: 18px;
-  color: #303133;
-}
-
 .address-search {
   width: 250px;
   margin-left: auto;

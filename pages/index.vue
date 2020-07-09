@@ -1,5 +1,12 @@
 <template>
-  <div id="swagger-ui"></div>
+  <el-container>
+    <el-header>
+      <Header title="API 仕様書" active="/" />
+    </el-header>
+    <el-main>
+      <div id="swagger-ui"></div>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
@@ -7,8 +14,13 @@ import config from '@/config'
 import SwaggerUI from 'swagger-ui-dist'
 import 'swagger-ui-dist/swagger-ui.css'
 import 'swagger-ui-themes/themes/3.x/theme-flattop.css'
+import Header from '@/components/Header'
 
 export default {
+  components: {
+    Header
+  },
+
   mounted() {
     const SwaggerUIBundle = SwaggerUI.SwaggerUIBundle
     const SwaggerUIStandalonePreset = SwaggerUI.SwaggerUIStandalonePreset
@@ -23,6 +35,12 @@ export default {
 }
 </script>
 
+<style scoped>
+.el-main {
+  padding: 0;
+}
+</style>
+
 <style>
 .swagger-ui .info .title small {
   top: 5px;
@@ -34,7 +52,7 @@ export default {
 }
 
 .swagger-ui .info {
-  margin: 20px 0;
+  margin: 10px 0;
 }
 
 .swagger-ui .download-contents {

@@ -1,11 +1,7 @@
 <template>
   <el-container>
-    <el-header class="header">
-      <h1>
-        <router-link :to="{ path: '/geocoding' }"
-          >逆ジオコーディング</router-link
-        >
-      </h1>
+    <el-header>
+      <Header title="逆ジオコーディング" active="/geocoding" />
     </el-header>
     <el-main>
       <div id="map"></div>
@@ -23,8 +19,13 @@
 <script>
 import config from '@/config'
 import axios from 'axios'
+import Header from '@/components/Header'
 
 export default {
+  components: {
+    Header
+  },
+
   head() {
     return { script: [{ src: config.google_maps.api_url }] }
   },
@@ -85,18 +86,6 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ebeef5;
-}
-
-.header .nuxt-link-active {
-  text-decoration: none;
-  font-size: 18px;
-  color: #303133;
-}
-
 #map {
   width: 100%;
   height: 500px;
