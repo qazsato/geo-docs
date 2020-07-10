@@ -6,13 +6,13 @@
     <el-main>
       <el-row v-if="address">
         <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/address' }">
+          <el-breadcrumb-item :to="{ path: '/addresses' }">
             <span>全国</span>
           </el-breadcrumb-item>
           <el-breadcrumb-item
             v-for="(detail, index) in address.details"
             :key="index"
-            :to="{ path: '/address?code=' + detail.code }"
+            :to="{ path: '/addresses?code=' + detail.code }"
           >
             <span>{{ detail.name }}</span>
           </el-breadcrumb-item>
@@ -146,13 +146,13 @@ export default {
   methods: {
     clickAddress(address) {
       const code = address.code
-      this.$router.push({ path: '/address', query: { code } })
+      this.$router.push({ path: '/addresses', query: { code } })
       window.scrollTo(0, 0)
     },
 
     changePage(page) {
       const code = this.address ? this.address.code : undefined
-      this.$router.push({ path: '/address', query: { code, page } })
+      this.$router.push({ path: '/addresses', query: { code, page } })
       window.scrollTo(0, 0)
     },
 
