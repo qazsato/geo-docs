@@ -8,12 +8,30 @@
       :router="true"
     >
       <el-menu-item index="/">API 仕様書</el-menu-item>
-      <el-submenu index="/address">
+      <el-submenu index="/addresses">
         <template slot="title"
           >Address</template
         >
-        <el-menu-item index="/address">住所検索</el-menu-item>
-        <el-menu-item index="/geocoding">逆ジオコーディング</el-menu-item>
+        <el-menu-item index="/addresses">住所検索</el-menu-item>
+        <el-menu-item index="/addresses/geocoding"
+          >逆ジオコーディング</el-menu-item
+        >
+      </el-submenu>
+      <el-submenu index="/analytics">
+        <template slot="title"
+          >Analytics</template
+        >
+        <el-menu-item index="/analytics/addresses/contains"
+          >住所コード解析</el-menu-item
+        >
+      </el-submenu>
+      <el-submenu index="/statistics">
+        <template slot="title"
+          >Statistics</template
+        >
+        <el-menu-item index="/statistics/addresses/population"
+          >住所毎の人口統計</el-menu-item
+        >
       </el-submenu>
     </el-menu>
   </div>

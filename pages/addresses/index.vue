@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header title="住所検索" active="/address" />
+      <Header title="住所検索" active="/addresses" />
     </el-header>
     <el-main>
       <el-row v-if="address">

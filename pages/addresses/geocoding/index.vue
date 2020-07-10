@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header title="逆ジオコーディング" active="/geocoding" />
+      <Header title="逆ジオコーディング" active="/addresses/geocoding" />
     </el-header>
     <el-main>
       <div id="map"></div>
