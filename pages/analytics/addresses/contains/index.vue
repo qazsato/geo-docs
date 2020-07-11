@@ -60,7 +60,7 @@ export default {
       latLngs: [],
       markers: [],
       tableData: [],
-      level: '3'
+      level: '1'
     }
   },
 

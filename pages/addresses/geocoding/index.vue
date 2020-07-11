@@ -74,7 +74,7 @@ export default {
         zoom: 14,
         center: position,
         mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-        styles: config.google_maps.theme.dark,
+        styles: config.google_maps.theme.retro,
         clickableIcons: false,
         disableDefaultUI: true,
         zoomControl: true
