@@ -71,6 +71,7 @@ import config from '@/config'
 import axios from 'axios'
 import _ from 'lodash'
 import Header from '@/components/Header'
+import GoogleMapsApiLoader from 'google-maps-api-loader'
 
 export default {
   components: {
@@ -122,6 +123,7 @@ export default {
 
   data() {
     return {
+      google: null,
       map: null,
       marker: null,
     }
@@ -133,7 +135,10 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
+    this.google = await GoogleMapsApiLoader({
+      apiKey: config.google_maps.api_key,
+    })
     this.createMap()
   },
 
@@ -151,24 +156,23 @@ export default {
     },
 
     createMap() {
-      // TODO: 地図コンポーネント化
       if (this.address === null) {
         return
       }
-      const position = new window.google.maps.LatLng(
+      const position = new this.google.maps.LatLng(
         this.address.location.lat,
         this.address.location.lng
       )
-      this.map = new window.google.maps.Map(document.getElementById('map'), {
+      this.map = new this.google.maps.Map(document.getElementById('map'), {
         zoom: 18,
         center: position,
-        mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+        mapTypeId: this.google.maps.MapTypeId.ROADMAP,
         styles: config.google_maps.theme.silver,
         clickableIcons: false,
         disableDefaultUI: true,
         zoomControl: true,
       })
-      this.marker = new window.google.maps.Marker({ position, map: this.map })
+      this.marker = new this.google.maps.Marker({ position, map: this.map })
 
       this.map.data.addGeoJson(this.addressShape)
       this.map.data.setStyle({
@@ -198,17 +202,13 @@ export default {
 
         // 南西と北西のポイントを指定
         // https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLngBounds.constructor
-        const shapeBounds = new window.google.maps.LatLngBounds(
-          new window.google.maps.LatLng(southernmost[1], westernmost[0]),
-          new window.google.maps.LatLng(northernmost[1], easternmost[0])
+        const shapeBounds = new this.google.maps.LatLngBounds(
+          new this.google.maps.LatLng(southernmost[1], westernmost[0]),
+          new this.google.maps.LatLng(northernmost[1], easternmost[0])
         )
         this.map.fitBounds(shapeBounds)
       }
     },
-  },
-
-  head() {
-    return { script: [{ src: config.google_maps.api_url }] }
   },
 
   watchQuery: ['code', 'page'],

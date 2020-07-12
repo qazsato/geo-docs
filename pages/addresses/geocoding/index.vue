@@ -33,6 +33,7 @@
 import config from '@/config'
 import axios from 'axios'
 import Header from '@/components/Header'
+import GoogleMapsApiLoader from 'google-maps-api-loader'
 
 export default {
   components: {
@@ -41,6 +42,7 @@ export default {
 
   data() {
     return {
+      google: null,
       map: null,
       latLng: null,
       marker: null,
@@ -53,7 +55,7 @@ export default {
       if (this.marker) {
         this.marker.setMap(null)
       }
-      this.marker = new window.google.maps.Marker({
+      this.marker = new this.google.maps.Marker({
         position: val,
         map: this.map,
       })
@@ -72,17 +74,20 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
+    this.google = await GoogleMapsApiLoader({
+      apiKey: config.google_maps.api_key,
+    })
     this.createMap()
   },
 
   methods: {
     createMap() {
-      const position = new window.google.maps.LatLng(35.689568, 139.691717)
-      this.map = new window.google.maps.Map(document.getElementById('map'), {
+      const position = new this.google.maps.LatLng(35.689568, 139.691717)
+      this.map = new this.google.maps.Map(document.getElementById('map'), {
         zoom: 14,
         center: position,
-        mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+        mapTypeId: this.google.maps.MapTypeId.ROADMAP,
         styles: config.google_maps.theme.retro,
         clickableIcons: false,
         disableDefaultUI: true,
@@ -90,10 +95,6 @@ export default {
       })
       this.map.addListener('click', (e) => (this.latLng = e.latLng))
     },
-  },
-
-  head() {
-    return { script: [{ src: config.google_maps.api_url }] }
   },
 }
 </script>
