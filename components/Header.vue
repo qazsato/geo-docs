@@ -17,12 +17,21 @@
           >逆ジオコーディング</el-menu-item
         >
       </el-submenu>
+      <el-submenu index="/meshes">
+        <template slot="title"
+          >Mesh</template
+        >
+        <el-menu-item index="/meshes">地域メッシュ検索</el-menu-item>
+      </el-submenu>
       <el-submenu index="/analytics">
         <template slot="title"
           >Analytics</template
         >
         <el-menu-item index="/analytics/addresses/contains"
           >住所コード解析</el-menu-item
+        >
+        <el-menu-item index="/analytics/meshes/contains"
+          >地域メッシュ解析</el-menu-item
         >
       </el-submenu>
       <el-submenu index="/statistics">
