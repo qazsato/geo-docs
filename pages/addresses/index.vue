@@ -74,24 +74,7 @@ import Header from '@/components/Header'
 
 export default {
   components: {
-    Header
-  },
-
-  head() {
-    return { script: [{ src: config.google_maps.api_url }] }
-  },
-
-  data() {
-    return {
-      map: null,
-      marker: null
-    }
-  },
-
-  watch: {
-    address() {
-      this.$nextTick(() => this.createMap())
-    }
+    Header,
   },
 
   async asyncData({ query }) {
@@ -104,15 +87,15 @@ export default {
         params: {
           code: query.code,
           limit,
-          offset
-        }
+          offset,
+        },
       }
     )
     const addresses = addressSearchRes.data
     const count = {
       limit,
       offset,
-      total: Number(addressSearchRes.headers['x-total-count'])
+      total: Number(addressSearchRes.headers['x-total-count']),
     }
     let address = null
     let addressShape = null
@@ -133,11 +116,22 @@ export default {
       addressShape,
       addresses,
       count,
-      page
+      page,
     }
   },
 
-  watchQuery: ['code', 'page'],
+  data() {
+    return {
+      map: null,
+      marker: null,
+    }
+  },
+
+  watch: {
+    address() {
+      this.$nextTick(() => this.createMap())
+    },
+  },
 
   mounted() {
     this.createMap()
@@ -172,7 +166,7 @@ export default {
         styles: config.google_maps.theme.silver,
         clickableIcons: false,
         disableDefaultUI: true,
-        zoomControl: true
+        zoomControl: true,
       })
       this.marker = new window.google.maps.Marker({ position, map: this.map })
 
@@ -181,7 +175,7 @@ export default {
         strokeWeight: 1,
         strokeColor: '#409eff',
         fillColor: '#409eff',
-        fillOpacity: 0.2
+        fillOpacity: 0.2,
       })
 
       if (this.addressShape) {
@@ -197,10 +191,10 @@ export default {
             coords = coords.concat(_.flatten(coordinates))
           }
         }
-        const northernmost = _.maxBy(coords, c => c[1])
-        const southernmost = _.minBy(coords, c => c[1])
-        const westernmost = _.minBy(coords, c => c[0])
-        const easternmost = _.maxBy(coords, c => c[0])
+        const northernmost = _.maxBy(coords, (c) => c[1])
+        const southernmost = _.minBy(coords, (c) => c[1])
+        const westernmost = _.minBy(coords, (c) => c[0])
+        const easternmost = _.maxBy(coords, (c) => c[0])
 
         // 南西と北西のポイントを指定
         // https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLngBounds.constructor
@@ -210,8 +204,14 @@ export default {
         )
         this.map.fitBounds(shapeBounds)
       }
-    }
-  }
+    },
+  },
+
+  head() {
+    return { script: [{ src: config.google_maps.api_url }] }
+  },
+
+  watchQuery: ['code', 'page'],
 }
 </script>
 

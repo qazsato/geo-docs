@@ -8,7 +8,7 @@
       <el-table
         :data="tableData"
         :default-sort="{ prop: 'index', order: 'descending' }"
-        style="width: 100%"
+        style="width: 100%;"
       >
         <el-table-column
           prop="index"
@@ -36,11 +36,7 @@ import Header from '@/components/Header'
 
 export default {
   components: {
-    Header
-  },
-
-  head() {
-    return { script: [{ src: config.google_maps.api_url }] }
+    Header,
   },
 
   data() {
@@ -48,7 +44,7 @@ export default {
       map: null,
       latLng: null,
       marker: null,
-      tableData: []
+      tableData: [],
     }
   },
 
@@ -59,7 +55,7 @@ export default {
       }
       this.marker = new window.google.maps.Marker({
         position: val,
-        map: this.map
+        map: this.map,
       })
 
       const api = `${config.geo.api_url}/addresses/geocoding`
@@ -71,9 +67,9 @@ export default {
         location: `${val.lat()},${val.lng()}`,
         name: address.name,
         code: address.code,
-        level: address.level
+        level: address.level,
       })
-    }
+    },
   },
 
   mounted() {
@@ -90,11 +86,15 @@ export default {
         styles: config.google_maps.theme.retro,
         clickableIcons: false,
         disableDefaultUI: true,
-        zoomControl: true
+        zoomControl: true,
       })
-      this.map.addListener('click', e => (this.latLng = e.latLng))
-    }
-  }
+      this.map.addListener('click', (e) => (this.latLng = e.latLng))
+    },
+  },
+
+  head() {
+    return { script: [{ src: config.google_maps.api_url }] }
+  },
 }
 </script>
 

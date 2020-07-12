@@ -30,7 +30,7 @@
       <el-table
         :data="tableData"
         :default-sort="{ prop: 'count', order: 'descending' }"
-        style="width: 100%"
+        style="width: 100%;"
       >
         <el-table-column prop="code" label="Code" sortable></el-table-column>
         <el-table-column prop="name" label="Name" sortable></el-table-column>
@@ -47,11 +47,7 @@ import Header from '@/components/Header'
 
 export default {
   components: {
-    Header
-  },
-
-  head() {
-    return { script: [{ src: config.google_maps.api_url }] }
+    Header,
   },
 
   data() {
@@ -60,18 +56,18 @@ export default {
       latLngs: [],
       markers: [],
       tableData: [],
-      level: '1'
+      level: '1',
     }
   },
 
   computed: {
     locations() {
       const locations = []
-      this.latLngs.forEach(latLngs => {
+      this.latLngs.forEach((latLngs) => {
         locations.push(`${latLngs.lat()},${latLngs.lng()}`)
       })
       return locations
-    }
+    },
   },
 
   watch: {
@@ -79,10 +75,10 @@ export default {
       const latLng = val[val.length - 1]
       const marker = new window.google.maps.Marker({
         position: latLng,
-        map: this.map
+        map: this.map,
       })
       this.markers.push(marker)
-    }
+    },
   },
 
   mounted() {
@@ -99,34 +95,38 @@ export default {
         styles: config.google_maps.theme.dark,
         clickableIcons: false,
         disableDefaultUI: true,
-        zoomControl: true
+        zoomControl: true,
       })
-      this.map.addListener('click', e => this.latLngs.push(e.latLng))
+      this.map.addListener('click', (e) => this.latLngs.push(e.latLng))
     },
 
     async onClickAnalyticsButton() {
       const api = `${config.geo.api_url}/analytics/addresses/contains`
       const res = await axios.post(api, {
         locations: this.locations,
-        level: this.level
+        level: this.level,
       })
       this.tableData = []
-      res.data.forEach(d => {
+      res.data.forEach((d) => {
         this.tableData.push({
           code: d.address.code,
           name: d.address.name,
-          count: d.count
+          count: d.count,
         })
       })
     },
 
     onClickResetButton() {
-      this.markers.forEach(marker => marker.setMap(null))
+      this.markers.forEach((marker) => marker.setMap(null))
       this.markers = []
       this.latLngs = []
       this.tableData = []
-    }
-  }
+    },
+  },
+
+  head() {
+    return { script: [{ src: config.google_maps.api_url }] }
+  },
 }
 </script>
 

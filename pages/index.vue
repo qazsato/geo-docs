@@ -18,7 +18,7 @@ import Header from '@/components/Header'
 
 export default {
   components: {
-    Header
+    Header,
   },
 
   mounted() {
@@ -29,9 +29,9 @@ export default {
       dom_id: '#swagger-ui',
       presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
       layout: 'StandaloneLayout',
-      deepLinking: true
+      deepLinking: true,
     })
-  }
+  },
 }
 </script>
 
@@ -59,7 +59,7 @@ export default {
   width: 85px;
 }
 
-.swagger-ui .parameter__name.required:after {
+.swagger-ui .parameter__name.required::after {
   top: -3px;
 }
 
