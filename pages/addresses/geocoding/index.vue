@@ -5,12 +5,25 @@
     </el-header>
     <el-main>
       <div id="map"></div>
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="index" label="#" width="50"></el-table-column>
-        <el-table-column prop="location" label="LatLng"></el-table-column>
-        <el-table-column prop="name" label="Name"></el-table-column>
-        <el-table-column prop="code" label="Code"></el-table-column>
-        <el-table-column prop="level" label="Level"></el-table-column>
+      <el-table
+        :data="tableData"
+        :default-sort="{ prop: 'index', order: 'descending' }"
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="index"
+          label="#"
+          width="100"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="location"
+          label="LatLng"
+          sortable
+        ></el-table-column>
+        <el-table-column prop="name" label="Name" sortable></el-table-column>
+        <el-table-column prop="code" label="Code" sortable></el-table-column>
+        <el-table-column prop="level" label="Level" sortable></el-table-column>
       </el-table>
     </el-main>
   </el-container>

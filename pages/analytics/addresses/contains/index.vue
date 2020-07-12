@@ -29,7 +29,7 @@
       </el-row>
       <el-table
         :data="tableData"
-        :default-sort="{ prop: 'code', order: 'descending' }"
+        :default-sort="{ prop: 'count', order: 'descending' }"
         style="width: 100%"
       >
         <el-table-column prop="code" label="Code" sortable></el-table-column>
