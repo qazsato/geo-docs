@@ -135,10 +135,7 @@ export default {
     },
   },
 
-  async mounted() {
-    this.google = await GoogleMapsApiLoader({
-      apiKey: config.google_maps.api_key,
-    })
+  mounted() {
     this.createMap()
   },
 
@@ -155,10 +152,17 @@ export default {
       window.scrollTo(0, 0)
     },
 
-    createMap() {
+    async createMap() {
       if (this.address === null) {
         return
       }
+
+      if (this.google === null) {
+        this.google = await GoogleMapsApiLoader({
+          apiKey: config.google_maps.api_key,
+        })
+      }
+
       const position = new this.google.maps.LatLng(
         this.address.location.lat,
         this.address.location.lng
