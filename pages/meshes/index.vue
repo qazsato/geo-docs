@@ -4,7 +4,16 @@
       <Header title="地域メッシュ検索" active="/meshes" />
     </el-header>
     <el-main>
-      <el-row v-if="meshShapes">
+      <el-row>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item
+            v-for="(breadcrumb, index) in breadcrumbs"
+            :key="index"
+            :to="{ path: breadcrumb.path }"
+          >
+            <span>{{ breadcrumb.name }}</span>
+          </el-breadcrumb-item>
+        </el-breadcrumb>
         <div id="map"></div>
       </el-row>
       <template v-if="meshes.length > 0">
@@ -36,15 +45,21 @@ import axios from 'axios'
 import _ from 'lodash'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
+const MESH_CODE_LENGTH = {
+  LEVEL1: 4,
+  LEVEL2: 6,
+  LEVEL3: 8,
+  LEVEL4: 9,
+  LEVEL5: 10,
+}
 
 export default {
   components: {
     Header,
   },
-
   async asyncData({ query }) {
     const code = query.code || null
-    const limit = 20
+    const limit = 100
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
     const meshSearchRes = await axios.get(
@@ -87,6 +102,49 @@ export default {
     }
   },
 
+  computed: {
+    breadcrumbs() {
+      const breadcrumbs = []
+      breadcrumbs.push({
+        path: '/meshes',
+        name: '1次メッシュ(80km)',
+      })
+
+      if (this.code === null) {
+        return breadcrumbs
+      }
+
+      if (this.code.length >= MESH_CODE_LENGTH.LEVEL1) {
+        breadcrumbs.push({
+          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL1)}`,
+          name: '2次メッシュ(10km)',
+        })
+      }
+
+      if (this.code.length >= MESH_CODE_LENGTH.LEVEL2) {
+        breadcrumbs.push({
+          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL2)}`,
+          name: '3次メッシュ(1km)',
+        })
+      }
+
+      if (this.code.length >= MESH_CODE_LENGTH.LEVEL3) {
+        breadcrumbs.push({
+          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL3)}`,
+          name: '4次メッシュ(500m)',
+        })
+      }
+
+      if (this.code.length >= MESH_CODE_LENGTH.LEVEL4) {
+        breadcrumbs.push({
+          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL4)}`,
+          name: '5次メッシュ(250m)',
+        })
+      }
+      return breadcrumbs
+    },
+  },
+
   watch: {
     meshes() {
       this.$nextTick(() => this.createMap())
@@ -99,6 +157,9 @@ export default {
 
   methods: {
     clickMesh(mesh) {
+      if (mesh.code.length === MESH_CODE_LENGTH.LEVEL5) {
+        return
+      }
       const code = mesh.code
       this.$router.push({ path: '/meshes', query: { code } })
       window.scrollTo(0, 0)
