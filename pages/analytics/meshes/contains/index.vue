@@ -6,27 +6,30 @@
     <el-main>
       <div id="map"></div>
 
-      <el-row class="search-area">
-        <template>
+      <section class="search-area">
+        <el-row>
+          <el-radio v-model="level" label="1">1次メッシュ(80km)</el-radio>
+          <el-radio v-model="level" label="2">2次メッシュ(10km)</el-radio>
           <el-radio v-model="level" label="3">3次メッシュ(1km)</el-radio>
           <el-radio v-model="level" label="4">4次メッシュ(500m)</el-radio>
           <el-radio v-model="level" label="5">5次メッシュ(250m)</el-radio>
-        </template>
+        </el-row>
+        <el-row>
+          <el-button
+            type="primary"
+            :disabled="latLngs.length === 0"
+            @click="onClickAnalyticsButton"
+            >地域メッシュコード毎に区分する</el-button
+          >
 
-        <el-button
-          type="primary"
-          :disabled="latLngs.length === 0"
-          @click="onClickAnalyticsButton"
-          >地域メッシュコード毎に区分する</el-button
-        >
-
-        <el-button
-          type="danger"
-          :disabled="latLngs.length === 0"
-          @click="onClickResetButton"
-          >マーカーをリセットする</el-button
-        >
-      </el-row>
+          <el-button
+            type="danger"
+            :disabled="latLngs.length === 0"
+            @click="onClickResetButton"
+            >マーカーをリセットする</el-button
+          >
+        </el-row>
+      </section>
       <el-table
         :data="tableData"
         :default-sort="{ prop: 'count', order: 'descending' }"
@@ -140,6 +143,10 @@ export default {
 }
 
 .search-area {
-  padding: 20px 10px;
+  padding: 10px 0;
+}
+
+.search-area .el-row {
+  padding: 10px;
 }
 </style>

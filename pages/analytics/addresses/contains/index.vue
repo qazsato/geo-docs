@@ -6,27 +6,26 @@
     <el-main>
       <div id="map"></div>
 
-      <el-row class="search-area">
-        <template>
+      <section class="search-area">
+        <el-row>
           <el-radio v-model="level" label="1">Lv.1 都道府県</el-radio>
           <el-radio v-model="level" label="2">Lv.2 市区町村</el-radio>
           <el-radio v-model="level" label="3">Lv.3 丁目・番地</el-radio>
-        </template>
+          <el-button
+            type="primary"
+            :disabled="latLngs.length === 0"
+            @click="onClickAnalyticsButton"
+            >住所コード毎に区分する</el-button
+          >
 
-        <el-button
-          type="primary"
-          :disabled="latLngs.length === 0"
-          @click="onClickAnalyticsButton"
-          >住所コード毎に区分する</el-button
-        >
-
-        <el-button
-          type="danger"
-          :disabled="latLngs.length === 0"
-          @click="onClickResetButton"
-          >マーカーをリセットする</el-button
-        >
-      </el-row>
+          <el-button
+            type="danger"
+            :disabled="latLngs.length === 0"
+            @click="onClickResetButton"
+            >マーカーをリセットする</el-button
+          >
+        </el-row>
+      </section>
       <el-table
         :data="tableData"
         :default-sort="{ prop: 'count', order: 'descending' }"
@@ -142,6 +141,10 @@ export default {
 }
 
 .search-area {
-  padding: 20px 10px;
+  padding: 10px 0;
+}
+
+.search-area .el-row {
+  padding: 10px;
 }
 </style>
