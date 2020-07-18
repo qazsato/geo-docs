@@ -4,7 +4,7 @@
       <Header title="地域メッシュ検索" active="/meshes" />
     </el-header>
     <el-main>
-      <el-row v-if="mesh">
+      <el-row v-if="meshShapes">
         <div id="map"></div>
       </el-row>
       <template v-if="meshes.length > 0">
@@ -43,6 +43,7 @@ export default {
   },
 
   async asyncData({ query }) {
+    const code = query.code || null
     const limit = 20
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
@@ -50,7 +51,7 @@ export default {
       `${config.geo.api_url}/meshes/search`,
       {
         params: {
-          code: query.code,
+          code,
           limit,
           offset,
         },
@@ -62,23 +63,16 @@ export default {
       offset,
       total: Number(meshSearchRes.headers['x-total-count']),
     }
-    let mesh = null
-    let meshShape = null
-    if (query.code) {
-      const meshRes = await axios.get(
-        `${config.geo.api_url}/meshes?codes=${query.code}`
-      )
-      mesh = meshRes.data[0]
-
-      const meshShapeRes = await axios.get(
-        `${config.geo.api_url}/meshes/shapes?codes=${query.code}`
-      )
-      meshShape = meshShapeRes.data[0]
-    }
+    let meshShapes = null
+    const codes = meshes.map((mesh) => mesh.code)
+    const meshShapeRes = await axios.get(
+      `${config.geo.api_url}/meshes/shapes?codes=${codes.toString()}`
+    )
+    meshShapes = meshShapeRes.data
 
     return {
-      mesh,
-      meshShape,
+      code,
+      meshShapes,
       meshes,
       count,
       page,
@@ -94,7 +88,7 @@ export default {
   },
 
   watch: {
-    mesh() {
+    meshes() {
       this.$nextTick(() => this.createMap())
     },
   },
@@ -111,25 +105,20 @@ export default {
     },
 
     changePage(page) {
-      const code = this.mesh ? this.mesh.code : undefined
+      const code = this.code
       this.$router.push({ path: '/meshes', query: { code, page } })
       window.scrollTo(0, 0)
     },
 
     async createMap() {
-      if (this.mesh === null) {
-        return
-      }
-
       if (this.google === null) {
         this.google = await GoogleMapsApiLoader({
           apiKey: config.google_maps.api_key,
         })
       }
 
-      const coordinate = this.meshShape.features[0].geometry.coordinates[0][0]
-      const lat = coordinate[1]
-      const lng = coordinate[0]
+      const lat = config.default_location.lat
+      const lng = config.default_location.lng
       const position = new this.google.maps.LatLng(lat, lng)
       this.map = new this.google.maps.Map(document.getElementById('map'), {
         zoom: 18,
@@ -141,7 +130,9 @@ export default {
         zoomControl: true,
       })
 
-      this.map.data.addGeoJson(this.meshShape)
+      this.meshShapes.forEach((meshShape) => {
+        this.map.data.addGeoJson(meshShape)
+      })
       this.map.data.setStyle({
         strokeWeight: 1,
         strokeColor: '#409eff',
@@ -149,9 +140,9 @@ export default {
         fillOpacity: 0.2,
       })
 
-      if (this.meshShape) {
-        const features = this.meshShape.features
-        let coords = []
+      let coords = []
+      for (const meshShape of this.meshShapes) {
+        const features = meshShape.features
         for (const feature of features) {
           const coordinates = feature.geometry.coordinates
           if (feature.geometry.type === 'MultiPolygon') {

@@ -1,4 +1,8 @@
 {
+  "default_location": {
+    "lat": 35.689568,
+    "lng": 139.691717
+  },
   "google_maps": {
     "api_key": "AIzaSyD5RITwg01wdgDs1gQn4xgHtyggfc8hLiM",
     "theme": {
