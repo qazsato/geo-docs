@@ -1,4 +1,4 @@
-# geo-web
+# geo-docs
 
 > My incredible Nuxt.js project
 
