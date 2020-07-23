@@ -59,7 +59,7 @@ export default {
   },
   async asyncData({ query }) {
     const code = query.code || null
-    const limit = 100
+    const limit = 1000
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
     const meshSearchRes = await axios.get(
@@ -99,6 +99,7 @@ export default {
       google: null,
       map: null,
       marker: null,
+      infowindow: null,
     }
   },
 
@@ -200,6 +201,29 @@ export default {
         fillColor: '#409eff',
         fillOpacity: 0.2,
       })
+      this.map.data.addListener('click', (event) => {
+        const code = event.feature.getProperty('code')
+        if (code.length === MESH_CODE_LENGTH.LEVEL5) {
+          return
+        }
+        this.$router.push({ path: '/meshes', query: { code } })
+      })
+
+      this.map.data.addListener('mouseout', (event) => {
+        this.infowindow.setMap(null)
+        this.infowindow = null
+      })
+
+      this.map.data.addListener('mouseover', (event) => {
+        const code = event.feature.getProperty('code')
+        const position = this.getInfowindowPosition(code)
+        this.infowindow = new this.google.maps.InfoWindow({
+          content: code,
+          position,
+          disableAutoPan: true,
+        })
+        this.infowindow.open(this.map)
+      })
 
       let coords = []
       for (const meshShape of this.meshShapes) {
@@ -228,6 +252,21 @@ export default {
         this.map.fitBounds(shapeBounds)
       }
     },
+
+    getInfowindowPosition(code) {
+      const shape = this.meshShapes.filter(
+        (m) => m.features[0].properties.code === code
+      )[0]
+      const coords = _.flatten(shape.features[0].geometry.coordinates)
+      const northernmost = _.maxBy(coords, (c) => c[1])
+      const westernmost = _.minBy(coords, (c) => c[0])
+      const easternmost = _.maxBy(coords, (c) => c[0])
+
+      return new this.google.maps.LatLng(
+        northernmost[1],
+        (westernmost[0] + easternmost[0]) / 2
+      )
+    },
   },
 
   watchQuery: ['code', 'page'],
@@ -238,7 +277,7 @@ export default {
 #map {
   margin: 20px 0 0;
   width: 100%;
-  height: 300px;
+  height: 450px;
   background-color: #ebeef5;
   display: flex;
   justify-content: center;
