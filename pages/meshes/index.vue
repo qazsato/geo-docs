@@ -59,7 +59,7 @@ export default {
   },
   async asyncData({ query }) {
     const code = query.code || null
-    const limit = 1000
+    const limit = 100
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
     const meshSearchRes = await axios.get(
