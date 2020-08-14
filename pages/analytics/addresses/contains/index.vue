@@ -10,7 +10,7 @@
         <el-row>
           <el-radio v-model="level" label="1">Lv.1 都道府県</el-radio>
           <el-radio v-model="level" label="2">Lv.2 市区町村</el-radio>
-          <el-radio v-model="level" label="3">Lv.3 丁目・番地</el-radio>
+          <el-radio v-model="level" label="3">Lv.3 町丁・字等</el-radio>
           <el-button
             type="primary"
             :disabled="latLngs.length === 0"
