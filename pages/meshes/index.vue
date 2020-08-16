@@ -85,8 +85,16 @@ export default {
     )
     meshShapes = meshShapeRes.data
 
+    let mesh = null
+    if (query.code) {
+      const meshRes = await axios.get(
+        `${config.geo.api_url}/meshes?codes=${query.code}`
+      )
+      mesh = meshRes.data[0]
+    }
+
     return {
-      code,
+      mesh,
       meshShapes,
       meshes,
       count,
@@ -111,37 +119,22 @@ export default {
         name: '1次メッシュ(80km)',
       })
 
-      if (this.code === null) {
+      if (this.mesh === null) {
         return breadcrumbs
       }
 
-      if (this.code.length >= MESH_CODE_LENGTH.LEVEL1) {
-        breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL1)}`,
-          name: '2次メッシュ(10km)',
-        })
-      }
-
-      if (this.code.length >= MESH_CODE_LENGTH.LEVEL2) {
-        breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL2)}`,
-          name: '3次メッシュ(1km)',
-        })
-      }
-
-      if (this.code.length >= MESH_CODE_LENGTH.LEVEL3) {
-        breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL3)}`,
-          name: '4次メッシュ(500m)',
-        })
-      }
-
-      if (this.code.length >= MESH_CODE_LENGTH.LEVEL4) {
-        breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL4)}`,
-          name: '5次メッシュ(250m)',
-        })
-      }
+      this.mesh.details.forEach((d) => {
+        const path = `/meshes?code=${d.code}`
+        if (d.level === 1) {
+          breadcrumbs.push({ path, name: '2次メッシュ(10km)' })
+        } else if (d.level === 2) {
+          breadcrumbs.push({ path, name: '3次メッシュ(1km)' })
+        } else if (d.level === 3) {
+          breadcrumbs.push({ path, name: '4次メッシュ(500m)' })
+        } else if (d.level === 4) {
+          breadcrumbs.push({ path, name: '5次メッシュ(250m)' })
+        }
+      })
       return breadcrumbs
     },
   },
@@ -167,7 +160,7 @@ export default {
     },
 
     changePage(page) {
-      const code = this.code
+      const code = this.mesh.code
       this.$router.push({ path: '/meshes', query: { code, page } })
       window.scrollTo(0, 0)
     },
