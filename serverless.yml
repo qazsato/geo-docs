@@ -1,12 +1,13 @@
-service: geo-docs
+service:
+  name: geo-docs
 
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: ${self:custom.secrets.NODE_ENV}
+  stage: ${opt:stage, self:custom.defaultStage}
   region: ap-northeast-1
   environment:
-    NODE_ENV: ${self:custom.secrets.NODE_ENV}
+    NODE_ENV: ${self:provider.stage}
 
 functions:
   nuxt:
@@ -21,12 +22,15 @@ plugins:
   - serverless-offline
 
 custom:
-  secrets: ${file(secrets.json)}
+  defaultStage: dev
+  environment:
+    dev: ${file(./config/development.yml)}
+    prod: ${file(./config/production.yml)}
   apigwBinary:
     types:
       - '*/*'
   customDomain:
-    domainName: ${self:custom.secrets.DOMAIN}
+    domainName: ${self:custom.environment.${self:provider.stage}.domain}
     basePath: ''
-    stage: ${self:custom.secrets.NODE_ENV}
+    stage: ${self:provider.stage}
     createRoute53Record: true
