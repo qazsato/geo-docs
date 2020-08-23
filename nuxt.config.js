@@ -54,6 +54,12 @@ module.exports = {
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/stylelint-module',
+    [
+      '@nuxtjs/google-analytics',
+      {
+        id: 'UA-51346952-5',
+      },
+    ],
   ],
   /*
    ** Nuxt.js modules
