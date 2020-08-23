@@ -26,6 +26,7 @@ export default {
     const SwaggerUIStandalonePreset = SwaggerUI.SwaggerUIStandalonePreset
     SwaggerUIBundle({
       url: config.geo.api_docs_url,
+      validatorUrl: null,
       dom_id: '#swagger-ui',
       presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
       layout: 'StandaloneLayout',
