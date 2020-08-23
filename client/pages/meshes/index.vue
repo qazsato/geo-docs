@@ -69,6 +69,7 @@ export default {
           code,
           limit,
           offset,
+          access_token: config.geo.access_token,
         },
       }
     )
@@ -81,15 +82,24 @@ export default {
     let meshShapes = null
     const codes = meshes.map((mesh) => mesh.code)
     const meshShapeRes = await axios.get(
-      `${config.geo.api_url}/meshes/shapes?codes=${codes.toString()}`
+      `${config.geo.api_url}/meshes/shapes`,
+      {
+        params: {
+          codes: codes.toString(),
+          access_token: config.geo.access_token,
+        },
+      }
     )
     meshShapes = meshShapeRes.data
 
     let mesh = null
     if (query.code) {
-      const meshRes = await axios.get(
-        `${config.geo.api_url}/meshes?codes=${query.code}`
-      )
+      const meshRes = await axios.get(`${config.geo.api_url}/meshes`, {
+        params: {
+          codes: query.code,
+          access_token: config.geo.access_token,
+        },
+      })
       mesh = meshRes.data[0]
     }
 

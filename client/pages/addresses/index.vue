@@ -93,6 +93,7 @@ export default {
           code: query.code,
           limit,
           offset,
+          access_token: config.geo.access_token,
         },
       }
     )
@@ -105,9 +106,12 @@ export default {
 
     let address = null
     if (query.code) {
-      const addressRes = await axios.get(
-        `${config.geo.api_url}/addresses?codes=${query.code}`
-      )
+      const addressRes = await axios.get(`${config.geo.api_url}/addresses`, {
+        params: {
+          codes: query.code,
+          access_token: config.geo.access_token,
+        },
+      })
       address = addressRes.data[0]
     }
 
@@ -146,7 +150,13 @@ export default {
     async fetch() {
       const codes = this.addresses.map((address) => address.code)
       const geoAddressRes = await axios.get(
-        `${config.geo.api_url}/addresses/shapes?codes=${codes.toString()}`
+        `${config.geo.api_url}/addresses/shapes`,
+        {
+          params: {
+            codes: codes.toString(),
+            access_token: config.geo.access_token,
+          },
+        }
       )
       this.addressShapes = geoAddressRes.data
     },
