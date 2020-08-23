@@ -73,4 +73,12 @@ export default {
 .response-col_status {
   width: 180px;
 }
+
+.swagger-ui table.headers tbody tr td {
+  padding: 0;
+}
+
+.swagger-ui .auth-btn-wrapper .btn {
+  margin: 5px 10px;
+}
 </style>
