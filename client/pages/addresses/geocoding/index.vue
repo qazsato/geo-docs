@@ -61,7 +61,12 @@ export default {
       })
 
       const api = `${config.geo.api_url}/addresses/geocoding`
-      const res = await axios.get(`${api}?locations=${val.lat()},${val.lng()}`)
+      const res = await axios.get(api, {
+        params: {
+          location: `${val.lat()},${val.lng()}`,
+          access_token: config.geo.access_token,
+        },
+      })
       const address = res.data[0]
 
       this.tableData.unshift({

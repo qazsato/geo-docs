@@ -112,6 +112,7 @@ export default {
       const res = await axios.post(api, {
         locations: this.locations,
         level: this.level,
+        access_token: config.geo.access_token,
       })
       this.tableData = []
       res.data.forEach((d) => {

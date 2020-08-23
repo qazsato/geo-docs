@@ -1,6 +1,7 @@
 {
   "geo": {
     "api_url": "http://localhost:4000/v1",
-    "api_docs_url": "http://localhost:4000/v1/apidocs"
+    "api_docs_url": "http://localhost:4000/v1/apidocs",
+    "access_token": ""
   }
 }
