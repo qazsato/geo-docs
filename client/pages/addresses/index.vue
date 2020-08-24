@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header title="住所検索" active="/addresses" />
+      <Header :title="title" active="/addresses" />
     </el-header>
     <el-main>
       <el-row>
@@ -125,6 +125,7 @@ export default {
 
   data() {
     return {
+      title: '住所検索',
       google: null,
       map: null,
       addressShapes: [],
@@ -240,6 +241,12 @@ export default {
       )
       this.map.fitBounds(shapeBounds)
     },
+  },
+
+  head() {
+    return {
+      title: this.title,
+    }
   },
 
   watchQuery: ['code', 'page'],

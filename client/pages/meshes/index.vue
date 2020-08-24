@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header title="地域メッシュ検索" active="/meshes" />
+      <Header :title="title" active="/meshes" />
     </el-header>
     <el-main>
       <el-row>
@@ -57,6 +57,7 @@ export default {
   components: {
     Header,
   },
+
   async asyncData({ query }) {
     const code = query.code || null
     const limit = 100
@@ -114,6 +115,7 @@ export default {
 
   data() {
     return {
+      title: '地域メッシュ検索',
       google: null,
       map: null,
       marker: null,
@@ -270,6 +272,12 @@ export default {
         (westernmost[0] + easternmost[0]) / 2
       )
     },
+  },
+
+  head() {
+    return {
+      title: this.title,
+    }
   },
 
   watchQuery: ['code', 'page'],
