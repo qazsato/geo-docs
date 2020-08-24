@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header title="住所コード解析" active="/analytics/addresses/contains" />
+      <Header :title="title" active="/analytics/addresses/contains" />
     </el-header>
     <el-main>
       <div id="map"></div>
@@ -52,6 +52,7 @@ export default {
 
   data() {
     return {
+      title: '住所コード解析',
       google: null,
       map: null,
       latLngs: [],
@@ -127,6 +128,12 @@ export default {
       this.latLngs = []
       this.tableData = []
     },
+  },
+
+  head() {
+    return {
+      title: this.title,
+    }
   },
 }
 </script>

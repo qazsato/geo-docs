@@ -16,17 +16,24 @@ module.exports = {
    ** See https://nuxtjs.org/api/configuration-head
    */
   head: {
-    title: 'Geo Docs',
+    titleTemplate: '%s - Geo Docs',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: process.env.npm_package_description || '',
+        content: 'Geo API (空間情報検索) の仕様書です',
       },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        href: '/apple-touch-icon.png',
+      },
+    ],
   },
   /*
    ** Customize the progress-bar color

@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header title="地域メッシュ解析" active="/analytics/meshes/contains" />
+      <Header :title="title" active="/analytics/meshes/contains" />
     </el-header>
     <el-main>
       <div id="map"></div>
@@ -55,6 +55,7 @@ export default {
 
   data() {
     return {
+      title: '地域メッシュ解析',
       google: null,
       map: null,
       latLngs: [],
@@ -129,6 +130,12 @@ export default {
       this.latLngs = []
       this.tableData = []
     },
+  },
+
+  head() {
+    return {
+      title: this.title,
+    }
   },
 }
 </script>

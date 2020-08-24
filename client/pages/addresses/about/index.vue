@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header title="About address" active="/addresses/about" />
+      <Header :title="住所について" active="/addresses/about" />
     </el-header>
     <el-main>
       <section>
@@ -108,6 +108,7 @@ export default {
 
   data() {
     return {
+      title: '住所について',
       addressTableData: [
         {
           level: 1,
@@ -160,6 +161,12 @@ export default {
           },
         },
       ],
+    }
+  },
+
+  head() {
+    return {
+      title: this.title,
     }
   },
 }

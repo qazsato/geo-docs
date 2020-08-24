@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header title="About mesh" active="/meshes/about" />
+      <Header :title="title" active="/meshes/about" />
     </el-header>
     <el-main>
       <section>
@@ -54,6 +54,7 @@ export default {
 
   data() {
     return {
+      title: '地域メッシュについて',
       tableData: [
         {
           level: 1,
@@ -111,6 +112,12 @@ export default {
           },
         },
       ],
+    }
+  },
+
+  head() {
+    return {
+      title: this.title,
     }
   },
 }

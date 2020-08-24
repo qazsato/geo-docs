@@ -1,10 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header
-        title="住所毎の人口統計"
-        active="/statistics/addresses/population"
-      />
+      <Header :title="title" active="/statistics/addresses/population" />
     </el-header>
     <el-main>
       <div>WIP</div>
@@ -18,6 +15,18 @@ import Header from '@/components/Header'
 export default {
   components: {
     Header,
+  },
+
+  data() {
+    return {
+      title: '住所毎の人口統計',
+    }
+  },
+
+  head() {
+    return {
+      title: this.title,
+    }
   },
 }
 </script>

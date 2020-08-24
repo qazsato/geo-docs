@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header title="逆ジオコーディング" active="/addresses/geocoding" />
+      <Header :title="title" active="/addresses/geocoding" />
     </el-header>
     <el-main>
       <div id="map"></div>
@@ -42,6 +42,7 @@ export default {
 
   data() {
     return {
+      title: '逆ジオコーディング',
       google: null,
       map: null,
       latLng: null,
@@ -100,6 +101,12 @@ export default {
       })
       this.map.addListener('click', (e) => (this.latLng = e.latLng))
     },
+  },
+
+  head() {
+    return {
+      title: this.title,
+    }
   },
 }
 </script>

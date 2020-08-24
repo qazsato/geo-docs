@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header title="API 仕様書" active="/" />
+      <Header :title="title" active="/" />
     </el-header>
     <el-main>
       <div id="swagger-ui"></div>
@@ -21,6 +21,12 @@ export default {
     Header,
   },
 
+  data() {
+    return {
+      title: 'API 仕様書',
+    }
+  },
+
   mounted() {
     const SwaggerUIBundle = SwaggerUI.SwaggerUIBundle
     const SwaggerUIStandalonePreset = SwaggerUI.SwaggerUIStandalonePreset
@@ -32,6 +38,12 @@ export default {
       layout: 'StandaloneLayout',
       deepLinking: true,
     })
+  },
+
+  head() {
+    return {
+      title: this.title,
+    }
   },
 }
 </script>
