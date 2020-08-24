@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header>
-      <Header :title="住所について" active="/addresses/about" />
+      <Header :title="title" active="/addresses/about" />
     </el-header>
     <el-main>
       <section>
@@ -178,6 +178,7 @@ section {
 }
 
 h2 {
+  font-size: 20px;
   font-weight: 400;
   color: #1f2f3d;
 }

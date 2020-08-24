@@ -64,7 +64,7 @@ export default {
       const api = `${config.geo.api_url}/addresses/geocoding`
       const res = await axios.get(api, {
         params: {
-          location: `${val.lat()},${val.lng()}`,
+          locations: `${val.lat()},${val.lng()}`,
           access_token: config.geo.access_token,
         },
       })

@@ -1,6 +1,9 @@
 <template>
   <div class="header">
-    <h1>{{ title }}</h1>
+    <div>
+      <a class="logo" href="/">Geo Docs 🌏</a>
+      <h1 class="title">{{ title }}</h1>
+    </div>
     <el-menu
       :default-active="active"
       mode="horizontal"
@@ -55,21 +58,47 @@ export default {
 
 <style scoped>
 .header {
-  display: flex;
-  align-items: center;
   border-bottom: 1px solid #ebeef5;
 }
 
-h1 {
+.logo {
+  margin: 10px 0;
+  padding: 5px 12px;
+  display: inline-block;
+  border-radius: 3px;
+  background: #3b4151;
+  color: #fff;
+  line-height: 19px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.title {
+  margin-left: 10px;
+  display: inline-block;
   text-decoration: none;
   font-size: 18px;
+  font-weight: normal;
   color: #303133;
 }
 
 .menu {
   display: flex;
   flex: 1;
-  justify-content: flex-end;
   border-bottom: none;
+  width: 100%;
+  overflow-x: auto;
+}
+</style>
+
+<style>
+.header .el-menu--horizontal > .el-menu-item,
+.header .el-menu--horizontal > .el-submenu .el-submenu__title {
+  height: 40px;
+  line-height: 40px;
+}
+
+.el-header {
+  height: 90px !important;
 }
 </style>
