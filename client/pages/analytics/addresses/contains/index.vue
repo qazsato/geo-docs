@@ -1,52 +1,52 @@
 <template>
-  <el-container>
-    <el-header>
+  <Page>
+    <template v-slot:header>
       <Header :title="title" active="/analytics/addresses/contains" />
-    </el-header>
-    <el-main>
-      <div id="map"></div>
+    </template>
+    <div id="map"></div>
 
-      <section class="search-area">
-        <el-row>
-          <el-radio v-model="level" label="1">Lv.1 都道府県</el-radio>
-          <el-radio v-model="level" label="2">Lv.2 市区町村</el-radio>
-          <el-radio v-model="level" label="3">Lv.3 町丁・字等</el-radio>
-          <el-button
-            type="primary"
-            :disabled="latLngs.length === 0"
-            @click="onClickAnalyticsButton"
-            >住所コード毎に区分する</el-button
-          >
+    <section class="search-area">
+      <el-row>
+        <el-radio v-model="level" label="1">Lv.1 都道府県</el-radio>
+        <el-radio v-model="level" label="2">Lv.2 市区町村</el-radio>
+        <el-radio v-model="level" label="3">Lv.3 町丁・字等</el-radio>
+        <el-button
+          type="primary"
+          :disabled="latLngs.length === 0"
+          @click="onClickAnalyticsButton"
+          >住所コード毎に区分する</el-button
+        >
 
-          <el-button
-            type="danger"
-            :disabled="latLngs.length === 0"
-            @click="onClickResetButton"
-            >マーカーをリセットする</el-button
-          >
-        </el-row>
-      </section>
-      <el-table
-        :data="tableData"
-        :default-sort="{ prop: 'count', order: 'descending' }"
-        style="width: 100%;"
-      >
-        <el-table-column prop="code" label="Code" sortable></el-table-column>
-        <el-table-column prop="name" label="Name" sortable></el-table-column>
-        <el-table-column prop="count" label="count" sortable></el-table-column>
-      </el-table>
-    </el-main>
-  </el-container>
+        <el-button
+          type="danger"
+          :disabled="latLngs.length === 0"
+          @click="onClickResetButton"
+          >マーカーをリセットする</el-button
+        >
+      </el-row>
+    </section>
+    <el-table
+      :data="tableData"
+      :default-sort="{ prop: 'count', order: 'descending' }"
+      style="width: 100%;"
+    >
+      <el-table-column prop="code" label="Code" sortable></el-table-column>
+      <el-table-column prop="name" label="Name" sortable></el-table-column>
+      <el-table-column prop="count" label="count" sortable></el-table-column>
+    </el-table>
+  </Page>
 </template>
 
 <script>
 import config from '@/config'
 import axios from 'axios'
+import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 
 export default {
   components: {
+    Page,
     Header,
   },
 
