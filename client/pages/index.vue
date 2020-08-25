@@ -55,38 +55,38 @@ export default {
 </style>
 
 <style>
-.swagger-ui .info .title small {
+#swagger-ui .swagger-ui .info .title small {
   top: 5px;
   left: 5px;
 }
 
-.swagger-ui .topbar {
+#swagger-ui .swagger-ui .topbar {
   display: none;
 }
 
-.swagger-ui .info {
+#swagger-ui .swagger-ui .info {
   margin: 10px 0;
 }
 
-.swagger-ui .download-contents {
+#swagger-ui .swagger-ui .download-contents {
   width: 85px;
 }
 
-.swagger-ui .parameter__name.required::after {
+#swagger-ui .swagger-ui .parameter__name.required::after {
   top: -3px;
 }
 
-.swagger-ui .parameter__name.required span {
+#swagger-ui .swagger-ui .parameter__name.required span {
   position: relative;
   top: 4px;
 }
 
-.parameters-col_name,
-.response-col_status {
+#swagger-ui .parameters-col_name,
+#swagger-ui .response-col_status {
   width: 180px;
 }
 
-.swagger-ui table.headers tbody tr td {
+#swagger-ui .swagger-ui table.headers tbody tr td {
   padding: 0;
 }
 
