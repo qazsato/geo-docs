@@ -1,7 +1,12 @@
 <template>
   <div class="header">
     <div>
-      <a class="logo" href="/">Geo Docs 🌏</a>
+      <div class="inline-block">
+        <a class="logo" href="/">
+          <span>Geo Docs</span>
+          <img src="~/assets/images/geo.svg" />
+        </a>
+      </div>
       <h1 class="title">{{ title }}</h1>
     </div>
     <el-menu
@@ -58,16 +63,28 @@ export default {
 </script>
 
 <style scoped>
-.logo {
-  margin: 10px 0;
-  padding: 5px 12px;
+.inline-block {
   display: inline-block;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  margin: 10px 0;
+  padding: 5px 0;
   border-radius: 3px;
   background: #3b4151;
   color: #fff;
   line-height: 19px;
   text-decoration: none;
   font-weight: bold;
+}
+
+.logo > img {
+  margin-left: 6px;
+  width: 20px;
 }
 
 .title {
