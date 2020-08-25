@@ -23,7 +23,7 @@ module.exports = {
       {
         hid: 'description',
         name: 'description',
-        content: 'Geo API (空間情報検索) の仕様書です',
+        content: 'Geo API (地理空間情報) の仕様書です',
       },
     ],
     link: [
