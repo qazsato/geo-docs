@@ -49,8 +49,9 @@ export default {
       type: String,
     },
     active: {
-      required: true,
+      required: false,
       type: String,
+      default: null,
     },
   },
 }

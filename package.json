@@ -28,6 +28,7 @@
     "@nuxtjs/axios": "5.11.0",
     "@nuxtjs/google-analytics": "2.4.0",
     "element-ui": "2.13.2",
+    "github-markdown-css": "4.0.0",
     "google-maps-api-loader": "1.1.1",
     "lodash": "4.17.19",
     "nuxt": "2.13.0",
