@@ -57,10 +57,6 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  border-bottom: 1px solid #ebeef5;
-}
-
 .logo {
   margin: 10px 0;
   padding: 5px 12px;
@@ -85,7 +81,6 @@ export default {
 .menu {
   display: flex;
   flex: 1;
-  border-bottom: none;
   width: 100%;
   overflow-x: auto;
 }
@@ -96,9 +91,5 @@ export default {
 .header .el-menu--horizontal > .el-submenu .el-submenu__title {
   height: 40px;
   line-height: 40px;
-}
-
-.el-header {
-  height: 90px !important;
 }
 </style>

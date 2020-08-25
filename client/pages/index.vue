@@ -1,12 +1,10 @@
 <template>
-  <el-container>
-    <el-header>
+  <Page>
+    <template v-slot:header>
       <Header :title="title" active="/" />
-    </el-header>
-    <el-main>
-      <div id="swagger-ui"></div>
-    </el-main>
-  </el-container>
+    </template>
+    <div id="swagger-ui"></div>
+  </Page>
 </template>
 
 <script>
@@ -14,10 +12,12 @@ import config from '@/config'
 import SwaggerUI from 'swagger-ui-dist'
 import 'swagger-ui-dist/swagger-ui.css'
 import 'swagger-ui-themes/themes/3.x/theme-flattop.css'
+import Page from '@/components/Page'
 import Header from '@/components/Header'
 
 export default {
   components: {
+    Page,
     Header,
   },
 

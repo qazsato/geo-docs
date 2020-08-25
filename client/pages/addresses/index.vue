@@ -1,75 +1,74 @@
 <template>
-  <el-container>
-    <el-header>
+  <Page>
+    <template v-slot:header>
       <Header :title="title" active="/addresses" />
-    </el-header>
-    <el-main>
+    </template>
+    <el-row>
+      <el-breadcrumb v-if="address" separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/addresses' }">
+          <span>全国</span>
+        </el-breadcrumb-item>
+        <el-breadcrumb-item
+          v-for="(detail, index) in address.details"
+          :key="index"
+          :to="{ path: '/addresses?code=' + detail.code }"
+        >
+          <span>{{ detail.name }}</span>
+        </el-breadcrumb-item>
+      </el-breadcrumb>
+      <h2 v-if="address" class="address-name">{{ address.name }}</h2>
+      <div id="map"></div>
+    </el-row>
+    <template v-if="addresses.length > 0">
       <el-row>
-        <el-breadcrumb v-if="address" separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/addresses' }">
-            <span>全国</span>
-          </el-breadcrumb-item>
-          <el-breadcrumb-item
-            v-for="(detail, index) in address.details"
-            :key="index"
-            :to="{ path: '/addresses?code=' + detail.code }"
-          >
-            <span>{{ detail.name }}</span>
-          </el-breadcrumb-item>
-        </el-breadcrumb>
-        <h2 v-if="address" class="address-name">{{ address.name }}</h2>
-        <div id="map"></div>
+        <el-table
+          :data="addresses"
+          class="address-table"
+          @row-click="clickAddress"
+        >
+          <el-table-column
+            prop="code"
+            label="Code"
+            width="130"
+          ></el-table-column>
+          <el-table-column
+            prop="level"
+            label="Level"
+            width="80"
+          ></el-table-column>
+          <el-table-column prop="name" label="Name"></el-table-column>
+          <el-table-column
+            prop="location.lat"
+            label="Latitude"
+            width="130"
+          ></el-table-column>
+          <el-table-column
+            prop="location.lng"
+            label="Longitude"
+            width="130"
+          ></el-table-column>
+        </el-table>
       </el-row>
-      <template v-if="addresses.length > 0">
-        <el-row>
-          <el-table
-            :data="addresses"
-            class="address-table"
-            @row-click="clickAddress"
-          >
-            <el-table-column
-              prop="code"
-              label="Code"
-              width="130"
-            ></el-table-column>
-            <el-table-column
-              prop="level"
-              label="Level"
-              width="80"
-            ></el-table-column>
-            <el-table-column prop="name" label="Name"></el-table-column>
-            <el-table-column
-              prop="location.lat"
-              label="Latitude"
-              width="130"
-            ></el-table-column>
-            <el-table-column
-              prop="location.lng"
-              label="Longitude"
-              width="130"
-            ></el-table-column>
-          </el-table>
-        </el-row>
-        <el-row>
-          <el-pagination
-            v-if="count"
-            layout="prev, pager, next"
-            :page-size="count.limit"
-            :total="count.total"
-            :current-page="page"
-            class="address-pager"
-            @current-change="changePage"
-          ></el-pagination>
-        </el-row>
-      </template>
-    </el-main>
-  </el-container>
+      <el-row>
+        <el-pagination
+          v-if="count"
+          layout="prev, pager, next"
+          :page-size="count.limit"
+          :total="count.total"
+          :current-page="page"
+          class="address-pager"
+          @current-change="changePage"
+        ></el-pagination>
+      </el-row>
+    </template>
+  </Page>
 </template>
 
 <script>
 import config from '@/config'
 import axios from 'axios'
 import _ from 'lodash'
+import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 const ADDRESS_CODE_LENGTH = {
@@ -79,6 +78,7 @@ const ADDRESS_CODE_LENGTH = {
 }
 export default {
   components: {
+    Page,
     Header,
   },
 

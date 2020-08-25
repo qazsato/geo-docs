@@ -1,55 +1,55 @@
 <template>
-  <el-container>
-    <el-header>
+  <Page>
+    <template v-slot:header>
       <Header :title="title" active="/analytics/meshes/contains" />
-    </el-header>
-    <el-main>
-      <div id="map"></div>
+    </template>
+    <div id="map"></div>
 
-      <section class="search-area">
-        <el-row>
-          <el-radio v-model="level" label="1">1次メッシュ(80km)</el-radio>
-          <el-radio v-model="level" label="2">2次メッシュ(10km)</el-radio>
-          <el-radio v-model="level" label="3">3次メッシュ(1km)</el-radio>
-          <el-radio v-model="level" label="4">4次メッシュ(500m)</el-radio>
-          <el-radio v-model="level" label="5">5次メッシュ(250m)</el-radio>
-        </el-row>
-        <el-row>
-          <el-button
-            type="primary"
-            :disabled="latLngs.length === 0"
-            @click="onClickAnalyticsButton"
-            >地域メッシュコード毎に区分する</el-button
-          >
+    <section class="search-area">
+      <el-row>
+        <el-radio v-model="level" label="1">1次メッシュ(80km)</el-radio>
+        <el-radio v-model="level" label="2">2次メッシュ(10km)</el-radio>
+        <el-radio v-model="level" label="3">3次メッシュ(1km)</el-radio>
+        <el-radio v-model="level" label="4">4次メッシュ(500m)</el-radio>
+        <el-radio v-model="level" label="5">5次メッシュ(250m)</el-radio>
+      </el-row>
+      <el-row>
+        <el-button
+          type="primary"
+          :disabled="latLngs.length === 0"
+          @click="onClickAnalyticsButton"
+          >地域メッシュコード毎に区分する</el-button
+        >
 
-          <el-button
-            type="danger"
-            :disabled="latLngs.length === 0"
-            @click="onClickResetButton"
-            >マーカーをリセットする</el-button
-          >
-        </el-row>
-      </section>
-      <el-table
-        :data="tableData"
-        :default-sort="{ prop: 'count', order: 'descending' }"
-        style="width: 100%;"
-      >
-        <el-table-column prop="code" label="Code" sortable></el-table-column>
-        <el-table-column prop="count" label="count" sortable></el-table-column>
-      </el-table>
-    </el-main>
-  </el-container>
+        <el-button
+          type="danger"
+          :disabled="latLngs.length === 0"
+          @click="onClickResetButton"
+          >マーカーをリセットする</el-button
+        >
+      </el-row>
+    </section>
+    <el-table
+      :data="tableData"
+      :default-sort="{ prop: 'count', order: 'descending' }"
+      style="width: 100%;"
+    >
+      <el-table-column prop="code" label="Code" sortable></el-table-column>
+      <el-table-column prop="count" label="count" sortable></el-table-column>
+    </el-table>
+  </Page>
 </template>
 
 <script>
 import config from '@/config'
 import axios from 'axios'
+import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 
 export default {
   components: {
+    Page,
     Header,
   },
 

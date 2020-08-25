@@ -1,48 +1,47 @@
 <template>
-  <el-container>
-    <el-header>
+  <Page>
+    <template v-slot:header>
       <Header :title="title" active="/meshes" />
-    </el-header>
-    <el-main>
+    </template>
+    <el-row>
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item
+          v-for="(breadcrumb, index) in breadcrumbs"
+          :key="index"
+          :to="{ path: breadcrumb.path }"
+        >
+          <span>{{ breadcrumb.name }}</span>
+        </el-breadcrumb-item>
+      </el-breadcrumb>
+      <div id="map"></div>
+    </el-row>
+    <template v-if="meshes.length > 0">
       <el-row>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item
-            v-for="(breadcrumb, index) in breadcrumbs"
-            :key="index"
-            :to="{ path: breadcrumb.path }"
-          >
-            <span>{{ breadcrumb.name }}</span>
-          </el-breadcrumb-item>
-        </el-breadcrumb>
-        <div id="map"></div>
+        <el-table :data="meshes" class="mesh-table" @row-click="clickMesh">
+          <el-table-column prop="code" label="Code"></el-table-column>
+          <el-table-column prop="level" label="Level"></el-table-column>
+        </el-table>
       </el-row>
-      <template v-if="meshes.length > 0">
-        <el-row>
-          <el-table :data="meshes" class="mesh-table" @row-click="clickMesh">
-            <el-table-column prop="code" label="Code"></el-table-column>
-            <el-table-column prop="level" label="Level"></el-table-column>
-          </el-table>
-        </el-row>
-        <el-row>
-          <el-pagination
-            v-if="count"
-            layout="prev, pager, next"
-            :page-size="count.limit"
-            :total="count.total"
-            :current-page="page"
-            class="mesh-pager"
-            @current-change="changePage"
-          ></el-pagination>
-        </el-row>
-      </template>
-    </el-main>
-  </el-container>
+      <el-row>
+        <el-pagination
+          v-if="count"
+          layout="prev, pager, next"
+          :page-size="count.limit"
+          :total="count.total"
+          :current-page="page"
+          class="mesh-pager"
+          @current-change="changePage"
+        ></el-pagination>
+      </el-row>
+    </template>
+  </Page>
 </template>
 
 <script>
 import config from '@/config'
 import axios from 'axios'
 import _ from 'lodash'
+import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 const MESH_CODE_LENGTH = {
@@ -55,6 +54,7 @@ const MESH_CODE_LENGTH = {
 
 export default {
   components: {
+    Page,
     Header,
   },
 

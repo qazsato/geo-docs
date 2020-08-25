@@ -1,19 +1,19 @@
 <template>
-  <el-container>
-    <el-header>
+  <Page>
+    <template v-slot:header>
       <Header :title="title" active="/statistics/addresses/population" />
-    </el-header>
-    <el-main>
-      <div>WIP</div>
-    </el-main>
-  </el-container>
+    </template>
+    <div>WIP</div>
+  </Page>
 </template>
 
 <script>
+import Page from '@/components/Page'
 import Header from '@/components/Header'
 
 export default {
   components: {
+    Page,
     Header,
   },
 

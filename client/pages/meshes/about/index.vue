@@ -1,54 +1,54 @@
 <template>
-  <el-container>
-    <el-header>
+  <Page>
+    <template v-slot:header>
       <Header :title="title" active="/meshes/about" />
-    </el-header>
-    <el-main>
-      <section>
-        <h2>地域メッシュデータについて</h2>
-        <p>
-          Geo APIで扱う地域メッシュデータは、JIS
-          規格に定められている仕様に基づき作成されており、<b>5段階の地域メッシュレベル</b>まで対応しています。データ階層は下記の通りです。
-        </p>
-        <el-table :data="tableData" style="width: 100%;">
-          <el-table-column
-            prop="level"
-            label="レベル"
-            width="80"
-          ></el-table-column>
-          <el-table-column
-            prop="name"
-            label="レベル名"
-            width="250"
-          ></el-table-column>
-          <el-table-column
-            prop="code"
-            label="コード桁数"
-            width="110"
-          ></el-table-column>
-          <el-table-column
-            prop="distance"
-            label="一辺の長さ"
-            width="110"
-          ></el-table-column>
-          <el-table-column prop="example" label="出力例">
-            <template slot-scope="scope">
-              <a :href="scope.row.example.url" target="_blank">{{
-                scope.row.example.name
-              }}</a>
-            </template>
-          </el-table-column>
-        </el-table>
-      </section>
-    </el-main>
-  </el-container>
+    </template>
+    <section>
+      <h2>地域メッシュデータについて</h2>
+      <p>
+        Geo APIで扱う地域メッシュデータは、JIS
+        規格に定められている仕様に基づき作成されており、<b>5段階の地域メッシュレベル</b>まで対応しています。データ階層は下記の通りです。
+      </p>
+      <el-table :data="tableData" style="width: 100%;">
+        <el-table-column
+          prop="level"
+          label="レベル"
+          width="80"
+        ></el-table-column>
+        <el-table-column
+          prop="name"
+          label="レベル名"
+          width="250"
+        ></el-table-column>
+        <el-table-column
+          prop="code"
+          label="コード桁数"
+          width="110"
+        ></el-table-column>
+        <el-table-column
+          prop="distance"
+          label="一辺の長さ"
+          width="110"
+        ></el-table-column>
+        <el-table-column prop="example" label="出力例">
+          <template slot-scope="scope">
+            <a :href="scope.row.example.url" target="_blank">{{
+              scope.row.example.name
+            }}</a>
+          </template>
+        </el-table-column>
+      </el-table>
+    </section>
+  </Page>
 </template>
 
 <script>
+import Page from '@/components/Page'
 import Header from '@/components/Header'
 
 export default {
   components: {
+    Page,
     Header,
   },
 

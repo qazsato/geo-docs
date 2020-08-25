@@ -1,42 +1,42 @@
 <template>
-  <el-container>
-    <el-header>
+  <Page>
+    <template v-slot:header>
       <Header :title="title" active="/addresses/geocoding" />
-    </el-header>
-    <el-main>
-      <div id="map"></div>
-      <el-table
-        :data="tableData"
-        :default-sort="{ prop: 'index', order: 'descending' }"
-        style="width: 100%;"
-      >
-        <el-table-column
-          prop="index"
-          label="#"
-          width="100"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="location"
-          label="LatLng"
-          sortable
-        ></el-table-column>
-        <el-table-column prop="name" label="Name" sortable></el-table-column>
-        <el-table-column prop="code" label="Code" sortable></el-table-column>
-        <el-table-column prop="level" label="Level" sortable></el-table-column>
-      </el-table>
-    </el-main>
-  </el-container>
+    </template>
+    <div id="map"></div>
+    <el-table
+      :data="tableData"
+      :default-sort="{ prop: 'index', order: 'descending' }"
+      style="width: 100%;"
+    >
+      <el-table-column
+        prop="index"
+        label="#"
+        width="100"
+        sortable
+      ></el-table-column>
+      <el-table-column
+        prop="location"
+        label="LatLng"
+        sortable
+      ></el-table-column>
+      <el-table-column prop="name" label="Name" sortable></el-table-column>
+      <el-table-column prop="code" label="Code" sortable></el-table-column>
+      <el-table-column prop="level" label="Level" sortable></el-table-column>
+    </el-table>
+  </Page>
 </template>
 
 <script>
 import config from '@/config'
 import axios from 'axios'
+import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 
 export default {
   components: {
+    Page,
     Header,
   },
 
