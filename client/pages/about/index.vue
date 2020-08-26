@@ -50,6 +50,11 @@ X-Rate-Limit-Remaining: 100 # 次の期間までにリクエストできる回�
           <td>アクセストークンが無効である</td>
         </tr>
         <tr>
+          <td>404</td>
+          <td>Not Found</td>
+          <td>指定したリソースが存在しない</td>
+        </tr>
+        <tr>
           <td>429</td>
           <td>Too Many Request</td>
           <td>期間内のリクエスト数を超過した</td>
