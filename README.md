@@ -1,5 +1,7 @@
 # Geo API ドキュメント
 
+<img src="https://user-images.githubusercontent.com/5030713/91316630-029b7380-e7f4-11ea-87d8-285a8f30aa9d.png" alt="Geo Docs" width="250px">
+
 ## 本リポジトリについて
 
 国土交通省と総務省が公開している、住所や地域メッシュといった地理情報を元にした API 群のドキュメントです。 
