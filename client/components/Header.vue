@@ -2,10 +2,7 @@
   <div class="header">
     <div>
       <div class="inline-block">
-        <a class="logo" href="/">
-          <span>Geo Docs</span>
-          <img src="~/assets/images/geo.svg" />
-        </a>
+        <Logo href="/" />
       </div>
       <h1 class="title">{{ title }}</h1>
     </div>
@@ -47,7 +44,13 @@
 </template>
 
 <script>
+import Logo from '@/components/Logo'
+
 export default {
+  components: {
+    Logo,
+  },
+
   props: {
     title: {
       required: true,
@@ -65,26 +68,6 @@ export default {
 <style scoped>
 .inline-block {
   display: inline-block;
-}
-
-.logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 120px;
-  margin: 10px 0;
-  padding: 5px 0;
-  border-radius: 3px;
-  background: #3b4151;
-  color: #fff;
-  line-height: 19px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.logo > img {
-  margin-left: 6px;
-  width: 20px;
 }
 
 .title {

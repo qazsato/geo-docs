@@ -1,22 +1,18 @@
-# geo-docs
+# Geo API ドキュメント
 
-> My incredible Nuxt.js project
+<img src="https://user-images.githubusercontent.com/5030713/91316630-029b7380-e7f4-11ea-87d8-285a8f30aa9d.png" alt="Geo Docs" width="250px">
 
-## Build Setup
+## 本リポジトリについて
 
-``` bash
-# install dependencies
-$ npm install
+国土交通省と総務省が公開している、住所や地域メッシュといった地理情報を元にした API 群のドキュメントです。 
+主に GIS による分析での利用を想定しています。  
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+ドキュメントは下記からご覧になれます。  
+https://docs.geo.qazsato.com
 
-# build for production and launch server
-$ npm run build
-$ npm start
+## データの出典
 
-# generate static project
-$ npm run generate
-```
-
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+- 国土交通省国土数値情報ダウンロードサイト（https://nlftp.mlit.go.jp/index.html）
+  - 「国土数値情報 行政区域データ, 位置参照情報」（国土交通省）を加工して作成
+- 政府統計の総合窓口(e-Stat)（https://www.e-stat.go.jp/）
+  - 「国勢調査」（総務省）を加工して作成
