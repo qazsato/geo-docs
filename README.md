@@ -1,22 +1,8 @@
-# geo-docs
+# Geo Docs
 
-> My incredible Nuxt.js project
+## About
 
-## Build Setup
+Geo API (地理空間情報)のドキュメントです。  
+住所や地域メッシュを元にした GIS 分析をおこなうための API を提供しています。
 
-``` bash
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm start
-
-# generate static project
-$ npm run generate
-```
-
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+https://docs.geo.qazsato.com
