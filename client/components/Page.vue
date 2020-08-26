@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .el-main {
   min-height: 100vh;
 }
@@ -42,9 +42,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
-.github img {
-  width: 20px;
+  img {
+    width: 20px;
+  }
 }
 </style>

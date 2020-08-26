@@ -65,7 +65,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .inline-block {
   display: inline-block;
 }
@@ -87,7 +87,7 @@ export default {
 }
 </style>
 
-<style>
+<style lang="scss">
 .header .el-menu--horizontal > .el-menu-item,
 .header .el-menu--horizontal > .el-submenu .el-submenu__title {
   height: 40px;

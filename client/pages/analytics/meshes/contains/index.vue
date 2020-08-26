@@ -140,7 +140,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #map {
   width: 100%;
   height: 350px;
@@ -152,9 +152,9 @@ export default {
 
 .search-area {
   padding: 10px 0;
-}
 
-.search-area .el-row {
-  padding: 10px;
+  .el-row {
+    padding: 10px;
+  }
 }
 </style>

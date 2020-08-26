@@ -253,7 +253,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .address-search {
   width: 250px;
   margin-left: auto;

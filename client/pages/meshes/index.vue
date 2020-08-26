@@ -284,7 +284,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #map {
   margin: 20px 0 0;
   width: 100%;
