@@ -117,7 +117,6 @@
 <script>
 import Page from '@/components/Page'
 import Header from '@/components/Header'
-import 'github-markdown-css/github-markdown.css'
 
 export default {
   components: {

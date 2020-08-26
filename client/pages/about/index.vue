@@ -82,7 +82,6 @@ X-Rate-Limit-Remaining: 100 # 次の期間までにリクエストできる回�
 <script>
 import Page from '@/components/Page'
 import Header from '@/components/Header'
-import 'github-markdown-css/github-markdown.css'
 
 export default {
   components: {
