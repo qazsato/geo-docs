@@ -48,49 +48,51 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .el-main {
   padding: 0;
 }
 </style>
 
-<style>
-#swagger-ui .swagger-ui .info .title small {
-  top: 5px;
-  left: 5px;
-}
+<style lang="scss">
+#swagger-ui {
+  .swagger-ui .info .title small {
+    top: 5px;
+    left: 5px;
+  }
 
-#swagger-ui .swagger-ui .topbar {
-  display: none;
-}
+  .swagger-ui .topbar {
+    display: none;
+  }
 
-#swagger-ui .swagger-ui .info {
-  margin: 10px 0;
-}
+  .swagger-ui .info {
+    margin: 10px 0;
+  }
 
-#swagger-ui .swagger-ui .download-contents {
-  width: 85px;
-}
+  .swagger-ui .download-contents {
+    width: 85px;
+  }
 
-#swagger-ui .swagger-ui .parameter__name.required::after {
-  top: -3px;
-}
+  .swagger-ui .parameter__name.required::after {
+    top: -3px;
+  }
 
-#swagger-ui .swagger-ui .parameter__name.required span {
-  position: relative;
-  top: 4px;
-}
+  .swagger-ui .parameter__name.required span {
+    position: relative;
+    top: 4px;
+  }
 
-#swagger-ui .parameters-col_name,
-#swagger-ui .response-col_status {
-  width: 180px;
-}
+  .parameters-col_name,
+  .response-col_status {
+    width: 180px;
+  }
 
-#swagger-ui .swagger-ui table.headers tbody tr td {
-  padding: 0;
-}
+  .swagger-ui table.headers tbody tr td {
+    padding: 0;
+  }
 
-.swagger-ui .auth-btn-wrapper .btn {
-  margin: 5px 10px;
+  .swagger-ui .auth-btn-wrapper .btn {
+    margin: 5px 10px;
+  }
 }
 </style>

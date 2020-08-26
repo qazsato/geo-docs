@@ -21,7 +21,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .logo {
   display: flex;
   justify-content: center;
@@ -35,10 +35,10 @@ export default {
   line-height: 19px;
   text-decoration: none;
   font-weight: bold;
-}
 
-.logo > img {
-  margin-left: 6px;
-  width: 20px;
+  > img {
+    margin-left: 6px;
+    width: 20px;
+  }
 }
 </style>

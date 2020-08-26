@@ -166,7 +166,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .markdown-body {
   font-size: 14px;
 }
