@@ -12,6 +12,7 @@
         <el-radio v-model="level" label="3">3次メッシュ(1km)</el-radio>
         <el-radio v-model="level" label="4">4次メッシュ(500m)</el-radio>
         <el-radio v-model="level" label="5">5次メッシュ(250m)</el-radio>
+        <el-radio v-model="level" label="6">6次メッシュ(125m)</el-radio>
       </el-row>
       <el-row>
         <el-button
