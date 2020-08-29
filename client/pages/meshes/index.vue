@@ -39,6 +39,7 @@ const MESH_CODE_LENGTH = {
   LEVEL3: 8,
   LEVEL4: 9,
   LEVEL5: 10,
+  LEVEL6: 11,
 }
 
 export default {
@@ -120,6 +121,13 @@ export default {
         })
       }
 
+      if (this.code.length >= MESH_CODE_LENGTH.LEVEL5) {
+        breadcrumbs.push({
+          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL5)}`,
+          name: '6次メッシュ(125m)',
+        })
+      }
+
       return breadcrumbs
     },
   },
@@ -136,7 +144,7 @@ export default {
 
   methods: {
     clickMesh(mesh) {
-      if (mesh.code.length === MESH_CODE_LENGTH.LEVEL5) {
+      if (mesh.code.length === MESH_CODE_LENGTH.LEVEL6) {
         return
       }
       const code = mesh.code
@@ -175,7 +183,7 @@ export default {
       })
       this.map.data.addListener('click', (event) => {
         const code = event.feature.getProperty('code')
-        if (code.length === MESH_CODE_LENGTH.LEVEL5) {
+        if (code.length === MESH_CODE_LENGTH.LEVEL6) {
           return
         }
         this.$router.push({ path: '/meshes', query: { code } })
