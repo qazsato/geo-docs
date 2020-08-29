@@ -41,8 +41,8 @@
 </template>
 
 <script>
+import japanmesh from 'japanmesh'
 import config from '@/config'
-import axios from 'axios'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
@@ -67,11 +67,12 @@ export default {
 
   computed: {
     locations() {
-      const locations = []
-      this.latLngs.forEach((latLngs) => {
-        locations.push(`${latLngs.lat()},${latLngs.lng()}`)
+      return this.latLngs.map((latLng) => {
+        return {
+          lat: latLng.lat(),
+          lng: latLng.lng(),
+        }
       })
-      return locations
     },
   },
 
@@ -108,20 +109,9 @@ export default {
       this.map.addListener('click', (e) => this.latLngs.push(e.latLng))
     },
 
-    async onClickAnalyticsButton() {
-      const api = `${config.geo.api_url}/analytics/meshes/contains`
-      const res = await axios.post(api, {
-        locations: this.locations,
-        level: this.level,
-        access_token: config.geo.access_token,
-      })
-      this.tableData = []
-      res.data.forEach((d) => {
-        this.tableData.push({
-          code: d.mesh.code,
-          count: d.count,
-        })
-      })
+    onClickAnalyticsButton() {
+      const level = Number(this.level)
+      this.tableData = this.calcCountGroupByCode(this.locations, level)
     },
 
     onClickResetButton() {
@@ -129,6 +119,21 @@ export default {
       this.markers = []
       this.latLngs = []
       this.tableData = []
+    },
+
+    calcCountGroupByCode(locations, level) {
+      const count = {}
+      locations.forEach((location) => {
+        const code = japanmesh.toCode(location.lat, location.lng, level)
+        if (count[code]) {
+          count[code]++
+        } else {
+          count[code] = 1
+        }
+      })
+      return Object.entries(count).map(([code, count]) => {
+        return { code, count }
+      })
     },
   },
 
