@@ -30,6 +30,7 @@
     "element-ui": "2.13.2",
     "github-markdown-css": "4.0.0",
     "google-maps-api-loader": "1.1.1",
+    "japanmesh": "0.0.7",
     "lodash": "4.17.19",
     "nuxt": "2.13.0",
     "nuxt-start": "2.14.3",
