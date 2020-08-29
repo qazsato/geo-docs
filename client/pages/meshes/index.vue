@@ -22,24 +22,13 @@
           <el-table-column prop="level" label="Level"></el-table-column>
         </el-table>
       </el-row>
-      <el-row>
-        <el-pagination
-          v-if="count"
-          layout="prev, pager, next"
-          :page-size="count.limit"
-          :total="count.total"
-          :current-page="page"
-          class="mesh-pager"
-          @current-change="changePage"
-        ></el-pagination>
-      </el-row>
     </template>
   </Page>
 </template>
 
 <script>
+import japanmesh from 'japanmesh'
 import config from '@/config'
-import axios from 'axios'
 import _ from 'lodash'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
@@ -58,58 +47,27 @@ export default {
     Header,
   },
 
-  async asyncData({ query }) {
+  asyncData({ query }) {
     const code = query.code || null
-    const limit = 100
-    const page = query.page ? Number(query.page) : 1
-    const offset = (page - 1) * limit
-    const meshSearchRes = await axios.get(
-      `${config.geo.api_url}/meshes/search`,
-      {
-        params: {
-          code,
-          limit,
-          offset,
-          access_token: config.geo.access_token,
-        },
-      }
-    )
-    const meshes = meshSearchRes.data
-    const count = {
-      limit,
-      offset,
-      total: Number(meshSearchRes.headers['x-total-count']),
-    }
-    let meshShapes = null
-    const codes = meshes.map((mesh) => mesh.code)
-    const meshShapeRes = await axios.get(
-      `${config.geo.api_url}/meshes/shapes`,
-      {
-        params: {
-          codes: codes.toString(),
-          access_token: config.geo.access_token,
-        },
-      }
-    )
-    meshShapes = meshShapeRes.data
+    const level = code ? japanmesh.getLevel(code) + 1 : 1
+    const codes = japanmesh.getCodes(code)
+    const meshes = codes.map((c) => {
+      return { code: c, level }
+    })
+    const meshShapes = codes.map((c) => {
+      return japanmesh.toGeoJSON(c, { code: c })
+    })
 
     let mesh = null
     if (query.code) {
-      const meshRes = await axios.get(`${config.geo.api_url}/meshes`, {
-        params: {
-          codes: query.code,
-          access_token: config.geo.access_token,
-        },
-      })
-      mesh = meshRes.data[0]
+      mesh = { code, level }
     }
 
     return {
+      code,
       mesh,
       meshShapes,
       meshes,
-      count,
-      page,
     }
   },
 
@@ -131,22 +89,37 @@ export default {
         name: '1次メッシュ(80km)',
       })
 
-      if (this.mesh === null) {
+      if (this.code === null) {
         return breadcrumbs
       }
 
-      this.mesh.details.forEach((d) => {
-        const path = `/meshes?code=${d.code}`
-        if (d.level === 1) {
-          breadcrumbs.push({ path, name: '2次メッシュ(10km)' })
-        } else if (d.level === 2) {
-          breadcrumbs.push({ path, name: '3次メッシュ(1km)' })
-        } else if (d.level === 3) {
-          breadcrumbs.push({ path, name: '4次メッシュ(500m)' })
-        } else if (d.level === 4) {
-          breadcrumbs.push({ path, name: '5次メッシュ(250m)' })
-        }
-      })
+      if (this.code.length >= MESH_CODE_LENGTH.LEVEL1) {
+        breadcrumbs.push({
+          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL1)}`,
+          name: '2次メッシュ(10km)',
+        })
+      }
+      if (this.code.length >= MESH_CODE_LENGTH.LEVEL2) {
+        breadcrumbs.push({
+          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL2)}`,
+          name: '3次メッシュ(1km)',
+        })
+      }
+
+      if (this.code.length >= MESH_CODE_LENGTH.LEVEL3) {
+        breadcrumbs.push({
+          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL3)}`,
+          name: '4次メッシュ(500m)',
+        })
+      }
+
+      if (this.code.length >= MESH_CODE_LENGTH.LEVEL4) {
+        breadcrumbs.push({
+          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL4)}`,
+          name: '5次メッシュ(250m)',
+        })
+      }
+
       return breadcrumbs
     },
   },
@@ -168,12 +141,6 @@ export default {
       }
       const code = mesh.code
       this.$router.push({ path: '/meshes', query: { code } })
-      window.scrollTo(0, 0)
-    },
-
-    changePage(page) {
-      const code = this.mesh.code
-      this.$router.push({ path: '/meshes', query: { code, page } })
       window.scrollTo(0, 0)
     },
 
@@ -232,17 +199,8 @@ export default {
 
       let coords = []
       for (const meshShape of this.meshShapes) {
-        const features = meshShape.features
-        for (const feature of features) {
-          const coordinates = feature.geometry.coordinates
-          if (feature.geometry.type === 'MultiPolygon') {
-            for (const c of coordinates) {
-              coords = coords.concat(_.flatten(c))
-            }
-          } else if (feature.geometry.type === 'Polygon') {
-            coords = coords.concat(_.flatten(coordinates))
-          }
-        }
+        const coordinates = meshShape.geometry.coordinates
+        coords = coords.concat(_.flatten(coordinates))
         const northernmost = _.maxBy(coords, (c) => c[1])
         const southernmost = _.minBy(coords, (c) => c[1])
         const westernmost = _.minBy(coords, (c) => c[0])
@@ -259,10 +217,8 @@ export default {
     },
 
     getInfowindowPosition(code) {
-      const shape = this.meshShapes.filter(
-        (m) => m.features[0].properties.code === code
-      )[0]
-      const coords = _.flatten(shape.features[0].geometry.coordinates)
+      const shape = this.meshShapes.filter((m) => m.properties.code === code)[0]
+      const coords = _.flatten(shape.geometry.coordinates)
       const northernmost = _.maxBy(coords, (c) => c[1])
       const westernmost = _.minBy(coords, (c) => c[0])
       const easternmost = _.maxBy(coords, (c) => c[0])
@@ -280,7 +236,7 @@ export default {
     }
   },
 
-  watchQuery: ['code', 'page'],
+  watchQuery: ['code'],
 }
 </script>
 
@@ -301,10 +257,5 @@ export default {
 
 .mesh-table >>> .el-table__row {
   cursor: pointer;
-}
-
-.mesh-pager {
-  display: flex;
-  justify-content: center;
 }
 </style>
