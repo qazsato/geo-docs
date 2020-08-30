@@ -12,11 +12,12 @@
           v-for="(detail, index) in address.details"
           :key="index"
           :to="{ path: '/addresses?code=' + detail.code }"
+          class="breadcrumb-item"
         >
           <span>{{ detail.name }}</span>
         </el-breadcrumb-item>
       </el-breadcrumb>
-      <h2 v-if="address" class="address-name">{{ address.name }}</h2>
+      <h2 v-if="address" class="address-title">{{ address.name }}</h2>
       <div id="map"></div>
     </el-row>
     <template v-if="addresses.length > 0">
@@ -259,10 +260,14 @@ export default {
   margin-left: auto;
 }
 
-.address-name {
+.breadcrumb-item {
+  margin-bottom: 10px;
+}
+
+.address-title {
   font-size: 18px;
   color: #303133;
-  padding-top: 15px;
+  padding-top: 5px;
 }
 
 #map {
