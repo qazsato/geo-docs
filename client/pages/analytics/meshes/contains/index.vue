@@ -14,20 +14,31 @@
         <el-radio v-model="level" label="5">5次メッシュ(250m)</el-radio>
         <el-radio v-model="level" label="6">6次メッシュ(125m)</el-radio>
       </el-row>
-      <el-row>
-        <el-button
-          type="primary"
-          :disabled="latLngs.length === 0"
-          @click="onClickAnalyticsButton"
-          >地域メッシュコード毎に区分する</el-button
-        >
+      <el-row class="button-row">
+        <div class="button-container">
+          <el-button
+            type="primary"
+            :disabled="latLngs.length === 0"
+            @click="onClickAnalyticsButton"
+            >解析する</el-button
+          >
 
-        <el-button
-          type="danger"
-          :disabled="latLngs.length === 0"
-          @click="onClickResetButton"
-          >マーカーをリセットする</el-button
-        >
+          <el-button
+            type="danger"
+            :disabled="latLngs.length === 0"
+            @click="onClickResetButton"
+            >リセットする</el-button
+          >
+        </div>
+
+        <div v-if="tableData.length > 0">
+          <el-switch v-model="isVisibleMesh" active-text="メッシュ">
+          </el-switch>
+          <el-switch
+            v-model="isVisibleMarker"
+            active-text="マーカー"
+          ></el-switch>
+        </div>
       </el-row>
     </section>
     <el-table
@@ -63,6 +74,8 @@ export default {
       markers: [],
       tableData: [],
       level: '3',
+      isVisibleMesh: true,
+      isVisibleMarker: true,
     }
   },
 
@@ -85,6 +98,15 @@ export default {
         map: this.map,
       })
       this.markers.push(marker)
+      this.isVisibleMarker = true
+    },
+
+    isVisibleMesh() {
+      this.toggleMesh()
+    },
+
+    isVisibleMarker() {
+      this.toggleMarker()
     },
   },
 
@@ -112,14 +134,34 @@ export default {
 
     onClickAnalyticsButton() {
       const level = Number(this.level)
-      this.tableData = this.calcCountGroupByCode(this.locations, level)
+      const counts = this.calcCountGroupByCode(this.locations, level)
+      this.tableData = counts
+      const max = Math.max(...counts.map((c) => c.count))
+      this.map.data.forEach((feature) => this.map.data.remove(feature))
+      counts.forEach((c) => {
+        const geojson = japanmesh.toGeoJSON(c.code, { count: c.count })
+        this.map.data.addGeoJson(geojson)
+      })
+      this.map.data.setStyle((feature) => {
+        const count = feature.getProperty('count')
+        const opcity = (count / max) * 0.9
+        return {
+          strokeWeight: 1,
+          strokeColor: '#409eff',
+          fillColor: '#409eff',
+          fillOpacity: opcity,
+        }
+      })
     },
 
     onClickResetButton() {
+      this.map.data.forEach((feature) => this.map.data.remove(feature))
       this.markers.forEach((marker) => marker.setMap(null))
       this.markers = []
       this.latLngs = []
       this.tableData = []
+      this.isVisibleMesh = true
+      this.isVisibleMarker = true
     },
 
     calcCountGroupByCode(locations, level) {
@@ -136,6 +178,18 @@ export default {
         return { code, count }
       })
     },
+
+    toggleMesh() {
+      this.map.data.forEach((feature) => {
+        this.map.data.overrideStyle(feature, { visible: this.isVisibleMesh })
+      })
+    },
+
+    toggleMarker() {
+      this.markers.forEach((marker) => {
+        marker.setVisible(this.isVisibleMarker)
+      })
+    },
   },
 
   head() {
@@ -147,6 +201,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/core.scss';
+
 #map {
   width: 100%;
   height: 350px;
@@ -161,6 +217,22 @@ export default {
 
   .el-row {
     padding: 10px;
+  }
+
+  .button-row {
+    display: flex;
+    align-items: center;
+    @include bp_sp() {
+      flex-direction: column;
+      align-items: self-end;
+    }
+
+    .button-container {
+      flex: 1;
+      @include bp_sp() {
+        margin-bottom: 15px;
+      }
+    }
   }
 }
 </style>
