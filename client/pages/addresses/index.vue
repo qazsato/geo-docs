@@ -159,17 +159,32 @@ export default {
     },
 
     async fetch() {
-      const codes = this.addresses.map((address) => address.code)
-      const geoAddressRes = await axios.get(
-        `${config.geo.api_url}/addresses/shapes`,
-        {
-          params: {
-            codes: codes.toString(),
-            access_token: config.geo.access_token,
-          },
-        }
-      )
-      this.addressShapes = geoAddressRes.data
+      if (this.address) {
+        const geoAddressShapeRes = await axios.get(
+          `${config.geo.api_url}/addresses/shapes`,
+          {
+            params: {
+              codes: this.address.code,
+              access_token: config.geo.access_token,
+            },
+          }
+        )
+        this.addressShapes = geoAddressShapeRes.data
+      }
+
+      if (this.addresses.length > 0) {
+        const codes = this.addresses.map((address) => address.code)
+        const geoAddressShapeRes = await axios.get(
+          `${config.geo.api_url}/addresses/shapes`,
+          {
+            params: {
+              codes: codes.toString(),
+              access_token: config.geo.access_token,
+            },
+          }
+        )
+        this.addressShapes = this.addressShapes.concat(geoAddressShapeRes.data)
+      }
     },
 
     clickAddress(address) {
@@ -210,17 +225,36 @@ export default {
       this.addressShapes.forEach((addressShape) => {
         this.map.data.addGeoJson(addressShape)
       })
-      this.map.data.setStyle({
-        strokeWeight: 1,
-        strokeColor: '#409eff',
-        fillColor: '#409eff',
-        fillOpacity: 0.2,
+      this.map.data.setStyle((feature) => {
+        const color = '#409eff'
+        const code = feature.getProperty('code')
+        if (this.address && this.address.code === code) {
+          // 最下層の場合は、枠を太くして中身を塗る
+          if (this.addressShapes.length === 1) {
+            return {
+              strokeWeight: 2,
+              strokeColor: color,
+              fillColor: color,
+              fillOpacity: 0.2,
+            }
+          }
+          // 現在のコードを示すために、枠を太くする(中身を塗らない)
+          return {
+            strokeWeight: 2,
+            strokeColor: color,
+            fillOpacity: 0,
+          }
+        }
+        // 配下のコードを示すために、枠を補足して中身を塗る
+        return {
+          strokeWeight: 1,
+          strokeColor: color,
+          fillColor: color,
+          fillOpacity: 0.2,
+        }
       })
       this.map.data.addListener('click', (event) => {
         const code = event.feature.getProperty('code')
-        if (code.length === ADDRESS_CODE_LENGTH.LEVEL3) {
-          return
-        }
         this.$router.push({ path: '/addresses', query: { code } })
       })
 
