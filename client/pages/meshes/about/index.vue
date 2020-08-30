@@ -9,7 +9,7 @@
         <p>
           地域メッシュとは、緯度・経度に基づき地域を隙間なく網の目（メッシュ）に分けたものです。<br />
           メッシュを識別するためのコードを<b>地域メッシュコード</b>と言い、<b>4桁から11桁の数字で構成</b>されています。<br />
-          なお、地域メッシュは日本独自の概念であり、JIS の規格で定めらています。
+          なお、地域メッシュは日本独自の概念であり、JIS 規格で定めらています。
         </p>
         <h2>地域メッシュデータ</h2>
         <p>
@@ -33,6 +33,7 @@
             <td>
               <a
                 href="https://gist.github.com/qazsato/fb26be6de0ecbefd107d7c1eff35cc5e"
+                target="_blank"
                 >5339のポリゴンデータ</a
               >
             </td>
@@ -45,6 +46,7 @@
             <td>
               <a
                 href="https://gist.github.com/qazsato/027f8dca59b2895d1040adc7e8621cc4"
+                target="_blank"
                 >533945のポリゴンデータ</a
               >
             </td>
@@ -57,6 +59,7 @@
             <td>
               <a
                 href="https://gist.github.com/qazsato/d9f219ba60e2d5193a8c1d65bce39fed"
+                target="_blank"
                 >53394529のポリゴンデータ</a
               >
             </td>
@@ -69,6 +72,7 @@
             <td>
               <a
                 href="https://gist.github.com/qazsato/bd3fe7aa7fbff441fd543a92814692b5"
+                target="_blank"
                 >533945292のポリゴンデータ</a
               >
             </td>
@@ -81,6 +85,7 @@
             <td>
               <a
                 href="https://gist.github.com/qazsato/557430aaf0504f558b5cc45fcbe257b0"
+                target="_blank"
                 >5339452922のポリゴンデータ</a
               >
             </td>
@@ -93,6 +98,7 @@
             <td>
               <a
                 href="https://gist.github.com/qazsato/443642c41a6b074d7ec2bf3d5204bb56"
+                target="_blank"
                 >53394529221のポリゴンデータ</a
               >
             </td>
@@ -103,14 +109,16 @@
         <p>
           Geo Docs の地域メッシュの機能は、npm モジュールの
           <b>japanmesh</b> を用いて実装されています。<br />
-          <a href="https://www.npmjs.com/package/japanmesh"
+          <a href="https://www.npmjs.com/package/japanmesh" target="_blank"
             >https://www.npmjs.com/package/japanmesh</a
           >
         </p>
         <h2>参考</h2>
         <ul>
           <li>
-            <a href="http://www.stat.go.jp/data/mesh/gaiyou.html"
+            <a
+              href="http://www.stat.go.jp/data/mesh/gaiyou.html"
+              target="_blank"
               >地域メッシュ統計の概要 - 総務省統計局</a
             >
           </li>

@@ -55,6 +55,7 @@
           <td>
             <a
               href="https://gist.github.com/qazsato/f3da1ff9377c91fb0096955279b2827a"
+              target="_blank"
               >東京都のポリゴンデータ</a
             >
           </td>
@@ -66,6 +67,7 @@
           <td>
             <a
               href="https://gist.github.com/qazsato/dd594ab00779ff19b737c8c72b1099b6"
+              target="_blank"
               >東京都千代田区のポリゴンデータ</a
             >
           </td>
@@ -77,6 +79,7 @@
           <td>
             <a
               href="https://gist.github.com/qazsato/84a1c676f539b3340d4572a1c67cca3b"
+              target="_blank"
               >東京都千代田区丸の内１丁目のポリゴンデータ</a
             >
           </td>
