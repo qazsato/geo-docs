@@ -71,11 +71,6 @@ import _ from 'lodash'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
-const ADDRESS_CODE_LENGTH = {
-  LEVEL1: 2,
-  LEVEL2: 5,
-  LEVEL3: 11,
-}
 export default {
   components: {
     Page,
@@ -188,9 +183,6 @@ export default {
     },
 
     clickAddress(address) {
-      if (address.code.length === ADDRESS_CODE_LENGTH.LEVEL3) {
-        return
-      }
       const code = address.code
       this.$router.push({ path: '/addresses', query: { code } })
       window.scrollTo(0, 0)
