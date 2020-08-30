@@ -12,11 +12,21 @@
           v-for="(detail, index) in address.details"
           :key="index"
           :to="{ path: '/addresses?code=' + detail.code }"
+          class="breadcrumb-item"
         >
           <span>{{ detail.name }}</span>
         </el-breadcrumb-item>
       </el-breadcrumb>
-      <h2 v-if="address" class="address-name">{{ address.name }}</h2>
+      <div class="title-container">
+        <h2 class="address-title">{{ addressTitle }}</h2>
+        <el-input
+          v-model="query"
+          placeholder="住所コード"
+          prefix-icon="el-icon-search"
+          @change="searchAddressCode"
+        >
+        </el-input>
+      </div>
       <div id="map"></div>
     </el-row>
     <template v-if="addresses.length > 0">
@@ -37,16 +47,6 @@
             width="80"
           ></el-table-column>
           <el-table-column prop="name" label="Name"></el-table-column>
-          <el-table-column
-            prop="location.lat"
-            label="Latitude"
-            width="130"
-          ></el-table-column>
-          <el-table-column
-            prop="location.lng"
-            label="Longitude"
-            width="130"
-          ></el-table-column>
         </el-table>
       </el-row>
       <el-row>
@@ -129,7 +129,17 @@ export default {
       google: null,
       map: null,
       addressShapes: [],
+      query: null,
     }
+  },
+
+  computed: {
+    addressTitle() {
+      if (!this.address) {
+        return '全国'
+      }
+      return this.address.name
+    },
   },
 
   watch: {
@@ -149,17 +159,32 @@ export default {
     },
 
     async fetch() {
-      const codes = this.addresses.map((address) => address.code)
-      const geoAddressRes = await axios.get(
-        `${config.geo.api_url}/addresses/shapes`,
-        {
-          params: {
-            codes: codes.toString(),
-            access_token: config.geo.access_token,
-          },
-        }
-      )
-      this.addressShapes = geoAddressRes.data
+      if (this.address) {
+        const geoAddressShapeRes = await axios.get(
+          `${config.geo.api_url}/addresses/shapes`,
+          {
+            params: {
+              codes: this.address.code,
+              access_token: config.geo.access_token,
+            },
+          }
+        )
+        this.addressShapes = geoAddressShapeRes.data
+      }
+
+      if (this.addresses.length > 0) {
+        const codes = this.addresses.map((address) => address.code)
+        const geoAddressShapeRes = await axios.get(
+          `${config.geo.api_url}/addresses/shapes`,
+          {
+            params: {
+              codes: codes.toString(),
+              access_token: config.geo.access_token,
+            },
+          }
+        )
+        this.addressShapes = this.addressShapes.concat(geoAddressShapeRes.data)
+      }
     },
 
     clickAddress(address) {
@@ -200,17 +225,36 @@ export default {
       this.addressShapes.forEach((addressShape) => {
         this.map.data.addGeoJson(addressShape)
       })
-      this.map.data.setStyle({
-        strokeWeight: 1,
-        strokeColor: '#409eff',
-        fillColor: '#409eff',
-        fillOpacity: 0.2,
+      this.map.data.setStyle((feature) => {
+        const color = '#409eff'
+        const code = feature.getProperty('code')
+        if (this.address && this.address.code === code) {
+          // 最下層の場合は、枠を太くして中身を塗る
+          if (this.addressShapes.length === 1) {
+            return {
+              strokeWeight: 2,
+              strokeColor: color,
+              fillColor: color,
+              fillOpacity: 0.2,
+            }
+          }
+          // 現在のコードを示すために、枠を太くする(中身を塗らない)
+          return {
+            strokeWeight: 2,
+            strokeColor: color,
+            fillOpacity: 0,
+          }
+        }
+        // 配下のコードを示すために、枠を補足して中身を塗る
+        return {
+          strokeWeight: 1,
+          strokeColor: color,
+          fillColor: color,
+          fillOpacity: 0.2,
+        }
       })
       this.map.data.addListener('click', (event) => {
         const code = event.feature.getProperty('code')
-        if (code.length === ADDRESS_CODE_LENGTH.LEVEL3) {
-          return
-        }
         this.$router.push({ path: '/addresses', query: { code } })
       })
 
@@ -241,6 +285,10 @@ export default {
       )
       this.map.fitBounds(shapeBounds)
     },
+
+    searchAddressCode() {
+      this.$router.push({ path: '/addresses', query: { code: this.query } })
+    },
   },
 
   head() {
@@ -254,19 +302,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.address-search {
-  width: 250px;
-  margin-left: auto;
+@import '@/assets/styles/core.scss';
+
+.breadcrumb-item {
+  margin-bottom: 5px;
 }
 
-.address-name {
-  font-size: 18px;
-  color: #303133;
-  padding-top: 15px;
+.title-container {
+  display: flex;
+  align-items: center;
+  padding-bottom: 5px;
+  @include bp_sp() {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .address-title {
+    flex: 1;
+    font-size: 18px;
+    color: #303133;
+    padding-top: 5px;
+  }
+
+  .el-input {
+    width: 200px;
+    @include bp_sp() {
+      margin: 10px 0 5px;
+      width: 100%;
+    }
+  }
 }
 
 #map {
-  margin: 20px 0 0;
+  margin: 10px 0 0;
   width: 100%;
   height: 450px;
   background-color: #ebeef5;
