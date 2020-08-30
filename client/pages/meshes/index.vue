@@ -9,20 +9,17 @@
           v-for="(breadcrumb, index) in breadcrumbs"
           :key="index"
           :to="{ path: breadcrumb.path }"
+          class="breadcrumb-item"
         >
           <span>{{ breadcrumb.name }}</span>
         </el-breadcrumb-item>
       </el-breadcrumb>
+      <h2 class="mesh-title">
+        <span class="main-title">{{ meshMainTitle }}</span>
+        <span class="sub-title">{{ meshSubTitle }}</span>
+      </h2>
       <div id="map"></div>
     </el-row>
-    <template v-if="meshes.length > 0">
-      <el-row>
-        <el-table :data="meshes" class="mesh-table" @row-click="clickMesh">
-          <el-table-column prop="code" label="Code"></el-table-column>
-          <el-table-column prop="level" label="Level"></el-table-column>
-        </el-table>
-      </el-row>
-    </template>
   </Page>
 </template>
 
@@ -33,14 +30,7 @@ import _ from 'lodash'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
-const MESH_CODE_LENGTH = {
-  LEVEL1: 4,
-  LEVEL2: 6,
-  LEVEL3: 8,
-  LEVEL4: 9,
-  LEVEL5: 10,
-  LEVEL6: 11,
-}
+import { MESH } from '@/constants/mesh'
 
 export default {
   components: {
@@ -50,25 +40,18 @@ export default {
 
   asyncData({ query }) {
     const code = query.code || null
-    const level = code ? japanmesh.getLevel(code) + 1 : 1
+    const mesh = code ? { code, level: japanmesh.getLevel(code) } : null
     const codes = japanmesh.getCodes(code)
-    const meshes = codes.map((c) => {
-      return { code: c, level }
-    })
-    const meshShapes = codes.map((c) => {
-      return japanmesh.toGeoJSON(c, { code: c })
-    })
-
-    let mesh = null
-    if (query.code) {
-      mesh = { code, level }
+    const meshShapes = []
+    if (code) {
+      meshShapes.push(japanmesh.toGeoJSON(code, { code }))
     }
+    codes.forEach((c) => meshShapes.push(japanmesh.toGeoJSON(c, { code: c })))
 
     return {
       code,
       mesh,
       meshShapes,
-      meshes,
     }
   },
 
@@ -83,47 +66,70 @@ export default {
   },
 
   computed: {
+    meshMainTitle() {
+      if (!this.mesh) {
+        return ''
+      }
+      return this.mesh.code
+    },
+
+    meshSubTitle() {
+      let title = ''
+      if (!this.mesh) {
+        return title
+      }
+      title = MESH[`LEVEL${this.mesh.level}`].TYPE
+      return `(${title})`
+    },
+
     breadcrumbs() {
       const breadcrumbs = []
       breadcrumbs.push({
         path: '/meshes',
-        name: '1次メッシュ(80km)',
+        name: '全国',
       })
 
       if (this.code === null) {
         return breadcrumbs
       }
 
-      if (this.code.length >= MESH_CODE_LENGTH.LEVEL1) {
+      if (this.code.length >= MESH.LEVEL1.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL1)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL1.DIGIT)}`,
+          name: '1次メッシュ(80km)',
+        })
+      }
+      if (this.code.length >= MESH.LEVEL2.DIGIT) {
+        breadcrumbs.push({
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL2.DIGIT)}`,
           name: '2次メッシュ(10km)',
         })
       }
-      if (this.code.length >= MESH_CODE_LENGTH.LEVEL2) {
+
+      if (this.code.length >= MESH.LEVEL3.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL2)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL3.DIGIT)}`,
           name: '3次メッシュ(1km)',
         })
       }
 
-      if (this.code.length >= MESH_CODE_LENGTH.LEVEL3) {
+      if (this.code.length >= MESH.LEVEL4.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL3)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL4.DIGIT)}`,
           name: '4次メッシュ(500m)',
         })
       }
 
-      if (this.code.length >= MESH_CODE_LENGTH.LEVEL4) {
+      if (this.code.length >= MESH.LEVEL5.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL4)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL5.DIGIT)}`,
           name: '5次メッシュ(250m)',
         })
       }
 
-      if (this.code.length >= MESH_CODE_LENGTH.LEVEL5) {
+      if (this.code.length >= MESH.LEVEL6.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH_CODE_LENGTH.LEVEL5)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL6.DIGIT)}`,
           name: '6次メッシュ(125m)',
         })
       }
@@ -133,7 +139,7 @@ export default {
   },
 
   watch: {
-    meshes() {
+    mesh() {
       this.$nextTick(() => this.createMap())
     },
   },
@@ -143,15 +149,6 @@ export default {
   },
 
   methods: {
-    clickMesh(mesh) {
-      if (mesh.code.length === MESH_CODE_LENGTH.LEVEL6) {
-        return
-      }
-      const code = mesh.code
-      this.$router.push({ path: '/meshes', query: { code } })
-      window.scrollTo(0, 0)
-    },
-
     async createMap() {
       if (this.google === null) {
         this.google = await GoogleMapsApiLoader({
@@ -175,27 +172,56 @@ export default {
       this.meshShapes.forEach((meshShape) => {
         this.map.data.addGeoJson(meshShape)
       })
-      this.map.data.setStyle({
-        strokeWeight: 1,
-        strokeColor: '#409eff',
-        fillColor: '#409eff',
-        fillOpacity: 0.2,
+      this.map.data.setStyle((feature) => {
+        const color = '#409eff'
+        const code = feature.getProperty('code')
+        if (this.mesh && this.mesh.code === code) {
+          // 最下層の場合は、枠を太くして中身を塗る
+          if (this.meshShapes.length === 1) {
+            return {
+              strokeWeight: 2,
+              strokeColor: color,
+              fillColor: color,
+              fillOpacity: 0.2,
+            }
+          }
+          // 現在のコードを示すために、枠を太くする(中身を塗らない)
+          return {
+            strokeWeight: 2,
+            strokeColor: color,
+            fillOpacity: 0,
+          }
+        }
+        // 配下のコードを示すために、枠を補足して中身を塗る
+        return {
+          strokeWeight: 1,
+          strokeColor: color,
+          fillColor: color,
+          fillOpacity: 0.2,
+        }
       })
       this.map.data.addListener('click', (event) => {
         const code = event.feature.getProperty('code')
-        if (code.length === MESH_CODE_LENGTH.LEVEL6) {
+        if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
           return
         }
         this.$router.push({ path: '/meshes', query: { code } })
       })
 
       this.map.data.addListener('mouseout', (event) => {
+        const code = event.feature.getProperty('code')
+        if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
+          return
+        }
         this.infowindow.setMap(null)
         this.infowindow = null
       })
 
       this.map.data.addListener('mouseover', (event) => {
         const code = event.feature.getProperty('code')
+        if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
+          return
+        }
         const position = this.getInfowindowPosition(code)
         this.infowindow = new this.google.maps.InfoWindow({
           content: code,
@@ -249,21 +275,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.breadcrumb-item {
+  margin-bottom: 10px;
+}
+
+.mesh-title {
+  padding-top: 5px;
+
+  .main-title {
+    font-size: 18px;
+    color: #303133;
+  }
+
+  .sub-title {
+    font-size: 14px;
+    font-weight: normal;
+    color: #606266;
+  }
+}
+
 #map {
   margin: 20px 0 0;
   width: 100%;
-  height: 450px;
+  height: 550px;
   background-color: #ebeef5;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.mesh-table {
-  margin: 20px 0;
-}
-
-.mesh-table >>> .el-table__row {
-  cursor: pointer;
 }
 </style>

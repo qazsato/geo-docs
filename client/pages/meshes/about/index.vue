@@ -14,7 +14,7 @@
         <table>
           <tr>
             <th>レベル</th>
-            <th>レベル名</th>
+            <th>区画の種類</th>
             <th>コード桁数</th>
             <th>一辺の長さ</th>
             <th>出力例</th>
@@ -110,63 +110,6 @@ export default {
   data() {
     return {
       title: '地域メッシュについて',
-      tableData: [
-        {
-          level: 1,
-          name: '第１次地域区画',
-          code: '4桁',
-          distance: '約80km',
-          example: {
-            url:
-              'https://gist.github.com/qazsato/fb26be6de0ecbefd107d7c1eff35cc5e',
-            name: '5339のポリゴンデータ',
-          },
-        },
-        {
-          level: 2,
-          name: '第２次地域区画',
-          code: '6桁',
-          distance: '約10km',
-          example: {
-            url:
-              'https://gist.github.com/qazsato/027f8dca59b2895d1040adc7e8621cc4',
-            name: '533945のポリゴンデータ',
-          },
-        },
-        {
-          level: 3,
-          name: '基準地域メッシュ(第３次地域区画)',
-          code: '8桁',
-          distance: '約1km',
-          example: {
-            url:
-              'https://gist.github.com/qazsato/d9f219ba60e2d5193a8c1d65bce39fed',
-            name: '53394529のポリゴンデータ',
-          },
-        },
-        {
-          level: 4,
-          name: '２分の１地域メッシュ',
-          code: '9桁',
-          distance: '約500m',
-          example: {
-            url:
-              'https://gist.github.com/qazsato/bd3fe7aa7fbff441fd543a92814692b5',
-            name: '533945292のポリゴンデータ',
-          },
-        },
-        {
-          level: 5,
-          name: '４分の１地域メッシュ',
-          code: '10桁',
-          distance: '約250m',
-          example: {
-            url:
-              'https://gist.github.com/qazsato/557430aaf0504f558b5cc45fcbe257b0',
-            name: '5339452922のポリゴンデータ',
-          },
-        },
-      ],
     }
   },
 
