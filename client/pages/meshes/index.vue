@@ -78,7 +78,7 @@ export default {
   computed: {
     meshMainTitle() {
       if (!this.mesh) {
-        return MESH.LEVEL1.TYPE
+        return '全国'
       }
       return this.mesh.code
     },
