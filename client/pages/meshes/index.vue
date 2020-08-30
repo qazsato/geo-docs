@@ -4,7 +4,7 @@
       <Header :title="title" active="/meshes" />
     </template>
     <el-row>
-      <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb v-if="mesh" separator-class="el-icon-arrow-right">
         <el-breadcrumb-item
           v-for="(breadcrumb, index) in breadcrumbs"
           :key="index"
@@ -292,13 +292,13 @@ export default {
 @import '@/assets/styles/core.scss';
 
 .breadcrumb-item {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .title-container {
   display: flex;
   align-items: center;
-  margin: 5px 0;
+  padding-bottom: 5px;
   @include bp_sp() {
     flex-direction: column;
     align-items: start;
