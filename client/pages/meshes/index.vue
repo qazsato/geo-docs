@@ -14,10 +14,19 @@
           <span>{{ breadcrumb.name }}</span>
         </el-breadcrumb-item>
       </el-breadcrumb>
-      <h2 class="mesh-title">
-        <span class="main-title">{{ meshMainTitle }}</span>
-        <span class="sub-title">{{ meshSubTitle }}</span>
-      </h2>
+      <div class="title-container">
+        <h2 class="mesh-title">
+          <span class="main-title">{{ meshMainTitle }}</span>
+          <span class="sub-title">{{ meshSubTitle }}</span>
+        </h2>
+        <el-input
+          v-model="query"
+          placeholder="地域メッシュコード"
+          prefix-icon="el-icon-search"
+          @change="searchMeshCode"
+        >
+        </el-input>
+      </div>
       <div id="map"></div>
     </el-row>
   </Page>
@@ -62,6 +71,7 @@ export default {
       map: null,
       marker: null,
       infowindow: null,
+      query: null,
     }
   },
 
@@ -262,6 +272,10 @@ export default {
         (westernmost[0] + easternmost[0]) / 2
       )
     },
+
+    searchMeshCode() {
+      this.$router.push({ path: '/meshes', query: { code: this.query } })
+    },
   },
 
   head() {
@@ -275,27 +289,47 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/core.scss';
+
 .breadcrumb-item {
   margin-bottom: 10px;
 }
 
-.mesh-title {
-  padding-top: 5px;
-
-  .main-title {
-    font-size: 18px;
-    color: #303133;
+.title-container {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  @include bp_sp() {
+    flex-direction: column;
+    align-items: start;
   }
 
-  .sub-title {
-    font-size: 14px;
-    font-weight: normal;
-    color: #606266;
+  .mesh-title {
+    flex: 1;
+
+    .main-title {
+      font-size: 18px;
+      color: #303133;
+    }
+
+    .sub-title {
+      font-size: 14px;
+      font-weight: normal;
+      color: #606266;
+    }
+  }
+
+  .el-input {
+    width: 200px;
+    @include bp_sp() {
+      margin: 10px 0 5px;
+      width: 100%;
+    }
   }
 }
 
 #map {
-  margin: 20px 0 0;
+  margin: 10px 0 0;
   width: 100%;
   height: 550px;
   background-color: #ebeef5;
