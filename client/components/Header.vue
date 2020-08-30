@@ -15,6 +15,7 @@
       <el-menu-item index="/">API 仕様書</el-menu-item>
       <el-submenu index="/addresses">
         <template slot="title">Address</template>
+        <el-menu-item index="/addresses/about">住所について</el-menu-item>
         <el-menu-item index="/addresses">住所検索</el-menu-item>
         <el-menu-item index="/addresses/geocoding"
           >逆ジオコーディング</el-menu-item
@@ -22,6 +23,7 @@
       </el-submenu>
       <el-submenu index="/meshes">
         <template slot="title">Mesh</template>
+        <el-menu-item index="/meshes/about">地域メッシュについて</el-menu-item>
         <el-menu-item index="/meshes">地域メッシュ検索</el-menu-item>
       </el-submenu>
       <el-submenu index="/analytics">

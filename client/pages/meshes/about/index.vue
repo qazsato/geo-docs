@@ -1,20 +1,26 @@
 <template>
   <Page>
     <template v-slot:header>
-      <Header :title="title" />
+      <Header :title="title" active="/meshes/about" />
     </template>
     <section>
       <article class="markdown-body">
+        <h2>地域メッシュとは</h2>
+        <p>
+          地域メッシュとは、緯度・経度に基づき地域を隙間なく網の目（メッシュ）に分けたものです。<br />
+          メッシュを識別するためのコードを<b>地域メッシュコード</b>と言い、<b>4桁から11桁の数字で構成</b>されています。<br />
+          なお、地域メッシュは日本独自の概念であり、JIS の規格で定めらています。
+        </p>
         <h2>地域メッシュデータ</h2>
         <p>
-          Geo APIで扱う地域メッシュデータは、JIS
-          規格に定められている仕様に基づき作成しており、<b>6段階の地域メッシュレベル</b>まで対応しています。<br />
+          Geo Docs で扱う地域メッシュデータは、JIS
+          規格に基づいており、<b>6段階の地域メッシュレベル</b>まで対応しています。<br />
           データ階層は下記の通りです。
         </p>
         <table>
           <tr>
             <th>レベル</th>
-            <th>区画の種類</th>
+            <th>レベル名</th>
             <th>コード桁数</th>
             <th>一辺の長さ</th>
             <th>出力例</th>
@@ -92,6 +98,23 @@
             </td>
           </tr>
         </table>
+
+        <h2>地域メッシュの実装</h2>
+        <p>
+          Geo Docs の地域メッシュの機能は、npm モジュールの
+          <b>japanmesh</b> を用いて実装されています。<br />
+          <a href="https://www.npmjs.com/package/japanmesh"
+            >https://www.npmjs.com/package/japanmesh</a
+          >
+        </p>
+        <h2>参考</h2>
+        <ul>
+          <li>
+            <a href="http://www.stat.go.jp/data/mesh/gaiyou.html"
+              >地域メッシュ統計の概要 - 総務省統計局</a
+            >
+          </li>
+        </ul>
       </article>
     </section>
   </Page>

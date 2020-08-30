@@ -1,7 +1,7 @@
 <template>
   <Page>
     <template v-slot:header>
-      <Header :title="title" />
+      <Header :title="title" active="/addresses/about" />
     </template>
     <article class="markdown-body">
       <h2>住所データ</h2>
