@@ -78,7 +78,7 @@ export default {
   computed: {
     meshMainTitle() {
       if (!this.mesh) {
-        return ''
+        return MESH.LEVEL1.TYPE
       }
       return this.mesh.code
     },
