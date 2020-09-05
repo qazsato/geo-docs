@@ -94,7 +94,7 @@ export default {
         zoom: 14,
         center: position,
         mapTypeId: this.google.maps.MapTypeId.ROADMAP,
-        styles: config.google_maps.theme.retro,
+        styles: config.map_theme.retro,
         clickableIcons: false,
         disableDefaultUI: true,
         zoomControl: true,
