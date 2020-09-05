@@ -1,7 +1,10 @@
 {
+  "google_maps": {
+    "api_key": "{YOUR_API_KEY}"
+  },
   "geo": {
-    "api_url": "http://localhost:4000/v1",
-    "api_docs_url": "http://localhost:4000/v1/apidocs",
-    "access_token": ""
+    "api_url": "https://api.geo.qazsato.com/v1",
+    "api_docs_url": "https://api.geo.qazsato.com/v1/apidocs",
+    "access_token": "{YOUR_ACCESS_TOKEN}"
   }
 }

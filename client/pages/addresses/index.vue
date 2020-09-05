@@ -208,7 +208,7 @@ export default {
         zoom: 18,
         center: position,
         mapTypeId: this.google.maps.MapTypeId.ROADMAP,
-        styles: config.google_maps.theme.silver,
+        styles: config.map_theme.silver,
         clickableIcons: false,
         disableDefaultUI: true,
         zoomControl: true,
