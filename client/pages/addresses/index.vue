@@ -66,12 +66,12 @@
 
 <script>
 import config from '@/config'
-import axios from 'axios'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 import { adjustViewPort } from '@/utils/map'
 import { toLocations } from '@/utils/geojson'
+import GeoApi from '@/requests/geo_api'
 
 export default {
   components: {
@@ -83,32 +83,24 @@ export default {
     const limit = 100
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
-    const addressSearchRes = await axios.get(
-      `${config.geo.api_url}/addresses/search`,
-      {
-        params: {
-          code: query.code,
-          limit,
-          offset,
-          access_token: config.geo.access_token,
-        },
-      }
-    )
-    const addresses = addressSearchRes.data
+
+    const searchApi = new GeoApi('/addresses/search', {
+      code: query.code,
+      limit,
+      offset,
+    })
+    const searchRes = await searchApi.get()
+    const addresses = searchRes.data
     const count = {
       limit,
       offset,
-      total: Number(addressSearchRes.headers['x-total-count']),
+      total: Number(searchRes.headers['x-total-count']),
     }
 
     let address = null
     if (query.code) {
-      const addressRes = await axios.get(`${config.geo.api_url}/addresses`, {
-        params: {
-          codes: query.code,
-          access_token: config.geo.access_token,
-        },
-      })
+      const addressApi = new GeoApi('/addresses', { codes: query.code })
+      const addressRes = await addressApi.get()
       address = addressRes.data[0]
     }
 
@@ -158,30 +150,20 @@ export default {
 
     async fetch() {
       if (this.address) {
-        const geoAddressShapeRes = await axios.get(
-          `${config.geo.api_url}/addresses/shape`,
-          {
-            params: {
-              codes: this.address.code,
-              access_token: config.geo.access_token,
-            },
-          }
-        )
-        this.parentAddressShape = geoAddressShapeRes.data
+        const shapeApi = new GeoApi('/addresses/shape', {
+          codes: this.address.code,
+        })
+        const shapeRes = await shapeApi.get()
+        this.parentAddressShape = shapeRes.data
       }
 
       if (this.addresses.length > 0) {
         const codes = this.addresses.map((address) => address.code)
-        const geoAddressShapeRes = await axios.get(
-          `${config.geo.api_url}/addresses/shape`,
-          {
-            params: {
-              codes: codes.toString(),
-              access_token: config.geo.access_token,
-            },
-          }
-        )
-        this.childAddressShape = geoAddressShapeRes.data
+        const shapeApi = new GeoApi('/addresses/shape', {
+          codes: codes.toString(),
+        })
+        const shapeRes = await shapeApi.get()
+        this.childAddressShape = shapeRes.data
       }
     },
 

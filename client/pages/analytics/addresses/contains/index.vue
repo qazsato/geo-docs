@@ -39,10 +39,10 @@
 
 <script>
 import config from '@/config'
-import axios from 'axios'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
+import GeoApi from '@/requests/geo_api'
 
 export default {
   components: {
@@ -106,12 +106,11 @@ export default {
     },
 
     async onClickAnalyticsButton() {
-      const api = `${config.geo.api_url}/analytics/addresses/contains`
-      const res = await axios.post(api, {
+      const api = new GeoApi('/analytics/addresses/contains', {
         locations: this.locations,
         level: this.level,
-        access_token: config.geo.access_token,
       })
+      const res = await api.post()
       this.tableData = []
       res.data.forEach((d) => {
         this.tableData.push({

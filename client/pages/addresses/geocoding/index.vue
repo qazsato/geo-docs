@@ -29,10 +29,10 @@
 
 <script>
 import config from '@/config'
-import axios from 'axios'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
+import GeoApi from '@/requests/geo_api'
 
 export default {
   components: {
@@ -61,13 +61,10 @@ export default {
         map: this.map,
       })
 
-      const api = `${config.geo.api_url}/addresses/geocoding`
-      const res = await axios.get(api, {
-        params: {
-          locations: `${val.lat()},${val.lng()}`,
-          access_token: config.geo.access_token,
-        },
+      const api = new GeoApi('/addresses/geocoding', {
+        locations: `${val.lat()},${val.lng()}`,
       })
+      const res = await api.get()
       const address = res.data[0]
 
       this.tableData.unshift({
