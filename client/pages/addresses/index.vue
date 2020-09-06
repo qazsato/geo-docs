@@ -67,10 +67,12 @@
 <script>
 import config from '@/config'
 import axios from 'axios'
-import _ from 'lodash'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
+import { adjustViewPort } from '@/utils/map'
+import { toLocations } from '@/utils/geojson'
+
 export default {
   components: {
     Page,
@@ -123,8 +125,9 @@ export default {
       title: '住所検索',
       google: null,
       map: null,
-      addressShapes: [],
       query: null,
+      parentAddressShape: null,
+      childAddressShape: null,
     }
   },
 
@@ -156,7 +159,7 @@ export default {
     async fetch() {
       if (this.address) {
         const geoAddressShapeRes = await axios.get(
-          `${config.geo.api_url}/addresses/shapes`,
+          `${config.geo.api_url}/addresses/shape`,
           {
             params: {
               codes: this.address.code,
@@ -164,13 +167,13 @@ export default {
             },
           }
         )
-        this.addressShapes = geoAddressShapeRes.data
+        this.parentAddressShape = geoAddressShapeRes.data
       }
 
       if (this.addresses.length > 0) {
         const codes = this.addresses.map((address) => address.code)
         const geoAddressShapeRes = await axios.get(
-          `${config.geo.api_url}/addresses/shapes`,
+          `${config.geo.api_url}/addresses/shape`,
           {
             params: {
               codes: codes.toString(),
@@ -178,7 +181,7 @@ export default {
             },
           }
         )
-        this.addressShapes = this.addressShapes.concat(geoAddressShapeRes.data)
+        this.childAddressShape = geoAddressShapeRes.data
       }
     },
 
@@ -214,15 +217,14 @@ export default {
         zoomControl: true,
       })
 
-      this.addressShapes.forEach((addressShape) => {
-        this.map.data.addGeoJson(addressShape)
-      })
+      this.map.data.addGeoJson(this.parentAddressShape)
+      this.map.data.addGeoJson(this.childAddressShape)
       this.map.data.setStyle((feature) => {
         const color = '#409eff'
         const code = feature.getProperty('code')
         if (this.address && this.address.code === code) {
           // 最下層の場合は、枠を太くして中身を塗る
-          if (this.addressShapes.length === 1) {
+          if (this.addresses.length === 0) {
             return {
               strokeWeight: 2,
               strokeColor: color,
@@ -249,33 +251,10 @@ export default {
         const code = event.feature.getProperty('code')
         this.$router.push({ path: '/addresses', query: { code } })
       })
-
-      let coords = []
-      for (const addressShape of this.addressShapes) {
-        const features = addressShape.features
-        for (const feature of features) {
-          const coordinates = feature.geometry.coordinates
-          if (feature.geometry.type === 'MultiPolygon') {
-            for (const c of coordinates) {
-              coords = coords.concat(_.flatten(c))
-            }
-          } else if (feature.geometry.type === 'Polygon') {
-            coords = coords.concat(_.flatten(coordinates))
-          }
-        }
-      }
-      const northernmost = _.maxBy(coords, (c) => c[1])
-      const southernmost = _.minBy(coords, (c) => c[1])
-      const westernmost = _.minBy(coords, (c) => c[0])
-      const easternmost = _.maxBy(coords, (c) => c[0])
-
-      // 南西と北西のポイントを指定
-      // https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLngBounds.constructor
-      const shapeBounds = new this.google.maps.LatLngBounds(
-        new this.google.maps.LatLng(southernmost[1], westernmost[0]),
-        new this.google.maps.LatLng(northernmost[1], easternmost[0])
+      const locations = toLocations(
+        this.parentAddressShape || this.childAddressShape
       )
-      this.map.fitBounds(shapeBounds)
+      adjustViewPort(this.google, this.map, locations)
     },
 
     searchAddressCode() {

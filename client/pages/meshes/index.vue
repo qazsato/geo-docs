@@ -40,6 +40,8 @@ import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 import { MESH } from '@/constants/mesh'
+import { adjustViewPort } from '@/utils/map'
+import { toLocations } from '@/utils/geojson'
 
 export default {
   components: {
@@ -69,7 +71,6 @@ export default {
       title: '地域メッシュ検索',
       google: null,
       map: null,
-      marker: null,
       infowindow: null,
       query: null,
     }
@@ -210,54 +211,46 @@ export default {
           fillOpacity: 0.2,
         }
       })
-      this.map.data.addListener('click', (event) => {
-        const code = event.feature.getProperty('code')
-        if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
-          return
-        }
-        this.$router.push({ path: '/meshes', query: { code } })
+      this.map.data.addListener('click', this.onMapDataClick)
+      this.map.data.addListener('mouseout', this.onMapDataMouseout)
+      this.map.data.addListener('mouseover', this.onMapDataMouseover)
+
+      let locations = []
+      this.meshShapes.forEach((meshShape) => {
+        locations = locations.concat(toLocations(meshShape))
       })
+      adjustViewPort(this.google, this.map, locations)
+    },
 
-      this.map.data.addListener('mouseout', (event) => {
-        const code = event.feature.getProperty('code')
-        if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
-          return
-        }
-        this.infowindow.setMap(null)
-        this.infowindow = null
-      })
-
-      this.map.data.addListener('mouseover', (event) => {
-        const code = event.feature.getProperty('code')
-        if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
-          return
-        }
-        const position = this.getInfowindowPosition(code)
-        this.infowindow = new this.google.maps.InfoWindow({
-          content: code,
-          position,
-          disableAutoPan: true,
-        })
-        this.infowindow.open(this.map)
-      })
-
-      let coords = []
-      for (const meshShape of this.meshShapes) {
-        const coordinates = meshShape.geometry.coordinates
-        coords = coords.concat(_.flatten(coordinates))
-        const northernmost = _.maxBy(coords, (c) => c[1])
-        const southernmost = _.minBy(coords, (c) => c[1])
-        const westernmost = _.minBy(coords, (c) => c[0])
-        const easternmost = _.maxBy(coords, (c) => c[0])
-
-        // 南西と北西のポイントを指定
-        // https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLngBounds.constructor
-        const shapeBounds = new this.google.maps.LatLngBounds(
-          new this.google.maps.LatLng(southernmost[1], westernmost[0]),
-          new this.google.maps.LatLng(northernmost[1], easternmost[0])
-        )
-        this.map.fitBounds(shapeBounds)
+    onMapDataClick(event) {
+      const code = event.feature.getProperty('code')
+      if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
+        return
       }
+      this.$router.push({ path: '/meshes', query: { code } })
+    },
+
+    onMapDataMouseout(event) {
+      const code = event.feature.getProperty('code')
+      if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
+        return
+      }
+      this.infowindow.setMap(null)
+      this.infowindow = null
+    },
+
+    onMapDataMouseover(event) {
+      const code = event.feature.getProperty('code')
+      if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
+        return
+      }
+      const position = this.getInfowindowPosition(code)
+      this.infowindow = new this.google.maps.InfoWindow({
+        content: code,
+        position,
+        disableAutoPan: true,
+      })
+      this.infowindow.open(this.map)
     },
 
     getInfowindowPosition(code) {
