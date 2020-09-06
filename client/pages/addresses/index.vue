@@ -4,19 +4,7 @@
       <Header :title="title" active="/addresses" />
     </template>
     <el-row>
-      <el-breadcrumb v-if="address" separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/addresses' }">
-          <span>全国</span>
-        </el-breadcrumb-item>
-        <el-breadcrumb-item
-          v-for="(detail, index) in address.details"
-          :key="index"
-          :to="{ path: '/addresses?code=' + detail.code }"
-          class="breadcrumb-item"
-        >
-          <span>{{ detail.name }}</span>
-        </el-breadcrumb-item>
-      </el-breadcrumb>
+      <breadcrumb v-if="address" :breadcrumbs="breadcrumbs" />
       <div class="title-container">
         <h2 class="address-title">{{ addressTitle }}</h2>
         <el-input
@@ -27,7 +15,7 @@
         >
         </el-input>
       </div>
-      <div id="map"></div>
+      <div ref="map" class="map"></div>
     </el-row>
     <template v-if="addresses.length > 0">
       <el-row>
@@ -66,11 +54,13 @@
 
 <script>
 import config from '@/config'
-import axios from 'axios'
-import _ from 'lodash'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
+import { adjustViewPort } from '@/utils/map'
+import { toLocations } from '@/utils/geojson'
+import GeoApi from '@/requests/geo_api'
+
 export default {
   components: {
     Page,
@@ -81,32 +71,24 @@ export default {
     const limit = 100
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
-    const addressSearchRes = await axios.get(
-      `${config.geo.api_url}/addresses/search`,
-      {
-        params: {
-          code: query.code,
-          limit,
-          offset,
-          access_token: config.geo.access_token,
-        },
-      }
-    )
-    const addresses = addressSearchRes.data
+
+    const searchApi = new GeoApi('/addresses/search', {
+      code: query.code,
+      limit,
+      offset,
+    })
+    const searchRes = await searchApi.get()
+    const addresses = searchRes.data
     const count = {
       limit,
       offset,
-      total: Number(addressSearchRes.headers['x-total-count']),
+      total: Number(searchRes.headers['x-total-count']),
     }
 
     let address = null
     if (query.code) {
-      const addressRes = await axios.get(`${config.geo.api_url}/addresses`, {
-        params: {
-          codes: query.code,
-          access_token: config.geo.access_token,
-        },
-      })
+      const addressApi = new GeoApi('/addresses', { codes: query.code })
+      const addressRes = await addressApi.get()
       address = addressRes.data[0]
     }
 
@@ -123,8 +105,9 @@ export default {
       title: '住所検索',
       google: null,
       map: null,
-      addressShapes: [],
       query: null,
+      parentAddressShape: null,
+      childAddressShape: null,
     }
   },
 
@@ -134,6 +117,24 @@ export default {
         return '全国'
       }
       return this.address.name
+    },
+
+    breadcrumbs() {
+      const breadcrumbs = []
+      breadcrumbs.push({
+        path: '/addresses',
+        name: '全国',
+      })
+      if (this.address === null) {
+        return breadcrumbs
+      }
+      this.address.details.forEach((d) => {
+        breadcrumbs.push({
+          path: `/addresses?code=${d.code}`,
+          name: d.name,
+        })
+      })
+      return breadcrumbs
     },
   },
 
@@ -155,30 +156,20 @@ export default {
 
     async fetch() {
       if (this.address) {
-        const geoAddressShapeRes = await axios.get(
-          `${config.geo.api_url}/addresses/shapes`,
-          {
-            params: {
-              codes: this.address.code,
-              access_token: config.geo.access_token,
-            },
-          }
-        )
-        this.addressShapes = geoAddressShapeRes.data
+        const shapeApi = new GeoApi('/addresses/shape', {
+          codes: this.address.code,
+        })
+        const shapeRes = await shapeApi.get()
+        this.parentAddressShape = shapeRes.data
       }
 
       if (this.addresses.length > 0) {
         const codes = this.addresses.map((address) => address.code)
-        const geoAddressShapeRes = await axios.get(
-          `${config.geo.api_url}/addresses/shapes`,
-          {
-            params: {
-              codes: codes.toString(),
-              access_token: config.geo.access_token,
-            },
-          }
-        )
-        this.addressShapes = this.addressShapes.concat(geoAddressShapeRes.data)
+        const shapeApi = new GeoApi('/addresses/shape', {
+          codes: codes.toString(),
+        })
+        const shapeRes = await shapeApi.get()
+        this.childAddressShape = shapeRes.data
       }
     },
 
@@ -204,7 +195,7 @@ export default {
       const lat = config.default_location.lat
       const lng = config.default_location.lng
       const position = new this.google.maps.LatLng(lat, lng)
-      this.map = new this.google.maps.Map(document.getElementById('map'), {
+      this.map = new this.google.maps.Map(this.$refs.map, {
         zoom: 18,
         center: position,
         mapTypeId: this.google.maps.MapTypeId.ROADMAP,
@@ -214,15 +205,14 @@ export default {
         zoomControl: true,
       })
 
-      this.addressShapes.forEach((addressShape) => {
-        this.map.data.addGeoJson(addressShape)
-      })
+      this.map.data.addGeoJson(this.parentAddressShape)
+      this.map.data.addGeoJson(this.childAddressShape)
       this.map.data.setStyle((feature) => {
         const color = '#409eff'
         const code = feature.getProperty('code')
         if (this.address && this.address.code === code) {
           // 最下層の場合は、枠を太くして中身を塗る
-          if (this.addressShapes.length === 1) {
+          if (this.addresses.length === 0) {
             return {
               strokeWeight: 2,
               strokeColor: color,
@@ -249,33 +239,10 @@ export default {
         const code = event.feature.getProperty('code')
         this.$router.push({ path: '/addresses', query: { code } })
       })
-
-      let coords = []
-      for (const addressShape of this.addressShapes) {
-        const features = addressShape.features
-        for (const feature of features) {
-          const coordinates = feature.geometry.coordinates
-          if (feature.geometry.type === 'MultiPolygon') {
-            for (const c of coordinates) {
-              coords = coords.concat(_.flatten(c))
-            }
-          } else if (feature.geometry.type === 'Polygon') {
-            coords = coords.concat(_.flatten(coordinates))
-          }
-        }
-      }
-      const northernmost = _.maxBy(coords, (c) => c[1])
-      const southernmost = _.minBy(coords, (c) => c[1])
-      const westernmost = _.minBy(coords, (c) => c[0])
-      const easternmost = _.maxBy(coords, (c) => c[0])
-
-      // 南西と北西のポイントを指定
-      // https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLngBounds.constructor
-      const shapeBounds = new this.google.maps.LatLngBounds(
-        new this.google.maps.LatLng(southernmost[1], westernmost[0]),
-        new this.google.maps.LatLng(northernmost[1], easternmost[0])
+      const locations = toLocations(
+        this.parentAddressShape || this.childAddressShape
       )
-      this.map.fitBounds(shapeBounds)
+      adjustViewPort(this.google, this.map, locations)
     },
 
     searchAddressCode() {
@@ -325,14 +292,10 @@ export default {
   }
 }
 
-#map {
+.map {
   margin: 10px 0 0;
   width: 100%;
   height: 450px;
-  background-color: #ebeef5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .address-table {

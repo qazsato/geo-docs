@@ -3,7 +3,7 @@
     <template v-slot:header>
       <Header :title="title" active="/analytics/addresses/contains" />
     </template>
-    <div id="map"></div>
+    <div ref="map" class="map"></div>
 
     <section class="search-area">
       <el-row>
@@ -39,10 +39,10 @@
 
 <script>
 import config from '@/config'
-import axios from 'axios'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
+import GeoApi from '@/requests/geo_api'
 
 export default {
   components: {
@@ -93,7 +93,7 @@ export default {
   methods: {
     createMap() {
       const position = new this.google.maps.LatLng(35.689568, 139.691717)
-      this.map = new this.google.maps.Map(document.getElementById('map'), {
+      this.map = new this.google.maps.Map(this.$refs.map, {
         zoom: 14,
         center: position,
         mapTypeId: this.google.maps.MapTypeId.ROADMAP,
@@ -106,12 +106,11 @@ export default {
     },
 
     async onClickAnalyticsButton() {
-      const api = `${config.geo.api_url}/analytics/addresses/contains`
-      const res = await axios.post(api, {
+      const api = new GeoApi('/analytics/addresses/contains', {
         locations: this.locations,
         level: this.level,
-        access_token: config.geo.access_token,
       })
+      const res = await api.post()
       this.tableData = []
       res.data.forEach((d) => {
         this.tableData.push({
@@ -139,13 +138,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#map {
+.map {
   width: 100%;
   height: 350px;
-  background-color: #ebeef5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .search-area {

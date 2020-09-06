@@ -4,16 +4,7 @@
       <Header :title="title" active="/meshes" />
     </template>
     <el-row>
-      <el-breadcrumb v-if="mesh" separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item
-          v-for="(breadcrumb, index) in breadcrumbs"
-          :key="index"
-          :to="{ path: breadcrumb.path }"
-          class="breadcrumb-item"
-        >
-          <span>{{ breadcrumb.name }}</span>
-        </el-breadcrumb-item>
-      </el-breadcrumb>
+      <breadcrumb v-if="mesh" :breadcrumbs="breadcrumbs" />
       <div class="title-container">
         <h2 class="mesh-title">
           <span class="main-title">{{ meshMainTitle }}</span>
@@ -27,7 +18,7 @@
         >
         </el-input>
       </div>
-      <div id="map"></div>
+      <div ref="map" class="map"></div>
     </el-row>
   </Page>
 </template>
@@ -38,13 +29,17 @@ import config from '@/config'
 import _ from 'lodash'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
+import Breadcrumb from '@/components/Breadcrumb'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 import { MESH } from '@/constants/mesh'
+import { adjustViewPort } from '@/utils/map'
+import { toLocations } from '@/utils/geojson'
 
 export default {
   components: {
     Page,
     Header,
+    Breadcrumb,
   },
 
   asyncData({ query }) {
@@ -69,7 +64,6 @@ export default {
       title: '地域メッシュ検索',
       google: null,
       map: null,
-      marker: null,
       infowindow: null,
       query: null,
     }
@@ -169,7 +163,7 @@ export default {
       const lat = config.default_location.lat
       const lng = config.default_location.lng
       const position = new this.google.maps.LatLng(lat, lng)
-      this.map = new this.google.maps.Map(document.getElementById('map'), {
+      this.map = new this.google.maps.Map(this.$refs.map, {
         zoom: 18,
         center: position,
         mapTypeId: this.google.maps.MapTypeId.ROADMAP,
@@ -210,54 +204,46 @@ export default {
           fillOpacity: 0.2,
         }
       })
-      this.map.data.addListener('click', (event) => {
-        const code = event.feature.getProperty('code')
-        if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
-          return
-        }
-        this.$router.push({ path: '/meshes', query: { code } })
+      this.map.data.addListener('click', this.onMapDataClick)
+      this.map.data.addListener('mouseout', this.onMapDataMouseout)
+      this.map.data.addListener('mouseover', this.onMapDataMouseover)
+
+      let locations = []
+      this.meshShapes.forEach((meshShape) => {
+        locations = locations.concat(toLocations(meshShape))
       })
+      adjustViewPort(this.google, this.map, locations)
+    },
 
-      this.map.data.addListener('mouseout', (event) => {
-        const code = event.feature.getProperty('code')
-        if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
-          return
-        }
-        this.infowindow.setMap(null)
-        this.infowindow = null
-      })
-
-      this.map.data.addListener('mouseover', (event) => {
-        const code = event.feature.getProperty('code')
-        if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
-          return
-        }
-        const position = this.getInfowindowPosition(code)
-        this.infowindow = new this.google.maps.InfoWindow({
-          content: code,
-          position,
-          disableAutoPan: true,
-        })
-        this.infowindow.open(this.map)
-      })
-
-      let coords = []
-      for (const meshShape of this.meshShapes) {
-        const coordinates = meshShape.geometry.coordinates
-        coords = coords.concat(_.flatten(coordinates))
-        const northernmost = _.maxBy(coords, (c) => c[1])
-        const southernmost = _.minBy(coords, (c) => c[1])
-        const westernmost = _.minBy(coords, (c) => c[0])
-        const easternmost = _.maxBy(coords, (c) => c[0])
-
-        // 南西と北西のポイントを指定
-        // https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLngBounds.constructor
-        const shapeBounds = new this.google.maps.LatLngBounds(
-          new this.google.maps.LatLng(southernmost[1], westernmost[0]),
-          new this.google.maps.LatLng(northernmost[1], easternmost[0])
-        )
-        this.map.fitBounds(shapeBounds)
+    onMapDataClick(event) {
+      const code = event.feature.getProperty('code')
+      if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
+        return
       }
+      this.$router.push({ path: '/meshes', query: { code } })
+    },
+
+    onMapDataMouseout(event) {
+      const code = event.feature.getProperty('code')
+      if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
+        return
+      }
+      this.infowindow.setMap(null)
+      this.infowindow = null
+    },
+
+    onMapDataMouseover(event) {
+      const code = event.feature.getProperty('code')
+      if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
+        return
+      }
+      const position = this.getInfowindowPosition(code)
+      this.infowindow = new this.google.maps.InfoWindow({
+        content: code,
+        position,
+        disableAutoPan: true,
+      })
+      this.infowindow.open(this.map)
     },
 
     getInfowindowPosition(code) {
@@ -290,10 +276,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/core.scss';
-
-.breadcrumb-item {
-  margin-bottom: 5px;
-}
 
 .title-container {
   display: flex;
@@ -328,13 +310,9 @@ export default {
   }
 }
 
-#map {
+.map {
   margin: 10px 0 0;
   width: 100%;
   height: 550px;
-  background-color: #ebeef5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>

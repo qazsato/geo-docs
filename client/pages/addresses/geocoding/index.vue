@@ -3,7 +3,7 @@
     <template v-slot:header>
       <Header :title="title" active="/addresses/geocoding" />
     </template>
-    <div id="map"></div>
+    <div ref="map" class="map"></div>
     <el-table
       :data="tableData"
       :default-sort="{ prop: 'index', order: 'descending' }"
@@ -29,10 +29,10 @@
 
 <script>
 import config from '@/config'
-import axios from 'axios'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
+import GeoApi from '@/requests/geo_api'
 
 export default {
   components: {
@@ -61,13 +61,10 @@ export default {
         map: this.map,
       })
 
-      const api = `${config.geo.api_url}/addresses/geocoding`
-      const res = await axios.get(api, {
-        params: {
-          locations: `${val.lat()},${val.lng()}`,
-          access_token: config.geo.access_token,
-        },
+      const api = new GeoApi('/addresses/geocoding', {
+        locations: `${val.lat()},${val.lng()}`,
       })
+      const res = await api.get()
       const address = res.data[0]
 
       this.tableData.unshift({
@@ -90,7 +87,7 @@ export default {
   methods: {
     createMap() {
       const position = new this.google.maps.LatLng(35.689568, 139.691717)
-      this.map = new this.google.maps.Map(document.getElementById('map'), {
+      this.map = new this.google.maps.Map(this.$refs.map, {
         zoom: 14,
         center: position,
         mapTypeId: this.google.maps.MapTypeId.ROADMAP,
@@ -112,12 +109,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#map {
+.map {
   width: 100%;
   height: 500px;
-  background-color: #ebeef5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>
