@@ -3,7 +3,7 @@
     <template v-slot:header>
       <Header :title="title" active="/addresses/geocoding" />
     </template>
-    <div id="map"></div>
+    <div ref="map" class="map"></div>
     <el-table
       :data="tableData"
       :default-sort="{ prop: 'index', order: 'descending' }"
@@ -90,7 +90,7 @@ export default {
   methods: {
     createMap() {
       const position = new this.google.maps.LatLng(35.689568, 139.691717)
-      this.map = new this.google.maps.Map(document.getElementById('map'), {
+      this.map = new this.google.maps.Map(this.$refs.map, {
         zoom: 14,
         center: position,
         mapTypeId: this.google.maps.MapTypeId.ROADMAP,
@@ -112,12 +112,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#map {
+.map {
   width: 100%;
   height: 500px;
-  background-color: #ebeef5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>

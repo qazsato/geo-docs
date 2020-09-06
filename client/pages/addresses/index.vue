@@ -27,7 +27,7 @@
         >
         </el-input>
       </div>
-      <div id="map"></div>
+      <div ref="map" class="map"></div>
     </el-row>
     <template v-if="addresses.length > 0">
       <el-row>
@@ -204,7 +204,7 @@ export default {
       const lat = config.default_location.lat
       const lng = config.default_location.lng
       const position = new this.google.maps.LatLng(lat, lng)
-      this.map = new this.google.maps.Map(document.getElementById('map'), {
+      this.map = new this.google.maps.Map(this.$refs.map, {
         zoom: 18,
         center: position,
         mapTypeId: this.google.maps.MapTypeId.ROADMAP,
@@ -325,14 +325,10 @@ export default {
   }
 }
 
-#map {
+.map {
   margin: 10px 0 0;
   width: 100%;
   height: 450px;
-  background-color: #ebeef5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .address-table {
