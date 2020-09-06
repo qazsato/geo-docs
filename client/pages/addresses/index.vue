@@ -4,19 +4,7 @@
       <Header :title="title" active="/addresses" />
     </template>
     <el-row>
-      <el-breadcrumb v-if="address" separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/addresses' }">
-          <span>全国</span>
-        </el-breadcrumb-item>
-        <el-breadcrumb-item
-          v-for="(detail, index) in address.details"
-          :key="index"
-          :to="{ path: '/addresses?code=' + detail.code }"
-          class="breadcrumb-item"
-        >
-          <span>{{ detail.name }}</span>
-        </el-breadcrumb-item>
-      </el-breadcrumb>
+      <breadcrumb v-if="address" :breadcrumbs="breadcrumbs" />
       <div class="title-container">
         <h2 class="address-title">{{ addressTitle }}</h2>
         <el-input
@@ -129,6 +117,24 @@ export default {
         return '全国'
       }
       return this.address.name
+    },
+
+    breadcrumbs() {
+      const breadcrumbs = []
+      breadcrumbs.push({
+        path: '/addresses',
+        name: '全国',
+      })
+      if (this.address === null) {
+        return breadcrumbs
+      }
+      this.address.details.forEach((d) => {
+        breadcrumbs.push({
+          path: `/addresses?code=${d.code}`,
+          name: d.name,
+        })
+      })
+      return breadcrumbs
     },
   },
 

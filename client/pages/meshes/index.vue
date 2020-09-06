@@ -4,16 +4,7 @@
       <Header :title="title" active="/meshes" />
     </template>
     <el-row>
-      <el-breadcrumb v-if="mesh" separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item
-          v-for="(breadcrumb, index) in breadcrumbs"
-          :key="index"
-          :to="{ path: breadcrumb.path }"
-          class="breadcrumb-item"
-        >
-          <span>{{ breadcrumb.name }}</span>
-        </el-breadcrumb-item>
-      </el-breadcrumb>
+      <breadcrumb v-if="mesh" :breadcrumbs="breadcrumbs" />
       <div class="title-container">
         <h2 class="mesh-title">
           <span class="main-title">{{ meshMainTitle }}</span>
@@ -38,6 +29,7 @@ import config from '@/config'
 import _ from 'lodash'
 import Page from '@/components/Page'
 import Header from '@/components/Header'
+import Breadcrumb from '@/components/Breadcrumb'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 import { MESH } from '@/constants/mesh'
 import { adjustViewPort } from '@/utils/map'
@@ -47,6 +39,7 @@ export default {
   components: {
     Page,
     Header,
+    Breadcrumb,
   },
 
   asyncData({ query }) {
@@ -283,10 +276,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/core.scss';
-
-.breadcrumb-item {
-  margin-bottom: 5px;
-}
 
 .title-container {
   display: flex;
