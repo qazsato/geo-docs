@@ -3,7 +3,7 @@
     <template v-slot:header>
       <Header :title="title" active="/addresses/geocoding" />
     </template>
-    <div ref="map" class="map"></div>
+    <GoogleMap @load="onLoad" @click="onClick" />
     <el-table
       :data="tableData"
       :default-sort="{ prop: 'index', order: 'descending' }"
@@ -28,8 +28,6 @@
 </template>
 
 <script>
-import config from '@/config'
-import GoogleMapsApiLoader from 'google-maps-api-loader'
 import GeoApi from '@/requests/geo_api'
 
 export default {
@@ -70,26 +68,14 @@ export default {
     },
   },
 
-  async mounted() {
-    this.google = await GoogleMapsApiLoader({
-      apiKey: config.google_maps.api_key,
-    })
-    this.createMap()
-  },
-
   methods: {
-    createMap() {
-      const position = new this.google.maps.LatLng(35.689568, 139.691717)
-      this.map = new this.google.maps.Map(this.$refs.map, {
-        zoom: 14,
-        center: position,
-        mapTypeId: this.google.maps.MapTypeId.ROADMAP,
-        styles: config.map_theme.retro,
-        clickableIcons: false,
-        disableDefaultUI: true,
-        zoomControl: true,
-      })
-      this.map.addListener('click', (e) => (this.latLng = e.latLng))
+    onLoad(google, map) {
+      this.google = google
+      this.map = map
+    },
+
+    onClick(e) {
+      this.latLng = e.latLng
     },
   },
 
