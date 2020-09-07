@@ -4,7 +4,7 @@
       <Header :title="title" active="/addresses" />
     </template>
     <el-row>
-      <breadcrumb v-if="address" :breadcrumbs="breadcrumbs" />
+      <Breadcrumb v-if="address" :breadcrumbs="breadcrumbs" />
       <div class="title-container">
         <h2 class="address-title">{{ addressTitle }}</h2>
         <el-input
@@ -54,19 +54,12 @@
 
 <script>
 import config from '@/config'
-import Page from '@/components/Page'
-import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 import { adjustViewPort } from '@/utils/map'
 import { toLocations } from '@/utils/geojson'
 import GeoApi from '@/requests/geo_api'
 
 export default {
-  components: {
-    Page,
-    Header,
-  },
-
   async asyncData({ query }) {
     const limit = 100
     const page = query.page ? Number(query.page) : 1

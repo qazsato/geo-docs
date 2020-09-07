@@ -39,17 +39,10 @@
 
 <script>
 import config from '@/config'
-import Page from '@/components/Page'
-import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 import GeoApi from '@/requests/geo_api'
 
 export default {
-  components: {
-    Page,
-    Header,
-  },
-
   data() {
     return {
       title: '住所コード解析',

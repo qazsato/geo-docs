@@ -44,16 +44,9 @@
 <script>
 import japanmesh from 'japanmesh'
 import config from '@/config'
-import Page from '@/components/Page'
-import Header from '@/components/Header'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 
 export default {
-  components: {
-    Page,
-    Header,
-  },
-
   data() {
     return {
       title: '地域メッシュ解析',

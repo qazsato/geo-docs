@@ -89,15 +89,7 @@ X-Rate-Limit-Remaining: 100 # 次の期間までにリクエストできる回�
 </template>
 
 <script>
-import Page from '@/components/Page'
-import Header from '@/components/Header'
-
 export default {
-  components: {
-    Page,
-    Header,
-  },
-
   data() {
     return {
       title: 'API 共通仕様',

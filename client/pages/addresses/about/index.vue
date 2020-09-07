@@ -126,15 +126,7 @@
 </template>
 
 <script>
-import Page from '@/components/Page'
-import Header from '@/components/Header'
-
 export default {
-  components: {
-    Page,
-    Header,
-  },
-
   data() {
     return {
       title: '住所について',

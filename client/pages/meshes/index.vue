@@ -27,21 +27,12 @@
 import japanmesh from 'japanmesh'
 import config from '@/config'
 import _ from 'lodash'
-import Page from '@/components/Page'
-import Header from '@/components/Header'
-import Breadcrumb from '@/components/Breadcrumb'
 import GoogleMapsApiLoader from 'google-maps-api-loader'
 import { MESH } from '@/constants/mesh'
 import { adjustViewPort } from '@/utils/map'
 import { toLocations } from '@/utils/geojson'
 
 export default {
-  components: {
-    Page,
-    Header,
-    Breadcrumb,
-  },
-
   asyncData({ query }) {
     const code = query.code || null
     const mesh = code ? { code, level: japanmesh.getLevel(code) } : null
