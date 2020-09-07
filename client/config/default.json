@@ -4,6 +4,7 @@
     "lng": 139.691717
   },
   "map_theme": {
+    "standard": [],
     "silver": [
       {
         "featureType": "water",
