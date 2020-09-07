@@ -29,41 +29,45 @@ X-Rate-Limit-Remaining: 100 # 次の期間までにリクエストできる回�
       <h2>ステータスコード</h2>
       <p>Geo API が返却する HTTP ステータスコードは、下記の通りです。</p>
       <table>
-        <tr>
-          <th>HTTPステータスコード</th>
-          <th>種別</th>
-          <th>概要</th>
-        </tr>
-        <tr>
-          <td>200</td>
-          <td>OK</td>
-          <td>リクエスト成功</td>
-        </tr>
-        <tr>
-          <td>400</td>
-          <td>Bad Request</td>
-          <td>リクエストパラメータに不備がある</td>
-        </tr>
-        <tr>
-          <td>401</td>
-          <td>Unauthorized</td>
-          <td>アクセストークンが無効である</td>
-        </tr>
-        <tr>
-          <td>404</td>
-          <td>Not Found</td>
-          <td>指定したリソースが存在しない</td>
-        </tr>
-        <tr>
-          <td>429</td>
-          <td>Too Many Request</td>
-          <td>期間内のリクエスト数を超過した</td>
-        </tr>
-        <tr>
-          <td>500</td>
-          <td>Internal Server Error</td>
-          <td>サーバ内部で予期せぬエラーが発生した</td>
-        </tr>
+        <thead>
+          <tr>
+            <th>HTTPステータスコード</th>
+            <th>種別</th>
+            <th>概要</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>200</td>
+            <td>OK</td>
+            <td>リクエスト成功</td>
+          </tr>
+          <tr>
+            <td>400</td>
+            <td>Bad Request</td>
+            <td>リクエストパラメータに不備がある</td>
+          </tr>
+          <tr>
+            <td>401</td>
+            <td>Unauthorized</td>
+            <td>アクセストークンが無効である</td>
+          </tr>
+          <tr>
+            <td>404</td>
+            <td>Not Found</td>
+            <td>指定したリソースが存在しない</td>
+          </tr>
+          <tr>
+            <td>429</td>
+            <td>Too Many Request</td>
+            <td>期間内のリクエスト数を超過した</td>
+          </tr>
+          <tr>
+            <td>500</td>
+            <td>Internal Server Error</td>
+            <td>サーバ内部で予期せぬエラーが発生した</td>
+          </tr>
+        </tbody>
       </table>
       <h2>エラーレスポンス</h2>
       <p>

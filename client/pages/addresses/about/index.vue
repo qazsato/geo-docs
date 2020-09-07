@@ -10,30 +10,34 @@
         APIで扱う住所データは、<b>3段階の住所レベル</b>に区分されており、下記のデータ階層となっています。
       </p>
       <table>
-        <tr>
-          <th>レベル</th>
-          <th>分類</th>
-          <th>コード桁数</th>
-          <th>出力例 (code, name)</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>都道府県</td>
-          <td>2桁</td>
-          <td>13, 東京都</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>市区町村</td>
-          <td>5桁</td>
-          <td>13101, 東京都千代田区</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>町丁・字等</td>
-          <td>11桁</td>
-          <td>13101001001, 東京都千代田区丸の内１丁目</td>
-        </tr>
+        <thead>
+          <tr>
+            <th>レベル</th>
+            <th>分類</th>
+            <th>コード桁数</th>
+            <th>出力例 (code, name)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>都道府県</td>
+            <td>2桁</td>
+            <td>13, 東京都</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>市区町村</td>
+            <td>5桁</td>
+            <td>13101, 東京都千代田区</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>町丁・字等</td>
+            <td>11桁</td>
+            <td>13101001001, 東京都千代田区丸の内１丁目</td>
+          </tr>
+        </tbody>
       </table>
       <h2>住所ポリゴンデータ</h2>
       <p>
@@ -42,48 +46,52 @@
         に加えて、より軽量なフォーマットである TopoJSON にも対応しています。
       </p>
       <table>
-        <tr>
-          <th>レベル</th>
-          <th>分類</th>
-          <th>コード桁数</th>
-          <th>出力例</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>都道府県</td>
-          <td>2桁</td>
-          <td>
-            <a
-              href="https://gist.github.com/qazsato/f3da1ff9377c91fb0096955279b2827a"
-              target="_blank"
-              >東京都のポリゴンデータ</a
-            >
-          </td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>市区町村</td>
-          <td>5桁</td>
-          <td>
-            <a
-              href="https://gist.github.com/qazsato/dd594ab00779ff19b737c8c72b1099b6"
-              target="_blank"
-              >東京都千代田区のポリゴンデータ</a
-            >
-          </td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>町丁・字等</td>
-          <td>11桁</td>
-          <td>
-            <a
-              href="https://gist.github.com/qazsato/84a1c676f539b3340d4572a1c67cca3b"
-              target="_blank"
-              >東京都千代田区丸の内１丁目のポリゴンデータ</a
-            >
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th>レベル</th>
+            <th>分類</th>
+            <th>コード桁数</th>
+            <th>出力例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>都道府県</td>
+            <td>2桁</td>
+            <td>
+              <a
+                href="https://gist.github.com/qazsato/f3da1ff9377c91fb0096955279b2827a"
+                target="_blank"
+                >東京都のポリゴンデータ</a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>市区町村</td>
+            <td>5桁</td>
+            <td>
+              <a
+                href="https://gist.github.com/qazsato/dd594ab00779ff19b737c8c72b1099b6"
+                target="_blank"
+                >東京都千代田区のポリゴンデータ</a
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>町丁・字等</td>
+            <td>11桁</td>
+            <td>
+              <a
+                href="https://gist.github.com/qazsato/84a1c676f539b3340d4572a1c67cca3b"
+                target="_blank"
+                >東京都千代田区丸の内１丁目のポリゴンデータ</a
+              >
+            </td>
+          </tr>
+        </tbody>
       </table>
       <h2>出典</h2>
       <ul>
