@@ -1,5 +1,5 @@
 <template>
-  <div class="map-container">
+  <div class="map-container" :style="{ width: width, height: height }">
     <div ref="map" class="map"></div>
     <el-select v-model="theme" class="theme-select" size="small">
       <el-option
@@ -17,16 +17,57 @@
 </template>
 
 <script>
-import GoogleMapsApiLoader from 'google-maps-api-loader'
 import config from '@/config'
+import { adjustViewPort } from '@/utils/map'
+import { toLocations } from '@/utils/geojson'
 
 export default {
+  props: {
+    width: {
+      required: false,
+      type: String,
+      default: '100%',
+    },
+
+    height: {
+      required: false,
+      type: String,
+      default: '100%',
+    },
+
+    markers: {
+      required: false,
+      type: Array,
+      default() {
+        return []
+      },
+    },
+
+    infowindows: {
+      required: false,
+      type: Array,
+      default() {
+        return []
+      },
+    },
+
+    geojsons: {
+      required: false,
+      type: Array,
+      default() {
+        return []
+      },
+    },
+  },
+
   data() {
     return {
       google: null,
       map: null,
       theme: 'silver',
       themes: ['standard', 'silver', 'retro', 'night', 'dark', 'aubergine'],
+      localMarkers: [],
+      localInfowindows: [],
     }
   },
 
@@ -34,14 +75,69 @@ export default {
     theme(val) {
       this.map.setMapTypeId(val)
     },
+
+    markers(val) {
+      // マーカー一括クリア
+      this.localMarkers.forEach((marker) => marker.setMap(null))
+      this.localMarkers = []
+
+      this.markers.forEach((marker) => {
+        marker.setMap(this.map)
+        this.localMarkers.push(marker)
+      })
+    },
+
+    infowindows(val) {
+      this.localInfowindows.forEach((infowindow) => infowindow.setMap(null))
+      this.localInfowindows = []
+
+      this.infowindows.forEach((infowindow) => {
+        infowindow.setMap(this.map)
+        this.localInfowindows.push(infowindow)
+      })
+    },
+
+    geojsons(val) {
+      // GeoJSON一括クリア
+      this.map.data.forEach((feature) => {
+        this.map.data.remove(feature)
+      })
+
+      this.geojsons.forEach((geojson) => {
+        this.map.data.addGeoJson(geojson)
+      })
+
+      this.map.data.setStyle((feature) => {
+        const strokeWeight = feature.getProperty('strokeWeight')
+        const strokeColor = feature.getProperty('strokeColor')
+        const fillColor = feature.getProperty('fillColor')
+        const fillOpacity = feature.getProperty('fillOpacity')
+        return {
+          strokeWeight,
+          strokeColor,
+          fillColor,
+          fillOpacity,
+        }
+      })
+
+      if (this.geojsons.length > 0) {
+        let locations = []
+        this.geojsons.forEach((geojson) => {
+          locations = locations.concat(toLocations(geojson))
+        })
+        adjustViewPort(this.google, this.map, locations)
+      }
+    },
   },
 
-  async mounted() {
-    const apiKey = config.google_maps.api_key
-    this.google = await GoogleMapsApiLoader({ apiKey })
-    this.initMap()
-    this.bindMap()
-    this.$emit('load', this.google, this.map)
+  mounted() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'map/load') {
+        this.google = state.map.google
+        this.initMap()
+        this.bindMap()
+      }
+    })
   },
 
   methods: {
@@ -50,7 +146,7 @@ export default {
       const lng = config.default_location.lng
       const position = new this.google.maps.LatLng(lat, lng)
       this.map = new this.google.maps.Map(this.$refs.map, {
-        zoom: 18,
+        zoom: 12,
         center: position,
         mapTypeId: this.theme,
         clickableIcons: false,
@@ -67,8 +163,13 @@ export default {
     },
 
     bindMap() {
-      this.map.addListener('click', (e) =>
-        this.$emit('click', e, this.google, this.map)
+      this.map.addListener('click', (e) => this.$emit('click', e))
+      this.map.data.addListener('click', (e) => this.$emit('clickData', e))
+      this.map.data.addListener('mouseout', (e) =>
+        this.$emit('mouseoutData', e)
+      )
+      this.map.data.addListener('mouseover', (e) =>
+        this.$emit('mouseoverData', e)
       )
     },
   },
@@ -82,7 +183,7 @@ export default {
 
 .map {
   width: 100%;
-  height: 550px;
+  height: 100%;
 }
 
 .theme-select {

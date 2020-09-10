@@ -18,19 +18,23 @@
         >
         </el-input>
       </div>
-      <div ref="map" class="map"></div>
+      <GoogleMap
+        height="500px"
+        :geojsons="geojsons"
+        :infowindows="infowindows"
+        @clickData="onClickData"
+        @mouseoutData="onMouseoutData"
+        @mouseoverData="onMouseoverData"
+      />
     </el-row>
   </Page>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import japanmesh from 'japanmesh'
-import config from '@/config'
 import _ from 'lodash'
-import GoogleMapsApiLoader from 'google-maps-api-loader'
 import { MESH } from '@/constants/mesh'
-import { adjustViewPort } from '@/utils/map'
-import { toLocations } from '@/utils/geojson'
 
 export default {
   asyncData({ query }) {
@@ -54,9 +58,9 @@ export default {
     return {
       title: '地域メッシュ検索',
       google: null,
-      map: null,
-      infowindow: null,
       query: null,
+      geojsons: [],
+      infowindows: [],
     }
   },
 
@@ -134,79 +138,50 @@ export default {
   },
 
   watch: {
+    async $route() {
+      await this.loadMap()
+      this.google = this.$store.state.map.google
+    },
+
     mesh() {
-      this.$nextTick(() => this.createMap())
+      this.$nextTick(() => this.drawMesh())
     },
   },
 
-  mounted() {
-    this.createMap()
+  async mounted() {
+    await this.loadMap()
+    this.google = this.$store.state.map.google
+    this.drawMesh()
   },
 
   methods: {
-    async createMap() {
-      if (this.google === null) {
-        this.google = await GoogleMapsApiLoader({
-          apiKey: config.google_maps.api_key,
-        })
-      }
+    ...mapActions('map', { loadMap: 'load' }),
 
-      const lat = config.default_location.lat
-      const lng = config.default_location.lng
-      const position = new this.google.maps.LatLng(lat, lng)
-      this.map = new this.google.maps.Map(this.$refs.map, {
-        zoom: 18,
-        center: position,
-        mapTypeId: this.google.maps.MapTypeId.ROADMAP,
-        styles: config.map_theme.silver,
-        clickableIcons: false,
-        disableDefaultUI: true,
-        zoomControl: true,
-      })
-
-      this.meshShapes.forEach((meshShape) => {
-        this.map.data.addGeoJson(meshShape)
-      })
-      this.map.data.setStyle((feature) => {
+    drawMesh() {
+      this.geojsons = this.meshShapes
+      this.geojsons.forEach((geojson) => {
         const color = '#409eff'
-        const code = feature.getProperty('code')
+        let strokeWeight = 1
+        const strokeColor = color
+        const fillColor = color
+        let fillOpacity = 0.2
+        const code = geojson.properties.code
+        // 親のメッシュは外形を強調するため枠を太くする
         if (this.mesh && this.mesh.code === code) {
-          // 最下層の場合は、枠を太くして中身を塗る
-          if (this.meshShapes.length === 1) {
-            return {
-              strokeWeight: 2,
-              strokeColor: color,
-              fillColor: color,
-              fillOpacity: 0.2,
-            }
-          }
-          // 現在のコードを示すために、枠を太くする(中身を塗らない)
-          return {
-            strokeWeight: 2,
-            strokeColor: color,
-            fillOpacity: 0,
+          strokeWeight = 2
+          // 最下層(6次メッシュ)以外は中身を塗らない
+          if (japanmesh.getLevel(code) !== 6) {
+            fillOpacity = 0
           }
         }
-        // 配下のコードを示すために、枠を補足して中身を塗る
-        return {
-          strokeWeight: 1,
-          strokeColor: color,
-          fillColor: color,
-          fillOpacity: 0.2,
-        }
+        geojson.properties.strokeWeight = strokeWeight
+        geojson.properties.strokeColor = strokeColor
+        geojson.properties.fillColor = fillColor
+        geojson.properties.fillOpacity = fillOpacity
       })
-      this.map.data.addListener('click', this.onMapDataClick)
-      this.map.data.addListener('mouseout', this.onMapDataMouseout)
-      this.map.data.addListener('mouseover', this.onMapDataMouseover)
-
-      let locations = []
-      this.meshShapes.forEach((meshShape) => {
-        locations = locations.concat(toLocations(meshShape))
-      })
-      adjustViewPort(this.google, this.map, locations)
     },
 
-    onMapDataClick(event) {
+    onClickData(event) {
       const code = event.feature.getProperty('code')
       if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
         return
@@ -214,27 +189,26 @@ export default {
       this.$router.push({ path: '/meshes', query: { code } })
     },
 
-    onMapDataMouseout(event) {
+    onMouseoutData(event) {
       const code = event.feature.getProperty('code')
       if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
         return
       }
-      this.infowindow.setMap(null)
-      this.infowindow = null
+      this.infowindows = []
     },
 
-    onMapDataMouseover(event) {
+    onMouseoverData(event) {
       const code = event.feature.getProperty('code')
       if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
         return
       }
       const position = this.getInfowindowPosition(code)
-      this.infowindow = new this.google.maps.InfoWindow({
+      const infowindow = new this.google.maps.InfoWindow({
         content: code,
         position,
         disableAutoPan: true,
       })
-      this.infowindow.open(this.map)
+      this.infowindows = [infowindow]
     },
 
     getInfowindowPosition(code) {
@@ -299,11 +273,5 @@ export default {
       width: 100%;
     }
   }
-}
-
-.map {
-  margin: 10px 0 0;
-  width: 100%;
-  height: 550px;
 }
 </style>

@@ -3,7 +3,7 @@
     <template v-slot:header>
       <Header :title="title" active="/addresses/geocoding" />
     </template>
-    <GoogleMap @load="onLoad" @click="onClick" />
+    <GoogleMap width="500px" :markers="markers" @click="onClick" />
     <el-table
       :data="tableData"
       :default-sort="{ prop: 'index', order: 'descending' }"
@@ -28,29 +28,24 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import GeoApi from '@/requests/geo_api'
 
 export default {
   data() {
     return {
       title: '逆ジオコーディング',
-      google: null,
-      map: null,
       latLng: null,
-      marker: null,
       tableData: [],
+      google: null,
+      markers: [],
     }
   },
 
   watch: {
     async latLng(val) {
-      if (this.marker) {
-        this.marker.setMap(null)
-      }
-      this.marker = new this.google.maps.Marker({
-        position: val,
-        map: this.map,
-      })
+      const marker = new this.google.maps.Marker({ position: val })
+      this.markers = [marker]
 
       const api = new GeoApi('/addresses/geocoding', {
         locations: `${val.lat()},${val.lng()}`,
@@ -68,11 +63,13 @@ export default {
     },
   },
 
+  async mounted() {
+    await this.loadMap()
+    this.google = this.$store.state.map.google
+  },
+
   methods: {
-    onLoad(google, map) {
-      this.google = google
-      this.map = map
-    },
+    ...mapActions('map', { loadMap: 'load' }),
 
     onClick(e) {
       this.latLng = e.latLng
@@ -86,10 +83,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.map {
-  width: 100%;
-  height: 500px;
-}
-</style>
