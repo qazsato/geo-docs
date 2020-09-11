@@ -14,14 +14,14 @@
           type="primary"
           :disabled="latLngs.length === 0"
           @click="onClickAnalyticsButton"
-          >住所コード毎に区分する</el-button
+          >住所コードで分ける</el-button
         >
 
         <el-button
           type="danger"
           :disabled="latLngs.length === 0"
           @click="onClickResetButton"
-          >マーカーをリセットする</el-button
+          >リセットする</el-button
         >
       </el-row>
     </section>

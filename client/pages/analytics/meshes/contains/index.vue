@@ -18,14 +18,14 @@
           type="primary"
           :disabled="latLngs.length === 0"
           @click="onClickAnalyticsButton"
-          >地域メッシュコード毎に区分する</el-button
+          >地域メッシュコードで分ける</el-button
         >
 
         <el-button
           type="danger"
           :disabled="latLngs.length === 0"
           @click="onClickResetButton"
-          >マーカーをリセットする</el-button
+          >リセットする</el-button
         >
       </el-row>
     </section>
