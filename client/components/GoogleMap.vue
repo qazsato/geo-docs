@@ -18,10 +18,11 @@
 
 <script>
 import _ from 'lodash'
+import ls from 'local-storage'
 import config from '@/config'
 import { adjustViewPort } from '@/utils/map'
 import { toLocations } from '@/utils/geojson'
-
+const LS_THEME_KEY = 'google-map-theme'
 export default {
   props: {
     width: {
@@ -65,7 +66,7 @@ export default {
     return {
       google: null,
       map: null,
-      theme: 'silver',
+      theme: this.getDefaultTheme(),
       themes: ['standard', 'silver', 'retro', 'night', 'dark', 'aubergine'],
       localMarkers: [],
       localInfowindows: [],
@@ -75,10 +76,11 @@ export default {
   watch: {
     theme(val) {
       this.map.setMapTypeId(val)
+      ls(LS_THEME_KEY, this.theme)
     },
 
     markers(val) {
-      const diffMarkers = _.difference(this.markers, this.localMarkers)
+      const diffMarkers = _.difference(this.localMarkers, this.markers)
       diffMarkers.forEach((marker) => marker.setMap(null))
 
       this.markers.forEach((marker) => {
@@ -89,8 +91,8 @@ export default {
 
     infowindows(val) {
       const diffInfowindows = _.difference(
-        this.infowindows,
-        this.localInfowindows
+        this.localInfowindows,
+        this.infowindows
       )
       diffInfowindows.forEach((infowindow) => infowindow.setMap(null))
 
@@ -144,6 +146,11 @@ export default {
   },
 
   methods: {
+    getDefaultTheme() {
+      const theme = ls(LS_THEME_KEY)
+      return theme || 'silver'
+    },
+
     initMap() {
       if (!this.$refs.map) return
       const lat = config.default_location.lat
