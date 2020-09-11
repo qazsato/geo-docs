@@ -142,6 +142,7 @@ export default {
 
   methods: {
     initMap() {
+      if (!this.$refs.map) return
       const lat = config.default_location.lat
       const lng = config.default_location.lng
       const position = new this.google.maps.LatLng(lat, lng)
