@@ -3,7 +3,7 @@
     <template v-slot:header>
       <Header :title="title" active="/addresses/geocoding" />
     </template>
-    <div ref="map" class="map"></div>
+    <GoogleMap height="500px" :markers="markers" @click="onClick" />
     <el-table
       :data="tableData"
       :default-sort="{ prop: 'index', order: 'descending' }"
@@ -28,31 +28,24 @@
 </template>
 
 <script>
-import config from '@/config'
-import GoogleMapsApiLoader from 'google-maps-api-loader'
+import { mapActions } from 'vuex'
 import GeoApi from '@/requests/geo_api'
 
 export default {
   data() {
     return {
       title: '逆ジオコーディング',
-      google: null,
-      map: null,
       latLng: null,
-      marker: null,
       tableData: [],
+      google: null,
+      markers: [],
     }
   },
 
   watch: {
     async latLng(val) {
-      if (this.marker) {
-        this.marker.setMap(null)
-      }
-      this.marker = new this.google.maps.Marker({
-        position: val,
-        map: this.map,
-      })
+      const marker = new this.google.maps.Marker({ position: val })
+      this.markers = [marker]
 
       const api = new GeoApi('/addresses/geocoding', {
         locations: `${val.lat()},${val.lng()}`,
@@ -71,25 +64,15 @@ export default {
   },
 
   async mounted() {
-    this.google = await GoogleMapsApiLoader({
-      apiKey: config.google_maps.api_key,
-    })
-    this.createMap()
+    await this.loadMap()
+    this.google = this.$store.state.map.google
   },
 
   methods: {
-    createMap() {
-      const position = new this.google.maps.LatLng(35.689568, 139.691717)
-      this.map = new this.google.maps.Map(this.$refs.map, {
-        zoom: 14,
-        center: position,
-        mapTypeId: this.google.maps.MapTypeId.ROADMAP,
-        styles: config.map_theme.retro,
-        clickableIcons: false,
-        disableDefaultUI: true,
-        zoomControl: true,
-      })
-      this.map.addListener('click', (e) => (this.latLng = e.latLng))
+    ...mapActions('map', { loadMap: 'load' }),
+
+    onClick(e) {
+      this.latLng = e.latLng
     },
   },
 
@@ -100,10 +83,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.map {
-  width: 100%;
-  height: 500px;
-}
-</style>

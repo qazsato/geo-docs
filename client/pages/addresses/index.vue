@@ -15,7 +15,7 @@
         >
         </el-input>
       </div>
-      <div ref="map" class="map"></div>
+      <GoogleMap height="500px" :geojsons="geojsons" @clickData="onClickData" />
     </el-row>
     <template v-if="addresses.length > 0">
       <el-row>
@@ -53,10 +53,7 @@
 </template>
 
 <script>
-import config from '@/config'
-import GoogleMapsApiLoader from 'google-maps-api-loader'
-import { adjustViewPort } from '@/utils/map'
-import { toLocations } from '@/utils/geojson'
+import { mapActions } from 'vuex'
 import GeoApi from '@/requests/geo_api'
 
 export default {
@@ -97,10 +94,10 @@ export default {
     return {
       title: '住所検索',
       google: null,
-      map: null,
       query: null,
       parentAddressShape: null,
       childAddressShape: null,
+      geojsons: [],
     }
   },
 
@@ -132,20 +129,23 @@ export default {
   },
 
   watch: {
-    address() {
-      this.$nextTick(() => this.init())
+    async address() {
+      await this.fetch()
+      await this.loadMap()
+      this.google = this.$store.state.map.google
+      this.drawAddress()
     },
   },
 
-  mounted() {
-    this.init()
+  async mounted() {
+    await this.fetch()
+    await this.loadMap()
+    this.google = this.$store.state.map.google
+    this.drawAddress()
   },
 
   methods: {
-    async init() {
-      await this.fetch()
-      this.createMap()
-    },
+    ...mapActions('map', { loadMap: 'load' }),
 
     async fetch() {
       if (this.address) {
@@ -166,6 +166,11 @@ export default {
       }
     },
 
+    onClickData(event) {
+      const code = event.feature.getProperty('code')
+      this.$router.push({ path: '/addresses', query: { code } })
+    },
+
     clickAddress(address) {
       const code = address.code
       this.$router.push({ path: '/addresses', query: { code } })
@@ -178,64 +183,35 @@ export default {
       window.scrollTo(0, 0)
     },
 
-    async createMap() {
-      if (this.google === null) {
-        this.google = await GoogleMapsApiLoader({
-          apiKey: config.google_maps.api_key,
-        })
+    drawAddress() {
+      if (this.parentAddressShape) {
+        this.geojsons.push(this.parentAddressShape)
       }
-
-      const lat = config.default_location.lat
-      const lng = config.default_location.lng
-      const position = new this.google.maps.LatLng(lat, lng)
-      this.map = new this.google.maps.Map(this.$refs.map, {
-        zoom: 18,
-        center: position,
-        mapTypeId: this.google.maps.MapTypeId.ROADMAP,
-        styles: config.map_theme.silver,
-        clickableIcons: false,
-        disableDefaultUI: true,
-        zoomControl: true,
-      })
-
-      this.map.data.addGeoJson(this.parentAddressShape)
-      this.map.data.addGeoJson(this.childAddressShape)
-      this.map.data.setStyle((feature) => {
+      if (this.childAddressShape) {
+        this.geojsons.push(this.childAddressShape)
+      }
+      this.geojsons.forEach((geojson) => {
         const color = '#409eff'
-        const code = feature.getProperty('code')
-        if (this.address && this.address.code === code) {
-          // 最下層の場合は、枠を太くして中身を塗る
-          if (this.addresses.length === 0) {
-            return {
-              strokeWeight: 2,
-              strokeColor: color,
-              fillColor: color,
-              fillOpacity: 0.2,
+        let strokeWeight = 1
+        const strokeColor = color
+        const fillColor = color
+        let fillOpacity = 0.2
+        geojson.features.forEach((feature) => {
+          const code = feature.properties.code
+          // 親の住所は外形を強調するため枠を太くする
+          if (this.address && this.address.code === code) {
+            strokeWeight = 2
+            // 最下層(レベル3)以外は中身を塗らない
+            if (this.address.level !== 3) {
+              fillOpacity = 0
             }
           }
-          // 現在のコードを示すために、枠を太くする(中身を塗らない)
-          return {
-            strokeWeight: 2,
-            strokeColor: color,
-            fillOpacity: 0,
-          }
-        }
-        // 配下のコードを示すために、枠を補足して中身を塗る
-        return {
-          strokeWeight: 1,
-          strokeColor: color,
-          fillColor: color,
-          fillOpacity: 0.2,
-        }
+          feature.properties.strokeWeight = strokeWeight
+          feature.properties.strokeColor = strokeColor
+          feature.properties.fillColor = fillColor
+          feature.properties.fillOpacity = fillOpacity
+        })
       })
-      this.map.data.addListener('click', (event) => {
-        const code = event.feature.getProperty('code')
-        this.$router.push({ path: '/addresses', query: { code } })
-      })
-      const locations = toLocations(
-        this.parentAddressShape || this.childAddressShape
-      )
-      adjustViewPort(this.google, this.map, locations)
     },
 
     searchAddressCode() {
@@ -283,12 +259,6 @@ export default {
       width: 100%;
     }
   }
-}
-
-.map {
-  margin: 10px 0 0;
-  width: 100%;
-  height: 450px;
 }
 
 .address-table {
