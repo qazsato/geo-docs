@@ -129,13 +129,10 @@ export default {
   },
 
   watch: {
-    async $route() {
-      await this.loadMap()
-      this.google = this.$store.state.map.google
-    },
-
     async address() {
       await this.fetch()
+      await this.loadMap()
+      this.google = this.$store.state.map.google
       this.drawAddress()
     },
   },
