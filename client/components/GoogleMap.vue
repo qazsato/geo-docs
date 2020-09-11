@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import config from '@/config'
 import { adjustViewPort } from '@/utils/map'
 import { toLocations } from '@/utils/geojson'
@@ -77,24 +78,26 @@ export default {
     },
 
     markers(val) {
-      // マーカー一括クリア
-      this.localMarkers.forEach((marker) => marker.setMap(null))
-      this.localMarkers = []
+      const diffMarkers = _.difference(this.markers, this.localMarkers)
+      diffMarkers.forEach((marker) => marker.setMap(null))
 
       this.markers.forEach((marker) => {
         marker.setMap(this.map)
-        this.localMarkers.push(marker)
       })
+      this.localMarkers = this.markers
     },
 
     infowindows(val) {
-      this.localInfowindows.forEach((infowindow) => infowindow.setMap(null))
-      this.localInfowindows = []
+      const diffInfowindows = _.difference(
+        this.infowindows,
+        this.localInfowindows
+      )
+      diffInfowindows.forEach((infowindow) => infowindow.setMap(null))
 
       this.infowindows.forEach((infowindow) => {
         infowindow.setMap(this.map)
-        this.localInfowindows.push(infowindow)
       })
+      this.localInfowindows = this.infowindows
     },
 
     geojsons(val) {
