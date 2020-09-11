@@ -165,10 +165,12 @@ export default {
         const strokeColor = color
         const fillColor = color
         let fillOpacity = 0.2
+        let zIndex = 2
         const code = geojson.properties.code
         // 親のメッシュは外形を強調するため枠を太くする
         if (this.mesh && this.mesh.code === code) {
           strokeWeight = 2
+          zIndex = 1
           // 最下層(6次メッシュ)以外は中身を塗らない
           if (japanmesh.getLevel(code) !== 6) {
             fillOpacity = 0
@@ -178,6 +180,7 @@ export default {
         geojson.properties.strokeColor = strokeColor
         geojson.properties.fillColor = fillColor
         geojson.properties.fillOpacity = fillOpacity
+        geojson.properties.zIndex = zIndex
       })
     },
 

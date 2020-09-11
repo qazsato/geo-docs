@@ -117,11 +117,13 @@ export default {
         const strokeColor = feature.getProperty('strokeColor')
         const fillColor = feature.getProperty('fillColor')
         const fillOpacity = feature.getProperty('fillOpacity')
+        const zIndex = feature.getProperty('zIndex')
         return {
           strokeWeight,
           strokeColor,
           fillColor,
           fillOpacity,
+          zIndex,
         }
       })
 

@@ -196,11 +196,13 @@ export default {
         const strokeColor = color
         const fillColor = color
         let fillOpacity = 0.2
+        let zIndex = 2
         geojson.features.forEach((feature) => {
           const code = feature.properties.code
           // 親の住所は外形を強調するため枠を太くする
           if (this.address && this.address.code === code) {
             strokeWeight = 2
+            zIndex = 1
             // 最下層(レベル3)以外は中身を塗らない
             if (this.address.level !== 3) {
               fillOpacity = 0
@@ -210,6 +212,7 @@ export default {
           feature.properties.strokeColor = strokeColor
           feature.properties.fillColor = fillColor
           feature.properties.fillOpacity = fillOpacity
+          feature.properties.zIndex = zIndex
         })
       })
     },
