@@ -3,7 +3,15 @@
     <template v-slot:header>
       <Header :title="title" active="/analytics/meshes/contains" />
     </template>
-    <GoogleMap height="500px" :markers="markers" @click="onClick" />
+    <GoogleMap
+      height="500px"
+      :geojsons="geojsons"
+      :markers="markers"
+      :infowindows="infowindows"
+      @click="onClick"
+      @mouseoutData="onMouseoutData"
+      @mouseoverData="onMouseoverData"
+    />
     <section class="search-area">
       <el-row>
         <el-radio v-model="level" label="1">1次メッシュ(80km)</el-radio>
@@ -61,11 +69,13 @@ export default {
       title: '地域メッシュ解析',
       google: null,
       latLngs: [],
+      geojsons: [],
       markers: [],
+      infowindows: [],
       tableData: [],
       level: '3',
-      isVisibleMesh: true,
-      isVisibleMarker: true,
+      isVisibleMesh: false,
+      isVisibleMarker: false,
     }
   },
 
@@ -109,6 +119,22 @@ export default {
 
     onClick(e) {
       this.latLngs.push(e.latLng)
+      this.isVisibleMesh = false
+      this.isVisibleMarker = true
+    },
+
+    onMouseoutData(event) {
+      this.infowindows = []
+    },
+
+    onMouseoverData(event) {
+      const count = event.feature.getProperty('count')
+      const infowindow = new this.google.maps.InfoWindow({
+        content: `${count}件`,
+        position: event.latLng,
+        disableAutoPan: true,
+      })
+      this.infowindows = [infowindow]
     },
 
     onClickAnalyticsButton() {
@@ -116,31 +142,27 @@ export default {
       const counts = this.calcCountGroupByCode(this.locations, level)
       this.tableData = counts
       const max = Math.max(...counts.map((c) => c.count))
-      this.map.data.forEach((feature) => this.map.data.remove(feature))
+      this.geojsons = []
       counts.forEach((c) => {
-        const geojson = japanmesh.toGeoJSON(c.code, { count: c.count })
-        this.map.data.addGeoJson(geojson)
-      })
-      this.map.data.setStyle((feature) => {
-        const count = feature.getProperty('count')
-        const opcity = (count / max) * 0.9
-        return {
+        const opcity = (c.count / max) * 0.9
+        const geojson = japanmesh.toGeoJSON(c.code, {
+          count: c.count,
           strokeWeight: 1,
-          strokeColor: '#409eff',
-          fillColor: '#409eff',
           fillOpacity: opcity,
-        }
+        })
+        this.geojsons.push(geojson)
       })
+      this.isVisibleMesh = true
+      this.isVisibleMarker = false
     },
 
     onClickResetButton() {
-      this.map.data.forEach((feature) => this.map.data.remove(feature))
-      this.markers.forEach((marker) => marker.setMap(null))
+      this.geojsons = []
       this.markers = []
       this.latLngs = []
       this.tableData = []
-      this.isVisibleMesh = true
-      this.isVisibleMarker = true
+      this.isVisibleMesh = false
+      this.isVisibleMarker = false
     },
 
     calcCountGroupByCode(locations, level) {
@@ -159,8 +181,11 @@ export default {
     },
 
     toggleMesh() {
-      this.map.data.forEach((feature) => {
-        this.map.data.overrideStyle(feature, { visible: this.isVisibleMesh })
+      const geojsons = this.geojsons
+      this.geojsons = []
+      geojsons.forEach((geojson) => {
+        geojson.properties.visible = this.isVisibleMesh
+        this.geojsons.push(geojson)
       })
     },
 
