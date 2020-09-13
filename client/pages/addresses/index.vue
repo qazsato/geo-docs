@@ -191,10 +191,7 @@ export default {
         this.geojsons.push(this.childAddressShape)
       }
       this.geojsons.forEach((geojson) => {
-        const color = '#409eff'
         let strokeWeight = 1
-        const strokeColor = color
-        const fillColor = color
         let fillOpacity = 0.2
         let zIndex = 2
         geojson.features.forEach((feature) => {
@@ -209,8 +206,6 @@ export default {
             }
           }
           feature.properties.strokeWeight = strokeWeight
-          feature.properties.strokeColor = strokeColor
-          feature.properties.fillColor = fillColor
           feature.properties.fillOpacity = fillOpacity
           feature.properties.zIndex = zIndex
         })

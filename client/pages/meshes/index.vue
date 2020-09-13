@@ -160,10 +160,7 @@ export default {
     drawMesh() {
       this.geojsons = this.meshShapes
       this.geojsons.forEach((geojson) => {
-        const color = '#409eff'
         let strokeWeight = 1
-        const strokeColor = color
-        const fillColor = color
         let fillOpacity = 0.2
         let zIndex = 2
         const code = geojson.properties.code
@@ -177,8 +174,6 @@ export default {
           }
         }
         geojson.properties.strokeWeight = strokeWeight
-        geojson.properties.strokeColor = strokeColor
-        geojson.properties.fillColor = fillColor
         geojson.properties.fillOpacity = fillOpacity
         geojson.properties.zIndex = zIndex
       })

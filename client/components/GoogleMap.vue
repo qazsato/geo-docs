@@ -1,18 +1,26 @@
 <template>
   <div class="map-container" :style="{ width: width, height: height }">
     <div ref="map" class="map"></div>
-    <el-select v-model="theme" class="theme-select" size="small">
-      <el-option
-        v-for="(t, i) in themes"
-        :key="i"
-        :label="t"
-        :value="t"
-        class="theme-option"
-      >
-        <img :src="require(`~/assets/images/map/themes/${t}.png`)" />
-        <span class="name">{{ t }}</span>
-      </el-option>
-    </el-select>
+    <div class="controller">
+      <el-color-picker
+        v-if="geojsons.length > 0"
+        v-model="color"
+        size="small"
+        :predefine="predefineColors"
+      ></el-color-picker>
+      <el-select v-model="theme" size="small">
+        <el-option
+          v-for="(t, i) in themes"
+          :key="i"
+          :label="t"
+          :value="t"
+          class="theme-option"
+        >
+          <img :src="require(`~/assets/images/map/themes/${t}.png`)" />
+          <span class="name">{{ t }}</span>
+        </el-option>
+      </el-select>
+    </div>
   </div>
 </template>
 
@@ -22,7 +30,8 @@ import ls from 'local-storage'
 import config from '@/config'
 import { adjustViewPort } from '@/utils/map'
 import { toLocations } from '@/utils/geojson'
-const LS_THEME_KEY = 'google-map-theme'
+const LS_COLOR_KEY = 'google-map-data-color'
+const LS_THEME_KEY = 'google-map-skin-theme'
 export default {
   props: {
     width: {
@@ -66,6 +75,17 @@ export default {
     return {
       google: null,
       map: null,
+      color: this.getDefaultColor(),
+      predefineColors: [
+        '#409eff',
+        '#ff4500',
+        '#ff8c00',
+        '#ffd700',
+        '#90ee90',
+        '#00ced1',
+        '#1e90ff',
+        '#c71585',
+      ],
       theme: this.getDefaultTheme(),
       themes: ['standard', 'silver', 'retro', 'night', 'dark', 'aubergine'],
       localMarkers: [],
@@ -74,6 +94,11 @@ export default {
   },
 
   watch: {
+    color(val) {
+      this.drawData()
+      ls(LS_COLOR_KEY, this.color)
+    },
+
     theme(val) {
       this.map.setMapTypeId(val)
       ls(LS_THEME_KEY, this.theme)
@@ -112,20 +137,7 @@ export default {
         this.map.data.addGeoJson(geojson)
       })
 
-      this.map.data.setStyle((feature) => {
-        const strokeWeight = feature.getProperty('strokeWeight')
-        const strokeColor = feature.getProperty('strokeColor')
-        const fillColor = feature.getProperty('fillColor')
-        const fillOpacity = feature.getProperty('fillOpacity')
-        const zIndex = feature.getProperty('zIndex')
-        return {
-          strokeWeight,
-          strokeColor,
-          fillColor,
-          fillOpacity,
-          zIndex,
-        }
-      })
+      this.drawData()
 
       if (this.geojsons.length > 0) {
         let locations = []
@@ -148,6 +160,11 @@ export default {
   },
 
   methods: {
+    getDefaultColor() {
+      const color = ls(LS_COLOR_KEY)
+      return color || '#409eff'
+    },
+
     getDefaultTheme() {
       const theme = ls(LS_THEME_KEY)
       return theme || 'silver'
@@ -185,6 +202,23 @@ export default {
         this.$emit('mouseoverData', e)
       )
     },
+
+    drawData() {
+      this.map.data.setStyle((feature) => {
+        const strokeWeight = feature.getProperty('strokeWeight')
+        const strokeColor = this.color
+        const fillColor = this.color
+        const fillOpacity = feature.getProperty('fillOpacity')
+        const zIndex = feature.getProperty('zIndex')
+        return {
+          strokeWeight,
+          strokeColor,
+          fillColor,
+          fillOpacity,
+          zIndex,
+        }
+      })
+    },
   },
 }
 </script>
@@ -199,7 +233,7 @@ export default {
   height: 100%;
 }
 
-.theme-select {
+.controller {
   position: absolute;
   left: 5px;
   bottom: 30px;
@@ -208,7 +242,7 @@ export default {
 
 .theme-option {
   position: relative;
-  width: 200px;
+  width: 180px;
   height: 38px;
   margin: 4px 8px;
   padding: 0;
