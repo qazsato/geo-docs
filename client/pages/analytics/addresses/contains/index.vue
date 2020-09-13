@@ -68,7 +68,6 @@ export default {
       const latLng = val[val.length - 1]
       const marker = new this.google.maps.Marker({
         position: latLng,
-        map: this.map,
       })
       this.markers.push(marker)
     },
@@ -103,7 +102,6 @@ export default {
     },
 
     onClickResetButton() {
-      this.markers.forEach((marker) => marker.setMap(null))
       this.markers = []
       this.latLngs = []
       this.tableData = []
