@@ -188,18 +188,11 @@ export default {
     },
 
     onMouseoutData(event) {
-      const code = event.feature.getProperty('code')
-      if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
-        return
-      }
       this.infowindows = []
     },
 
     onMouseoverData(event) {
       const code = event.feature.getProperty('code')
-      if (this.mesh && this.mesh.level === japanmesh.getLevel(code)) {
-        return
-      }
       const position = this.getInfowindowPosition(code)
       const infowindow = new this.google.maps.InfoWindow({
         content: code,
