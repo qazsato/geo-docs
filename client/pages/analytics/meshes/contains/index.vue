@@ -62,6 +62,7 @@
 <script>
 import { mapActions } from 'vuex'
 import japanmesh from 'japanmesh'
+import _ from 'lodash'
 
 export default {
   data() {
@@ -128,10 +129,12 @@ export default {
     },
 
     onMouseoverData(event) {
+      const code = event.feature.getProperty('code')
       const count = event.feature.getProperty('count')
+      const position = this.getInfowindowPosition(code)
       const infowindow = new this.google.maps.InfoWindow({
-        content: `${count}件`,
-        position: event.latLng,
+        content: `${code} : ${count}件`,
+        position,
         disableAutoPan: true,
       })
       this.infowindows = [infowindow]
@@ -146,6 +149,7 @@ export default {
       counts.forEach((c) => {
         const opacity = (c.count / max) * 0.9
         const geojson = japanmesh.toGeoJSON(c.code, {
+          code: c.code,
           count: c.count,
           strokeWeight: 1,
           fillOpacity: opacity,
@@ -163,6 +167,19 @@ export default {
       this.tableData = []
       this.isVisiblePolygon = false
       this.isVisibleMarker = false
+    },
+
+    getInfowindowPosition(code) {
+      const shape = this.geojsons.filter((g) => g.properties.code === code)[0]
+      const coords = _.flatten(shape.geometry.coordinates)
+      const northernmost = _.maxBy(coords, (c) => c[1])
+      const westernmost = _.minBy(coords, (c) => c[0])
+      const easternmost = _.maxBy(coords, (c) => c[0])
+
+      return new this.google.maps.LatLng(
+        northernmost[1],
+        (westernmost[0] + easternmost[0]) / 2
+      )
     },
 
     calcCountGroupByCode(locations, level) {

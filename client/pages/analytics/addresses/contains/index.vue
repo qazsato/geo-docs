@@ -10,7 +10,7 @@
       :infowindows="infowindows"
       @click="onClick"
       @mouseoutData="onMouseoutData"
-      @mouseoverData="onMouseoverData"
+      @mousemoveData="onMousemoveData"
     />
     <section class="search-area">
       <el-row>
@@ -125,11 +125,14 @@ export default {
       this.infowindows = []
     },
 
-    onMouseoverData(event) {
+    onMousemoveData(event) {
+      this.infowindows = []
       const count = event.feature.getProperty('count')
+      const addressName = event.feature.getProperty('addressName')
       const infowindow = new this.google.maps.InfoWindow({
-        content: `${count}件`,
+        content: `${addressName} : ${count}件`,
         position: event.latLng,
+        pixelOffset: new this.google.maps.Size(0, -5),
         disableAutoPan: true,
       })
       this.infowindows = [infowindow]
@@ -160,11 +163,12 @@ export default {
       const shapeRes = await shapeApi.get()
       this.geojsons = []
       shapeRes.data.features.forEach((feature) => {
-        const count = res.data.filter(
+        const d = res.data.filter(
           (d) => d.address.code === feature.properties.code
-        )[0].count
-        const opacity = (count / max) * 0.9
-        feature.properties.count = count
+        )[0]
+        const opacity = (d.count / max) * 0.9
+        feature.properties.count = d.count
+        feature.properties.addressName = d.address.name
         feature.properties.strokeWeight = 1
         feature.properties.fillOpacity = opacity
       })

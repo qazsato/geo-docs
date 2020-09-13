@@ -15,7 +15,14 @@
         >
         </el-input>
       </div>
-      <GoogleMap height="500px" :geojsons="geojsons" @clickData="onClickData" />
+      <GoogleMap
+        height="500px"
+        :geojsons="geojsons"
+        :infowindows="infowindows"
+        @clickData="onClickData"
+        @mouseoutData="onMouseoutData"
+        @mousemoveData="onMousemoveData"
+      />
     </el-row>
     <template v-if="addresses.length > 0">
       <el-row>
@@ -98,6 +105,7 @@ export default {
       parentAddressShape: null,
       childAddressShape: null,
       geojsons: [],
+      infowindows: [],
     }
   },
 
@@ -171,6 +179,22 @@ export default {
       this.$router.push({ path: '/addresses', query: { code } })
     },
 
+    onMouseoutData(event) {
+      this.infowindows = []
+    },
+
+    onMousemoveData(event) {
+      this.infowindows = []
+      const addressName = event.feature.getProperty('addressName')
+      const infowindow = new this.google.maps.InfoWindow({
+        content: addressName,
+        position: event.latLng,
+        pixelOffset: new this.google.maps.Size(0, -5),
+        disableAutoPan: true,
+      })
+      this.infowindows = [infowindow]
+    },
+
     clickAddress(address) {
       const code = address.code
       this.$router.push({ path: '/addresses', query: { code } })
@@ -196,6 +220,7 @@ export default {
         let zIndex = 2
         geojson.features.forEach((feature) => {
           const code = feature.properties.code
+          let address
           // 親の住所は外形を強調するため枠を太くする
           if (this.address && this.address.code === code) {
             strokeWeight = 2
@@ -204,10 +229,16 @@ export default {
             if (this.address.level !== 3) {
               fillOpacity = 0
             }
+            address = this.address
+          } else {
+            address = this.addresses.filter((a) => a.code === code)[0]
           }
+
           feature.properties.strokeWeight = strokeWeight
           feature.properties.fillOpacity = fillOpacity
           feature.properties.zIndex = zIndex
+          feature.properties.addressName =
+            address.details[address.details.length - 1].name
         })
       })
     },

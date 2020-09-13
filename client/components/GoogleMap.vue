@@ -198,6 +198,9 @@ export default {
       this.map.data.addListener('mouseout', (e) =>
         this.$emit('mouseoutData', e)
       )
+      this.map.data.addListener('mousemove', (e) =>
+        this.$emit('mousemoveData', e)
+      )
       this.map.data.addListener('mouseover', (e) =>
         this.$emit('mouseoverData', e)
       )
