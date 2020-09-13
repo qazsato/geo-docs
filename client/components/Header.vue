@@ -1,9 +1,7 @@
 <template>
   <div class="header">
-    <div>
-      <div class="inline-block">
-        <Logo href="/" />
-      </div>
+    <div class="flex">
+      <Logo href="/" />
       <h1 class="title">{{ title }}</h1>
     </div>
     <el-menu
@@ -68,8 +66,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.inline-block {
-  display: inline-block;
+.flex {
+  display: flex;
+  align-items: center;
 }
 
 .title {
@@ -79,6 +78,10 @@ export default {
   font-size: 18px;
   font-weight: normal;
   color: #303133;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .menu {
