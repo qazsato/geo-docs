@@ -39,7 +39,7 @@
         </div>
 
         <div v-if="tableData.length > 0">
-          <el-switch v-model="isVisibleMesh" active-text="メッシュ">
+          <el-switch v-model="isVisiblePolygon" active-text="ポリゴン">
           </el-switch>
           <el-switch
             v-model="isVisibleMarker"
@@ -74,7 +74,7 @@ export default {
       infowindows: [],
       tableData: [],
       level: '3',
-      isVisibleMesh: false,
+      isVisiblePolygon: false,
       isVisibleMarker: false,
     }
   },
@@ -100,8 +100,8 @@ export default {
       this.isVisibleMarker = true
     },
 
-    isVisibleMesh() {
-      this.toggleMesh()
+    isVisiblePolygon() {
+      this.togglePolygon()
     },
 
     isVisibleMarker() {
@@ -119,7 +119,7 @@ export default {
 
     onClick(e) {
       this.latLngs.push(e.latLng)
-      this.isVisibleMesh = false
+      this.isVisiblePolygon = false
       this.isVisibleMarker = true
     },
 
@@ -144,15 +144,15 @@ export default {
       const max = Math.max(...counts.map((c) => c.count))
       this.geojsons = []
       counts.forEach((c) => {
-        const opcity = (c.count / max) * 0.9
+        const opacity = (c.count / max) * 0.9
         const geojson = japanmesh.toGeoJSON(c.code, {
           count: c.count,
           strokeWeight: 1,
-          fillOpacity: opcity,
+          fillOpacity: opacity,
         })
         this.geojsons.push(geojson)
       })
-      this.isVisibleMesh = true
+      this.isVisiblePolygon = true
       this.isVisibleMarker = false
     },
 
@@ -161,7 +161,7 @@ export default {
       this.markers = []
       this.latLngs = []
       this.tableData = []
-      this.isVisibleMesh = false
+      this.isVisiblePolygon = false
       this.isVisibleMarker = false
     },
 
@@ -180,11 +180,11 @@ export default {
       })
     },
 
-    toggleMesh() {
+    togglePolygon() {
       const geojsons = this.geojsons
       this.geojsons = []
       geojsons.forEach((geojson) => {
-        geojson.properties.visible = this.isVisibleMesh
+        geojson.properties.visible = this.isVisiblePolygon
         this.geojsons.push(geojson)
       })
     },

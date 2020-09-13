@@ -3,26 +3,48 @@
     <template v-slot:header>
       <Header :title="title" active="/analytics/addresses/contains" />
     </template>
-    <GoogleMap height="500px" :markers="markers" @click="onClick" />
-
+    <GoogleMap
+      height="500px"
+      :geojsons="geojsons"
+      :markers="markers"
+      :infowindows="infowindows"
+      @click="onClick"
+      @mouseoutData="onMouseoutData"
+      @mouseoverData="onMouseoverData"
+    />
     <section class="search-area">
       <el-row>
         <el-radio v-model="level" label="1">Lv.1 都道府県</el-radio>
         <el-radio v-model="level" label="2">Lv.2 市区町村</el-radio>
         <el-radio v-model="level" label="3">Lv.3 町丁・字等</el-radio>
-        <el-button
-          type="primary"
-          :disabled="latLngs.length === 0"
-          @click="onClickAnalyticsButton"
-          >住所コードで分ける</el-button
-        >
+      </el-row>
+      <el-row class="button-row">
+        <div class="button-container">
+          <el-button
+            type="primary"
+            :disabled="latLngs.length === 0"
+            @click="onClickAnalyticsButton"
+            >住所コードで分ける</el-button
+          >
 
-        <el-button
-          type="danger"
-          :disabled="latLngs.length === 0"
-          @click="onClickResetButton"
-          >リセットする</el-button
-        >
+          <el-button
+            type="danger"
+            :disabled="latLngs.length === 0"
+            @click="onClickResetButton"
+            >リセットする</el-button
+          >
+        </div>
+
+        <div v-if="tableData.length > 0">
+          <el-switch
+            v-model="isVisiblePolygon"
+            active-text="ポリゴン"
+          ></el-switch>
+          <el-switch
+            v-model="isVisibleMarker"
+            active-text="マーカー"
+          ></el-switch>
+        </div>
       </el-row>
     </section>
     <el-table
@@ -47,9 +69,13 @@ export default {
       title: '住所コード解析',
       google: null,
       latLngs: [],
+      geojsons: [],
       markers: [],
+      infowindows: [],
       tableData: [],
-      level: '1',
+      level: '2',
+      isVisiblePolygon: false,
+      isVisibleMarker: false,
     }
   },
 
@@ -71,6 +97,14 @@ export default {
       })
       this.markers.push(marker)
     },
+
+    isVisiblePolygon() {
+      this.togglePolygon()
+    },
+
+    isVisibleMarker() {
+      this.toggleMarker()
+    },
   },
 
   async mounted() {
@@ -83,6 +117,22 @@ export default {
 
     onClick(e) {
       this.latLngs.push(e.latLng)
+      this.isVisiblePolygon = false
+      this.isVisibleMarker = true
+    },
+
+    onMouseoutData(event) {
+      this.infowindows = []
+    },
+
+    onMouseoverData(event) {
+      const count = event.feature.getProperty('count')
+      const infowindow = new this.google.maps.InfoWindow({
+        content: `${count}件`,
+        position: event.latLng,
+        disableAutoPan: true,
+      })
+      this.infowindows = [infowindow]
     },
 
     async onClickAnalyticsButton() {
@@ -99,12 +149,50 @@ export default {
           count: d.count,
         })
       })
+      const max = Math.max(...res.data.map((d) => d.count))
+      const codes = res.data.map((d) => d.address.code)
+      const shapeApi = new GeoApi('/addresses/shape', {
+        codes: codes.toString(),
+      })
+      const shapeRes = await shapeApi.get()
+      shapeRes.data.features.forEach((feature) => {
+        const count = res.data.filter(
+          (d) => d.address.code === feature.properties.code
+        )[0].count
+        const opacity = (count / max) * 0.9
+        feature.properties.count = count
+        feature.properties.strokeWeight = 1
+        feature.properties.fillOpacity = opacity
+      })
+      this.geojsons.push(shapeRes.data)
+      this.isVisiblePolygon = true
+      this.isVisibleMarker = false
     },
 
     onClickResetButton() {
+      this.geojsons = []
       this.markers = []
       this.latLngs = []
       this.tableData = []
+      this.isVisiblePolygon = false
+      this.isVisibleMarker = false
+    },
+
+    togglePolygon() {
+      const geojsons = this.geojsons
+      this.geojsons = []
+      geojsons.forEach((geojson) => {
+        geojson.features.forEach((f) => {
+          f.properties.visible = this.isVisiblePolygon
+        })
+        this.geojsons.push(geojson)
+      })
+    },
+
+    toggleMarker() {
+      this.markers.forEach((marker) => {
+        marker.setVisible(this.isVisibleMarker)
+      })
     },
   },
 
@@ -117,11 +205,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/core.scss';
+
 .search-area {
   padding: 10px 0;
-}
 
-.search-area .el-row {
-  padding: 10px;
+  .el-row {
+    padding: 10px;
+  }
+
+  .button-row {
+    display: flex;
+    align-items: center;
+    @include bp_sp() {
+      flex-direction: column;
+      align-items: self-end;
+    }
+
+    .button-container {
+      flex: 1;
+      @include bp_sp() {
+        margin-bottom: 15px;
+      }
+    }
+  }
 }
 </style>
