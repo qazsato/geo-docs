@@ -136,6 +136,7 @@ export default {
     },
 
     async onClickAnalyticsButton() {
+      // テーブル
       const api = new GeoApi('/analytics/addresses/contains', {
         locations: this.locations,
         level: this.level,
@@ -149,12 +150,15 @@ export default {
           count: d.count,
         })
       })
+
+      // 地図ポリゴン
       const max = Math.max(...res.data.map((d) => d.count))
       const codes = res.data.map((d) => d.address.code)
       const shapeApi = new GeoApi('/addresses/shape', {
         codes: codes.toString(),
       })
       const shapeRes = await shapeApi.get()
+      this.geojsons = []
       shapeRes.data.features.forEach((feature) => {
         const count = res.data.filter(
           (d) => d.address.code === feature.properties.code
@@ -165,6 +169,7 @@ export default {
         feature.properties.fillOpacity = opacity
       })
       this.geojsons.push(shapeRes.data)
+
       this.isVisiblePolygon = true
       this.isVisibleMarker = false
     },
