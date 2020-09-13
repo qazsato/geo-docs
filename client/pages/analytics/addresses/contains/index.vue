@@ -3,7 +3,7 @@
     <template v-slot:header>
       <Header :title="title" active="/analytics/addresses/contains" />
     </template>
-    <div id="map"></div>
+    <GoogleMap height="500px" :markers="markers" @click="onClick" />
 
     <section class="search-area">
       <el-row>
@@ -14,14 +14,14 @@
           type="primary"
           :disabled="latLngs.length === 0"
           @click="onClickAnalyticsButton"
-          >住所コード毎に区分する</el-button
+          >住所コードで分ける</el-button
         >
 
         <el-button
           type="danger"
           :disabled="latLngs.length === 0"
           @click="onClickResetButton"
-          >マーカーをリセットする</el-button
+          >リセットする</el-button
         >
       </el-row>
     </section>
@@ -38,23 +38,14 @@
 </template>
 
 <script>
-import config from '@/config'
-import axios from 'axios'
-import Page from '@/components/Page'
-import Header from '@/components/Header'
-import GoogleMapsApiLoader from 'google-maps-api-loader'
+import { mapActions } from 'vuex'
+import GeoApi from '@/requests/geo_api'
 
 export default {
-  components: {
-    Page,
-    Header,
-  },
-
   data() {
     return {
       title: '住所コード解析',
       google: null,
-      map: null,
       latLngs: [],
       markers: [],
       tableData: [],
@@ -84,34 +75,23 @@ export default {
   },
 
   async mounted() {
-    this.google = await GoogleMapsApiLoader({
-      apiKey: config.google_maps.api_key,
-    })
-    this.createMap()
+    await this.loadMap()
+    this.google = this.$store.state.map.google
   },
 
   methods: {
-    createMap() {
-      const position = new this.google.maps.LatLng(35.689568, 139.691717)
-      this.map = new this.google.maps.Map(document.getElementById('map'), {
-        zoom: 14,
-        center: position,
-        mapTypeId: this.google.maps.MapTypeId.ROADMAP,
-        styles: config.google_maps.theme.dark,
-        clickableIcons: false,
-        disableDefaultUI: true,
-        zoomControl: true,
-      })
-      this.map.addListener('click', (e) => this.latLngs.push(e.latLng))
+    ...mapActions('map', { loadMap: 'load' }),
+
+    onClick(e) {
+      this.latLngs.push(e.latLng)
     },
 
     async onClickAnalyticsButton() {
-      const api = `${config.geo.api_url}/analytics/addresses/contains`
-      const res = await axios.post(api, {
+      const api = new GeoApi('/analytics/addresses/contains', {
         locations: this.locations,
         level: this.level,
-        access_token: config.geo.access_token,
       })
+      const res = await api.post()
       this.tableData = []
       res.data.forEach((d) => {
         this.tableData.push({
@@ -139,15 +119,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#map {
-  width: 100%;
-  height: 350px;
-  background-color: #ebeef5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .search-area {
   padding: 10px 0;
 }

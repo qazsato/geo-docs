@@ -12,15 +12,8 @@ import config from '@/config'
 import SwaggerUI from 'swagger-ui-dist'
 import 'swagger-ui-dist/swagger-ui.css'
 import 'swagger-ui-themes/themes/3.x/theme-flattop.css'
-import Page from '@/components/Page'
-import Header from '@/components/Header'
 
 export default {
-  components: {
-    Page,
-    Header,
-  },
-
   data() {
     return {
       title: 'API 仕様書',

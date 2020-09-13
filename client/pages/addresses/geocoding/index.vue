@@ -3,7 +3,7 @@
     <template v-slot:header>
       <Header :title="title" active="/addresses/geocoding" />
     </template>
-    <div id="map"></div>
+    <GoogleMap height="500px" :markers="markers" @click="onClick" />
     <el-table
       :data="tableData"
       :default-sort="{ prop: 'index', order: 'descending' }"
@@ -28,46 +28,29 @@
 </template>
 
 <script>
-import config from '@/config'
-import axios from 'axios'
-import Page from '@/components/Page'
-import Header from '@/components/Header'
-import GoogleMapsApiLoader from 'google-maps-api-loader'
+import { mapActions } from 'vuex'
+import GeoApi from '@/requests/geo_api'
 
 export default {
-  components: {
-    Page,
-    Header,
-  },
-
   data() {
     return {
       title: '逆ジオコーディング',
-      google: null,
-      map: null,
       latLng: null,
-      marker: null,
       tableData: [],
+      google: null,
+      markers: [],
     }
   },
 
   watch: {
     async latLng(val) {
-      if (this.marker) {
-        this.marker.setMap(null)
-      }
-      this.marker = new this.google.maps.Marker({
-        position: val,
-        map: this.map,
-      })
+      const marker = new this.google.maps.Marker({ position: val })
+      this.markers = [marker]
 
-      const api = `${config.geo.api_url}/addresses/geocoding`
-      const res = await axios.get(api, {
-        params: {
-          locations: `${val.lat()},${val.lng()}`,
-          access_token: config.geo.access_token,
-        },
+      const api = new GeoApi('/addresses/geocoding', {
+        locations: `${val.lat()},${val.lng()}`,
       })
+      const res = await api.get()
       const address = res.data[0]
 
       this.tableData.unshift({
@@ -81,25 +64,15 @@ export default {
   },
 
   async mounted() {
-    this.google = await GoogleMapsApiLoader({
-      apiKey: config.google_maps.api_key,
-    })
-    this.createMap()
+    await this.loadMap()
+    this.google = this.$store.state.map.google
   },
 
   methods: {
-    createMap() {
-      const position = new this.google.maps.LatLng(35.689568, 139.691717)
-      this.map = new this.google.maps.Map(document.getElementById('map'), {
-        zoom: 14,
-        center: position,
-        mapTypeId: this.google.maps.MapTypeId.ROADMAP,
-        styles: config.google_maps.theme.retro,
-        clickableIcons: false,
-        disableDefaultUI: true,
-        zoomControl: true,
-      })
-      this.map.addListener('click', (e) => (this.latLng = e.latLng))
+    ...mapActions('map', { loadMap: 'load' }),
+
+    onClick(e) {
+      this.latLng = e.latLng
     },
   },
 
@@ -110,14 +83,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-#map {
-  width: 100%;
-  height: 500px;
-  background-color: #ebeef5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-</style>
