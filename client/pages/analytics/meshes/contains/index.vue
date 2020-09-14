@@ -13,13 +13,23 @@
       @mouseoverData="onMouseoverData"
     />
     <section class="search-area">
-      <el-row>
-        <el-radio v-model="level" label="1">1次メッシュ(80km)</el-radio>
-        <el-radio v-model="level" label="2">2次メッシュ(10km)</el-radio>
-        <el-radio v-model="level" label="3">3次メッシュ(1km)</el-radio>
-        <el-radio v-model="level" label="4">4次メッシュ(500m)</el-radio>
-        <el-radio v-model="level" label="5">5次メッシュ(250m)</el-radio>
-        <el-radio v-model="level" label="6">6次メッシュ(125m)</el-radio>
+      <el-row class="condition-row">
+        <div class="radio-area">
+          <el-radio v-model="level" label="1">1次メッシュ(80km)</el-radio>
+          <el-radio v-model="level" label="2">2次メッシュ(10km)</el-radio>
+          <el-radio v-model="level" label="3">3次メッシュ(1km)</el-radio>
+          <el-radio v-model="level" label="4">4次メッシュ(500m)</el-radio>
+          <el-radio v-model="level" label="5">5次メッシュ(250m)</el-radio>
+          <el-radio v-model="level" label="6">6次メッシュ(125m)</el-radio>
+        </div>
+        <div v-if="tableData.length > 0">
+          <el-switch v-model="isVisiblePolygon" active-text="ポリゴン">
+          </el-switch>
+          <el-switch
+            v-model="isVisibleMarker"
+            active-text="マーカー"
+          ></el-switch>
+        </div>
       </el-row>
       <el-row class="button-row">
         <div class="button-container">
@@ -34,17 +44,8 @@
             type="danger"
             :disabled="latLngs.length === 0"
             @click="onClickResetButton"
-            >リセットする</el-button
+            >削除する</el-button
           >
-        </div>
-
-        <div v-if="tableData.length > 0">
-          <el-switch v-model="isVisiblePolygon" active-text="ポリゴン">
-          </el-switch>
-          <el-switch
-            v-model="isVisibleMarker"
-            active-text="マーカー"
-          ></el-switch>
         </div>
       </el-row>
     </section>
@@ -231,7 +232,7 @@ export default {
     padding: 10px;
   }
 
-  .button-row {
+  .condition-row {
     display: flex;
     align-items: center;
     @include bp_sp() {
@@ -239,12 +240,18 @@ export default {
       align-items: self-end;
     }
 
-    .button-container {
+    .radio-area {
       flex: 1;
       @include bp_sp() {
-        margin-bottom: 15px;
+        margin-bottom: 10px;
       }
     }
+  }
+
+  .button-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

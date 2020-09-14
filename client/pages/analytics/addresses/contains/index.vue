@@ -13,28 +13,12 @@
       @mousemoveData="onMousemoveData"
     />
     <section class="search-area">
-      <el-row>
-        <el-radio v-model="level" label="1">Lv.1 都道府県</el-radio>
-        <el-radio v-model="level" label="2">Lv.2 市区町村</el-radio>
-        <el-radio v-model="level" label="3">Lv.3 町丁・字等</el-radio>
-      </el-row>
-      <el-row class="button-row">
-        <div class="button-container">
-          <el-button
-            type="primary"
-            :disabled="latLngs.length === 0"
-            @click="onClickAnalyticsButton"
-            >住所コードで分ける</el-button
-          >
-
-          <el-button
-            type="danger"
-            :disabled="latLngs.length === 0"
-            @click="onClickResetButton"
-            >リセットする</el-button
-          >
+      <el-row class="condition-row">
+        <div class="radio-area">
+          <el-radio v-model="level" label="1">Lv.1 都道府県</el-radio>
+          <el-radio v-model="level" label="2">Lv.2 市区町村</el-radio>
+          <el-radio v-model="level" label="3">Lv.3 町丁・字等</el-radio>
         </div>
-
         <div v-if="tableData.length > 0">
           <el-switch
             v-model="isVisiblePolygon"
@@ -45,6 +29,21 @@
             active-text="マーカー"
           ></el-switch>
         </div>
+      </el-row>
+      <el-row class="button-row">
+        <el-button
+          type="primary"
+          :disabled="latLngs.length === 0"
+          @click="onClickAnalyticsButton"
+          >解析する</el-button
+        >
+
+        <el-button
+          type="danger"
+          :disabled="latLngs.length === 0"
+          @click="onClickResetButton"
+          >削除する</el-button
+        >
       </el-row>
     </section>
     <el-table
@@ -223,7 +222,7 @@ export default {
     padding: 10px;
   }
 
-  .button-row {
+  .condition-row {
     display: flex;
     align-items: center;
     @include bp_sp() {
@@ -231,12 +230,18 @@ export default {
       align-items: self-end;
     }
 
-    .button-container {
+    .radio-area {
       flex: 1;
       @include bp_sp() {
-        margin-bottom: 15px;
+        margin-bottom: 10px;
       }
     }
+  }
+
+  .button-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>
