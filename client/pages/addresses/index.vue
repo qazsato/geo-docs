@@ -16,6 +16,7 @@
         </el-input>
       </div>
       <GoogleMap
+        v-loading="loading"
         height="500px"
         :geojsons="geojsons"
         :infowindows="infowindows"
@@ -106,6 +107,7 @@ export default {
       childAddressShape: null,
       geojsons: [],
       infowindows: [],
+      loading: false,
     }
   },
 
@@ -156,6 +158,7 @@ export default {
     ...mapActions('map', { loadMap: 'load' }),
 
     async fetch() {
+      this.loading = true
       if (this.address) {
         const shapeApi = new GeoApi('/addresses/shape', {
           codes: this.address.code,
@@ -172,6 +175,7 @@ export default {
         const shapeRes = await shapeApi.get()
         this.childAddressShape = shapeRes.data
       }
+      this.loading = false
     },
 
     onClickData(event) {

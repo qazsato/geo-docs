@@ -4,6 +4,7 @@
       <Header :title="title" active="/analytics/addresses/contains" />
     </template>
     <GoogleMap
+      v-loading="loading"
       height="500px"
       :geojsons="geojsons"
       :markers="markers"
@@ -75,6 +76,7 @@ export default {
       level: '2',
       isVisiblePolygon: false,
       isVisibleMarker: false,
+      loading: false,
     }
   },
 
@@ -138,6 +140,7 @@ export default {
     },
 
     async onClickAnalyticsButton() {
+      this.loading = true
       // テーブル
       const api = new GeoApi('/analytics/addresses/contains', {
         locations: this.locations,
@@ -175,6 +178,7 @@ export default {
 
       this.isVisiblePolygon = true
       this.isVisibleMarker = false
+      this.loading = false
     },
 
     onClickResetButton() {
