@@ -139,11 +139,8 @@ export default {
 
       this.drawData()
 
-      if (this.geojsons.length > 0) {
-        let locations = []
-        this.geojsons.forEach((geojson) => {
-          locations = locations.concat(toLocations(geojson))
-        })
+      const locations = this.getVisibleLocations()
+      if (locations.length > 0) {
         adjustViewPort(this.google, this.map, locations)
       }
     },
@@ -223,6 +220,24 @@ export default {
           visible,
         }
       })
+    },
+
+    getVisibleLocations() {
+      let locations = []
+      this.geojsons.forEach((geojson) => {
+        if (geojson.type === 'Feature') {
+          if (geojson.properties.visible !== false) {
+            locations = locations.concat(toLocations(geojson))
+          }
+        } else if (geojson.type === 'FeatureCollection') {
+          geojson.features.forEach((f) => {
+            if (f.properties.visible !== false) {
+              locations = locations.concat(toLocations(f))
+            }
+          })
+        }
+      })
+      return locations
     },
   },
 }
