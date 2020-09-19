@@ -54,14 +54,14 @@
     >
       <el-table-column prop="code" label="Code" sortable></el-table-column>
       <el-table-column prop="name" label="Name" sortable></el-table-column>
-      <el-table-column prop="count" label="count" sortable></el-table-column>
+      <el-table-column prop="count" label="Count" sortable></el-table-column>
     </el-table>
   </Page>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import GeoApi from '@/requests/geo_api'
+import GeoApi from '@/requests/geo-api'
 
 export default {
   data() {

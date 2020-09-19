@@ -62,7 +62,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import GeoApi from '@/requests/geo_api'
+import GeoApi from '@/requests/geo-api'
 
 export default {
   async asyncData({ query }) {
