@@ -263,8 +263,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/core.scss';
-
 .breadcrumb-item {
   margin-bottom: 5px;
 }
@@ -273,7 +271,7 @@ export default {
   display: flex;
   align-items: center;
   padding-bottom: 5px;
-  @include bp_sp() {
+  @include sp() {
     flex-direction: column;
     align-items: start;
   }
@@ -287,7 +285,7 @@ export default {
 
   .el-input {
     width: 200px;
-    @include bp_sp() {
+    @include sp() {
       margin: 10px 0 5px;
       width: 100%;
     }

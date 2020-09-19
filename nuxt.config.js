@@ -1,20 +1,11 @@
 // eslint-disable-next-line nuxt/no-cjs-in-config
 module.exports = {
   srcDir: 'client/',
-  /*
-   ** Nuxt rendering mode
-   ** See https://nuxtjs.org/api/configuration-mode
-   */
+
   mode: 'universal',
-  /*
-   ** Nuxt target
-   ** See https://nuxtjs.org/api/configuration-target
-   */
+
   target: 'server',
-  /*
-   ** Headers of the page
-   ** See https://nuxtjs.org/api/configuration-head
-   */
+
   head: {
     titleTemplate: '%s - Geo Docs',
     meta: [
@@ -35,35 +26,26 @@ module.exports = {
       },
     ],
   },
-  /*
-   ** Customize the progress-bar color
-   */
+
   loading: { color: '#409fff' },
-  /*
-   ** Global CSS
-   */
+
   css: [
     'element-ui/lib/theme-chalk/index.css',
     'github-markdown-css/github-markdown.css',
   ],
-  /*
-   ** Plugins to load before mounting the App
-   ** https://nuxtjs.org/guide/plugins
-   */
+
+  styleResources: {
+    scss: ['@/assets/styles/core.scss'],
+  },
+
   plugins: ['@/plugins/element-ui'],
-  /*
-   ** Auto import components
-   ** See https://nuxtjs.org/api/configuration-components
-   */
+
   components: true,
-  /*
-   ** Nuxt.js dev-modules
-   */
+
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    // Doc: https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/stylelint-module',
+    '@nuxtjs/style-resources',
     [
       '@nuxtjs/google-analytics',
       {
@@ -71,22 +53,11 @@ module.exports = {
       },
     ],
   ],
-  /*
-   ** Nuxt.js modules
-   */
-  modules: [
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
-  ],
-  /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
+
+  modules: ['@nuxtjs/axios'],
+
   axios: {},
-  /*
-   ** Build configuration
-   ** See https://nuxtjs.org/api/configuration-build/
-   */
+
   build: {
     transpile: [/^element-ui/],
   },

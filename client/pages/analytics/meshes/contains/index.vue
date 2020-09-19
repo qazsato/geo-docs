@@ -223,8 +223,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/core.scss';
-
 .search-area {
   padding: 10px 0;
 
@@ -235,14 +233,14 @@ export default {
   .condition-row {
     display: flex;
     align-items: center;
-    @include bp_sp() {
+    @include sp() {
       flex-direction: column;
       align-items: self-end;
     }
 
     .radio-area {
       flex: 1;
-      @include bp_sp() {
+      @include sp() {
         margin-bottom: 10px;
       }
     }
