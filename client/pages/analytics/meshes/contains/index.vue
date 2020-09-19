@@ -186,11 +186,15 @@ export default {
     calcCountGroupByCode(locations, level) {
       const count = {}
       locations.forEach((location) => {
-        const code = japanmesh.toCode(location.lat, location.lng, level)
-        if (count[code]) {
-          count[code]++
-        } else {
-          count[code] = 1
+        try {
+          const code = japanmesh.toCode(location.lat, location.lng, level)
+          if (count[code]) {
+            count[code]++
+          } else {
+            count[code] = 1
+          }
+        } catch (e) {
+          console.warn(e)
         }
       })
       return Object.entries(count).map(([code, count]) => {
