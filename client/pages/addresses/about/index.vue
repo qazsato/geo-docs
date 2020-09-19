@@ -6,8 +6,7 @@
     <article class="markdown-body">
       <h2>住所データ</h2>
       <p>
-        Geo
-        APIで扱う住所データは、<b>3段階の住所レベル</b>に区分されており、下記のデータ階層となっています。
+        Geo APIで扱う住所データは、<b>3段階の住所レベル</b>に区分されており、下記のデータ階層となっています。
       </p>
       <table>
         <thead>
@@ -42,8 +41,8 @@
       <h2>住所ポリゴンデータ</h2>
       <p>
         住所ポリゴンデータは、住所データと同様に3段階の住所レベルに区分されており、住所データとは<b>一対一の関係</b>となっています。<br />
-        また出力形式は、空間データの標準的なフォーマットの GeoJSON
-        に加えて、より軽量なフォーマットである TopoJSON にも対応しています。
+        また出力形式は、空間データの標準的なフォーマットの GeoJSON に加えて、より軽量なフォーマットである TopoJSON
+        にも対応しています。
       </p>
       <table>
         <thead>
@@ -60,9 +59,7 @@
             <td>都道府県</td>
             <td>2桁</td>
             <td>
-              <a
-                href="https://gist.github.com/qazsato/f3da1ff9377c91fb0096955279b2827a"
-                target="_blank"
+              <a href="https://gist.github.com/qazsato/f3da1ff9377c91fb0096955279b2827a" target="_blank"
                 >東京都のポリゴンデータ</a
               >
             </td>
@@ -72,9 +69,7 @@
             <td>市区町村</td>
             <td>5桁</td>
             <td>
-              <a
-                href="https://gist.github.com/qazsato/dd594ab00779ff19b737c8c72b1099b6"
-                target="_blank"
+              <a href="https://gist.github.com/qazsato/dd594ab00779ff19b737c8c72b1099b6" target="_blank"
                 >東京都千代田区のポリゴンデータ</a
               >
             </td>
@@ -84,9 +79,7 @@
             <td>町丁・字等</td>
             <td>11桁</td>
             <td>
-              <a
-                href="https://gist.github.com/qazsato/84a1c676f539b3340d4572a1c67cca3b"
-                target="_blank"
+              <a href="https://gist.github.com/qazsato/84a1c676f539b3340d4572a1c67cca3b" target="_blank"
                 >東京都千代田区丸の内１丁目のポリゴンデータ</a
               >
             </td>
@@ -96,23 +89,17 @@
       <h2>出典</h2>
       <ul>
         <li>
-          国土交通省国土数値情報ダウンロードサイト（<a
-            href="https://nlftp.mlit.go.jp/index.html"
-            target="_blank"
+          国土交通省国土数値情報ダウンロードサイト（<a href="https://nlftp.mlit.go.jp/index.html" target="_blank"
             >https://nlftp.mlit.go.jp/index.html</a
           >）
         </li>
         <ul>
           <li>
-            「国土数値情報 行政区域データ,
-            位置参照情報」（国土交通省）を加工して作成
+            「国土数値情報 行政区域データ, 位置参照情報」（国土交通省）を加工して作成
           </li>
         </ul>
         <li>
-          政府統計の総合窓口(e-Stat)（<a
-            href="https://www.e-stat.go.jp/"
-            target="_blank"
-            >https://www.e-stat.go.jp/</a
+          政府統計の総合窓口(e-Stat)（<a href="https://www.e-stat.go.jp/" target="_blank">https://www.e-stat.go.jp/</a
           >）
         </li>
         <ul>

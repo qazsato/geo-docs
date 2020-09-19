@@ -34,9 +34,7 @@
               <td>4桁</td>
               <td>約80km</td>
               <td>
-                <a
-                  href="https://gist.github.com/qazsato/fb26be6de0ecbefd107d7c1eff35cc5e"
-                  target="_blank"
+                <a href="https://gist.github.com/qazsato/fb26be6de0ecbefd107d7c1eff35cc5e" target="_blank"
                   >5339のポリゴンデータ</a
                 >
               </td>
@@ -47,9 +45,7 @@
               <td>6桁</td>
               <td>約10km</td>
               <td>
-                <a
-                  href="https://gist.github.com/qazsato/027f8dca59b2895d1040adc7e8621cc4"
-                  target="_blank"
+                <a href="https://gist.github.com/qazsato/027f8dca59b2895d1040adc7e8621cc4" target="_blank"
                   >533945のポリゴンデータ</a
                 >
               </td>
@@ -60,9 +56,7 @@
               <td>8桁</td>
               <td>約1km</td>
               <td>
-                <a
-                  href="https://gist.github.com/qazsato/d9f219ba60e2d5193a8c1d65bce39fed"
-                  target="_blank"
+                <a href="https://gist.github.com/qazsato/d9f219ba60e2d5193a8c1d65bce39fed" target="_blank"
                   >53394529のポリゴンデータ</a
                 >
               </td>
@@ -73,9 +67,7 @@
               <td>9桁</td>
               <td>約500m</td>
               <td>
-                <a
-                  href="https://gist.github.com/qazsato/bd3fe7aa7fbff441fd543a92814692b5"
-                  target="_blank"
+                <a href="https://gist.github.com/qazsato/bd3fe7aa7fbff441fd543a92814692b5" target="_blank"
                   >533945292のポリゴンデータ</a
                 >
               </td>
@@ -86,9 +78,7 @@
               <td>10桁</td>
               <td>約250m</td>
               <td>
-                <a
-                  href="https://gist.github.com/qazsato/557430aaf0504f558b5cc45fcbe257b0"
-                  target="_blank"
+                <a href="https://gist.github.com/qazsato/557430aaf0504f558b5cc45fcbe257b0" target="_blank"
                   >5339452922のポリゴンデータ</a
                 >
               </td>
@@ -99,9 +89,7 @@
               <td>11桁</td>
               <td>約125m</td>
               <td>
-                <a
-                  href="https://gist.github.com/qazsato/443642c41a6b074d7ec2bf3d5204bb56"
-                  target="_blank"
+                <a href="https://gist.github.com/qazsato/443642c41a6b074d7ec2bf3d5204bb56" target="_blank"
                   >53394529221のポリゴンデータ</a
                 >
               </td>
@@ -113,16 +101,12 @@
         <p>
           Geo Docs の地域メッシュの機能は、npm モジュールの
           <b>japanmesh</b> を用いて実装されています。<br />
-          <a href="https://www.npmjs.com/package/japanmesh" target="_blank"
-            >https://www.npmjs.com/package/japanmesh</a
-          >
+          <a href="https://www.npmjs.com/package/japanmesh" target="_blank">https://www.npmjs.com/package/japanmesh</a>
         </p>
         <h2>参考</h2>
         <ul>
           <li>
-            <a
-              href="http://www.stat.go.jp/data/mesh/gaiyou.html"
-              target="_blank"
+            <a href="http://www.stat.go.jp/data/mesh/gaiyou.html" target="_blank"
               >地域メッシュ統計の概要 - 総務省統計局</a
             >
           </li>

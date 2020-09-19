@@ -21,37 +21,17 @@
           <el-radio v-model="level" label="3">Lv.3 町丁・字等</el-radio>
         </div>
         <div v-if="tableData.length > 0">
-          <el-switch
-            v-model="isVisiblePolygon"
-            active-text="ポリゴン"
-          ></el-switch>
-          <el-switch
-            v-model="isVisibleMarker"
-            active-text="マーカー"
-          ></el-switch>
+          <el-switch v-model="isVisiblePolygon" active-text="ポリゴン"></el-switch>
+          <el-switch v-model="isVisibleMarker" active-text="マーカー"></el-switch>
         </div>
       </el-row>
       <el-row class="button-row">
-        <el-button
-          type="primary"
-          :disabled="latLngs.length === 0"
-          @click="onClickAnalyticsButton"
-          >解析する</el-button
-        >
+        <el-button type="primary" :disabled="latLngs.length === 0" @click="onClickAnalyticsButton">解析する</el-button>
 
-        <el-button
-          type="danger"
-          :disabled="latLngs.length === 0"
-          @click="onClickResetButton"
-          >削除する</el-button
-        >
+        <el-button type="danger" :disabled="latLngs.length === 0" @click="onClickResetButton">削除する</el-button>
       </el-row>
     </section>
-    <el-table
-      :data="tableData"
-      :default-sort="{ prop: 'count', order: 'descending' }"
-      style="width: 100%;"
-    >
+    <el-table :data="tableData" :default-sort="{ prop: 'count', order: 'descending' }" style="width: 100%;">
       <el-table-column prop="code" label="Code" sortable></el-table-column>
       <el-table-column prop="name" label="Name" sortable></el-table-column>
       <el-table-column prop="count" label="Count" sortable></el-table-column>
@@ -165,9 +145,7 @@ export default {
       const shapeRes = await shapeApi.get()
       this.geojsons = []
       shapeRes.data.features.forEach((feature) => {
-        const d = res.data.filter(
-          (d) => d.address.code === feature.properties.code
-        )[0]
+        const d = res.data.filter((d) => d.address.code === feature.properties.code)[0]
         const opacity = (d.count / max) * 0.9
         feature.properties.count = d.count
         feature.properties.addressName = d.address.name

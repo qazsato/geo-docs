@@ -209,10 +209,7 @@ export default {
       const westernmost = _.minBy(coords, (c) => c[0])
       const easternmost = _.maxBy(coords, (c) => c[0])
 
-      return new this.google.maps.LatLng(
-        northernmost[1],
-        (westernmost[0] + easternmost[0]) / 2
-      )
+      return new this.google.maps.LatLng(northernmost[1], (westernmost[0] + easternmost[0]) / 2)
     },
 
     searchMeshCode() {

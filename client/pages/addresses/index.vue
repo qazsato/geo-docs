@@ -7,12 +7,7 @@
       <Breadcrumb v-if="address" :breadcrumbs="breadcrumbs" />
       <div class="title-container">
         <h2 class="address-title">{{ addressTitle }}</h2>
-        <el-input
-          v-model="query"
-          placeholder="住所コード"
-          prefix-icon="el-icon-search"
-          @change="searchAddressCode"
-        >
+        <el-input v-model="query" placeholder="住所コード" prefix-icon="el-icon-search" @change="searchAddressCode">
         </el-input>
       </div>
       <GoogleMap
@@ -27,21 +22,9 @@
     </el-row>
     <template v-if="addresses.length > 0">
       <el-row>
-        <el-table
-          :data="addresses"
-          class="address-table"
-          @row-click="clickAddress"
-        >
-          <el-table-column
-            prop="code"
-            label="Code"
-            width="130"
-          ></el-table-column>
-          <el-table-column
-            prop="level"
-            label="Level"
-            width="80"
-          ></el-table-column>
+        <el-table :data="addresses" class="address-table" @row-click="clickAddress">
+          <el-table-column prop="code" label="Code" width="130"></el-table-column>
+          <el-table-column prop="level" label="Level" width="80"></el-table-column>
           <el-table-column prop="name" label="Name"></el-table-column>
         </el-table>
       </el-row>
@@ -241,8 +224,7 @@ export default {
           feature.properties.strokeWeight = strokeWeight
           feature.properties.fillOpacity = fillOpacity
           feature.properties.zIndex = zIndex
-          feature.properties.addressName =
-            address.details[address.details.length - 1].name
+          feature.properties.addressName = address.details[address.details.length - 1].name
         })
       })
     },

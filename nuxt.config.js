@@ -29,10 +29,7 @@ module.exports = {
 
   loading: { color: '#409fff' },
 
-  css: [
-    'element-ui/lib/theme-chalk/index.css',
-    'github-markdown-css/github-markdown.css',
-  ],
+  css: ['element-ui/lib/theme-chalk/index.css', 'github-markdown-css/github-markdown.css'],
 
   styleResources: {
     scss: ['@/assets/styles/core.scss'],

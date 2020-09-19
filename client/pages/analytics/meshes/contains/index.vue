@@ -23,37 +23,21 @@
           <el-radio v-model="level" label="6">6次メッシュ(125m)</el-radio>
         </div>
         <div v-if="tableData.length > 0">
-          <el-switch v-model="isVisiblePolygon" active-text="ポリゴン">
-          </el-switch>
-          <el-switch
-            v-model="isVisibleMarker"
-            active-text="マーカー"
-          ></el-switch>
+          <el-switch v-model="isVisiblePolygon" active-text="ポリゴン"> </el-switch>
+          <el-switch v-model="isVisibleMarker" active-text="マーカー"></el-switch>
         </div>
       </el-row>
       <el-row class="button-row">
         <div class="button-container">
-          <el-button
-            type="primary"
-            :disabled="latLngs.length === 0"
-            @click="onClickAnalyticsButton"
+          <el-button type="primary" :disabled="latLngs.length === 0" @click="onClickAnalyticsButton"
             >解析する</el-button
           >
 
-          <el-button
-            type="danger"
-            :disabled="latLngs.length === 0"
-            @click="onClickResetButton"
-            >削除する</el-button
-          >
+          <el-button type="danger" :disabled="latLngs.length === 0" @click="onClickResetButton">削除する</el-button>
         </div>
       </el-row>
     </section>
-    <el-table
-      :data="tableData"
-      :default-sort="{ prop: 'count', order: 'descending' }"
-      style="width: 100%;"
-    >
+    <el-table :data="tableData" :default-sort="{ prop: 'count', order: 'descending' }" style="width: 100%;">
       <el-table-column prop="code" label="Code" sortable></el-table-column>
       <el-table-column prop="count" label="count" sortable></el-table-column>
     </el-table>
@@ -177,10 +161,7 @@ export default {
       const westernmost = _.minBy(coords, (c) => c[0])
       const easternmost = _.maxBy(coords, (c) => c[0])
 
-      return new this.google.maps.LatLng(
-        northernmost[1],
-        (westernmost[0] + easternmost[0]) / 2
-      )
+      return new this.google.maps.LatLng(northernmost[1], (westernmost[0] + easternmost[0]) / 2)
     },
 
     calcCountGroupByCode(locations, level) {
