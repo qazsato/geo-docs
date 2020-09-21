@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import config from '@/config'
 import SwaggerUI from 'swagger-ui-dist'
 import 'swagger-ui-dist/swagger-ui.css'
 import 'swagger-ui-themes/themes/3.x/theme-flattop.css'
+import config from '@/config'
 
 export default {
   data() {
