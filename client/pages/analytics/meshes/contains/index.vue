@@ -175,6 +175,7 @@ export default {
             count[code] = 1
           }
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.warn(e)
         }
       })
