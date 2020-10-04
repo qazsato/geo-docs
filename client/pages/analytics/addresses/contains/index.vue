@@ -205,14 +205,14 @@ export default {
   .condition-row {
     display: flex;
     align-items: center;
-    @include sp() {
+    @include xs() {
       flex-direction: column;
       align-items: self-end;
     }
 
     .radio-area {
       flex: 1;
-      @include sp() {
+      @include xs() {
         margin-bottom: 10px;
       }
     }

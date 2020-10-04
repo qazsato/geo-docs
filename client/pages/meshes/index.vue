@@ -232,7 +232,7 @@ export default {
   display: flex;
   align-items: center;
   padding-bottom: 5px;
-  @include sp() {
+  @include xs() {
     flex-direction: column;
     align-items: start;
   }
@@ -254,7 +254,7 @@ export default {
 
   .el-input {
     width: 200px;
-    @include sp() {
+    @include xs() {
       margin: 10px 0 5px;
       width: 100%;
     }
