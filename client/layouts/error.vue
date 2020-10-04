@@ -1,7 +1,10 @@
 <template>
   <div class="main">
     <div class="text">
-      <h1 class="title">404 Not Found</h1>
+      <h1 class="title">
+        <div>Geo Docs</div>
+        <div>404 Not Found</div>
+      </h1>
       <p class="sub-title">お探しのページは見つかりませんでした</p>
     </div>
     <img class="telescope" src="~/assets/images/error/telescope.png" />
@@ -46,7 +49,7 @@ export default {
     color: #fff;
 
     .title {
-      font-size: 60px;
+      font-size: 50px;
       margin-bottom: 20px;
     }
 
