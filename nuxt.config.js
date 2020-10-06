@@ -28,7 +28,7 @@ module.exports = {
     ],
   },
 
-  loading: { color: '#409fff' },
+  loading: { color: '#00CED1' },
 
   css: ['element-ui/lib/theme-chalk/index.css', 'github-markdown-css/github-markdown.css'],
 
