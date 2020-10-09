@@ -35,10 +35,10 @@ export default {
       this.markers = [marker]
 
       const api = new GeoApi('/addresses/geocoding', {
-        locations: `${val.lat()},${val.lng()}`,
+        location: `${val.lat()},${val.lng()}`,
       })
       const res = await api.get()
-      const address = res.data[0]
+      const address = res.data
 
       this.tableData.unshift({
         index: this.tableData.length + 1,
