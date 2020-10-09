@@ -64,7 +64,11 @@ export default {
     locations() {
       const locations = []
       this.latLngs.forEach((latLngs) => {
-        locations.push(`${latLngs.lat()},${latLngs.lng()}`)
+        const location = {
+          lat: latLngs.lat(),
+          lng: latLngs.lng(),
+        }
+        locations.push(location)
       })
       return locations
     },
