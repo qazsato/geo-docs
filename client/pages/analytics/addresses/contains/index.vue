@@ -143,20 +143,20 @@ export default {
       // 地図ポリゴン
       const max = Math.max(...res.data.map((d) => d.count))
       const codes = res.data.map((d) => d.address.code)
-      const shapeApi = new GeoApi('/addresses/shape', {
+      const shapeApi = new GeoApi('/addresses/shapes', {
         codes: codes.toString(),
       })
       const shapeRes = await shapeApi.get()
       this.geojsons = []
-      shapeRes.data.features.forEach((feature) => {
-        const d = res.data.filter((d) => d.address.code === feature.properties.code)[0]
+      shapeRes.data.forEach((geojson) => {
+        const d = res.data.filter((d) => d.address.code === geojson.properties.code)[0]
         const opacity = (d.count / max) * 0.9
-        feature.properties.count = d.count
-        feature.properties.addressName = d.address.name
-        feature.properties.strokeWeight = 1
-        feature.properties.fillOpacity = opacity
+        geojson.properties.count = d.count
+        geojson.properties.addressName = d.address.name
+        geojson.properties.strokeWeight = 1
+        geojson.properties.fillOpacity = opacity
+        this.geojsons.push(geojson)
       })
-      this.geojsons.push(shapeRes.data)
 
       this.isVisiblePolygon = true
       this.isVisibleMarker = false
@@ -176,9 +176,7 @@ export default {
       const geojsons = this.geojsons
       this.geojsons = []
       geojsons.forEach((geojson) => {
-        geojson.features.forEach((f) => {
-          f.properties.visible = this.isVisiblePolygon
-        })
+        geojson.properties.visible = this.isVisiblePolygon
         this.geojsons.push(geojson)
       })
     },

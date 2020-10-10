@@ -87,7 +87,7 @@ export default {
       google: null,
       query: null,
       parentAddressShape: null,
-      childAddressShape: null,
+      childAddressShapes: null,
       geojsons: [],
       infowindows: [],
       loading: false,
@@ -143,20 +143,20 @@ export default {
     async fetch() {
       this.loading = true
       if (this.address) {
-        const shapeApi = new GeoApi('/addresses/shape', {
+        const shapeApi = new GeoApi('/addresses/shapes', {
           codes: this.address.code,
         })
         const shapeRes = await shapeApi.get()
-        this.parentAddressShape = shapeRes.data
+        this.parentAddressShape = shapeRes.data[0]
       }
 
       if (this.addresses.length > 0) {
         const codes = this.addresses.map((address) => address.code)
-        const shapeApi = new GeoApi('/addresses/shape', {
+        const shapeApi = new GeoApi('/addresses/shapes', {
           codes: codes.toString(),
         })
         const shapeRes = await shapeApi.get()
-        this.childAddressShape = shapeRes.data
+        this.childAddressShapes = shapeRes.data
       }
       this.loading = false
     },
@@ -198,34 +198,33 @@ export default {
       if (this.parentAddressShape) {
         this.geojsons.push(this.parentAddressShape)
       }
-      if (this.childAddressShape) {
-        this.geojsons.push(this.childAddressShape)
+      if (this.childAddressShapes) {
+        this.childAddressShapes.forEach((s) => this.geojsons.push(s))
       }
       this.geojsons.forEach((geojson) => {
         let strokeWeight = 1
         let fillOpacity = 0.2
         let zIndex = 2
-        geojson.features.forEach((feature) => {
-          const code = feature.properties.code
-          let address
-          // 親の住所は外形を強調するため枠を太くする
-          if (this.address && this.address.code === code) {
-            strokeWeight = 2
-            zIndex = 1
-            // 最下層(レベル3)以外は中身を塗らない
-            if (this.address.level !== 3) {
-              fillOpacity = 0
-            }
-            address = this.address
-          } else {
-            address = this.addresses.filter((a) => a.code === code)[0]
-          }
 
-          feature.properties.strokeWeight = strokeWeight
-          feature.properties.fillOpacity = fillOpacity
-          feature.properties.zIndex = zIndex
-          feature.properties.addressName = address.details[address.details.length - 1].name
-        })
+        const code = geojson.properties.code
+        let address
+        // 親の住所は外形を強調するため枠を太くする
+        if (this.address && this.address.code === code) {
+          strokeWeight = 2
+          zIndex = 1
+          // 最下層(レベル3)以外は中身を塗らない
+          if (this.address.level !== 3) {
+            fillOpacity = 0
+          }
+          address = this.address
+        } else {
+          address = this.addresses.filter((a) => a.code === code)[0]
+        }
+
+        geojson.properties.strokeWeight = strokeWeight
+        geojson.properties.fillOpacity = fillOpacity
+        geojson.properties.zIndex = zIndex
+        geojson.properties.addressName = address.details[address.details.length - 1].name
       })
     },
 
