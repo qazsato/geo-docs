@@ -134,25 +134,25 @@ export default {
       this.tableData = []
       res.data.forEach((d) => {
         this.tableData.push({
-          code: d.address.code,
-          name: d.address.name,
+          code: d.address_code,
+          name: d.address_name,
           count: d.count,
         })
       })
 
       // 地図ポリゴン
       const max = Math.max(...res.data.map((d) => d.count))
-      const codes = res.data.map((d) => d.address.code)
+      const codes = res.data.map((d) => d.address_code)
       const shapeApi = new GeoApi('/addresses/shapes', {
         codes: codes.toString(),
       })
       const shapeRes = await shapeApi.get()
       this.geojsons = []
       shapeRes.data.forEach((geojson) => {
-        const d = res.data.filter((d) => d.address.code === geojson.properties.code)[0]
+        const d = res.data.filter((d) => d.address_code === geojson.properties.code)[0]
         const opacity = (d.count / max) * 0.9
         geojson.properties.count = d.count
-        geojson.properties.addressName = d.address.name
+        geojson.properties.addressName = d.address_name
         geojson.properties.strokeWeight = 1
         geojson.properties.fillOpacity = opacity
         this.geojsons.push(geojson)

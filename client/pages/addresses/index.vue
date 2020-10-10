@@ -87,7 +87,7 @@ export default {
       google: null,
       query: null,
       parentAddressShape: null,
-      childAddressShapes: null,
+      childAddressShapes: [],
       geojsons: [],
       infowindows: [],
       loading: false,
@@ -199,7 +199,7 @@ export default {
         this.geojsons.push(this.parentAddressShape)
       }
       if (this.childAddressShapes) {
-        this.childAddressShapes.forEach((s) => this.geojsons.push(s))
+        this.childAddressShapes.forEach((geojson) => this.geojsons.push(geojson))
       }
       this.geojsons.forEach((geojson) => {
         let strokeWeight = 1
