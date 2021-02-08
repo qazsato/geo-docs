@@ -68,9 +68,9 @@ export default {
 
     let address = null
     if (query.code) {
-      const addressApi = new GeoApi('/addresses', { codes: query.code })
+      const addressApi = new GeoApi(`/addresses/${query.code}`)
       const addressRes = await addressApi.get()
-      address = addressRes.data[0]
+      address = addressRes.data
     }
 
     return {
@@ -143,11 +143,9 @@ export default {
     async fetch() {
       this.loading = true
       if (this.address) {
-        const shapeApi = new GeoApi('/addresses/shapes', {
-          codes: this.address.code,
-        })
+        const shapeApi = new GeoApi(`/addresses/${this.address.code}/shape`)
         const shapeRes = await shapeApi.get()
-        this.parentAddressShape = shapeRes.data[0]
+        this.parentAddressShape = shapeRes.data
       }
 
       if (this.addresses.length > 0) {
