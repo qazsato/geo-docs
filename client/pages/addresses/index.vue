@@ -46,10 +46,11 @@
 <script>
 import { mapActions } from 'vuex'
 import GeoApi from '@/requests/geo-api'
+const ADDRESS_LIMIT = 100
 
 export default {
   async asyncData({ query }) {
-    const limit = 100
+    const limit = ADDRESS_LIMIT
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
 
@@ -152,6 +153,7 @@ export default {
         const codes = this.addresses.map((address) => address.code)
         const shapeApi = new GeoApi('/addresses/shapes', {
           codes: codes.toString(),
+          limit: ADDRESS_LIMIT,
         })
         const shapeRes = await shapeApi.get()
         this.childAddressShapes = shapeRes.data

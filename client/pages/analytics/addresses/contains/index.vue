@@ -42,6 +42,7 @@
 <script>
 import { mapActions } from 'vuex'
 import GeoApi from '@/requests/geo-api'
+const ADDRESS_LIMIT = 100
 
 export default {
   data() {
@@ -145,6 +146,7 @@ export default {
       const codes = res.data.map((d) => d.address_code)
       const shapeApi = new GeoApi('/addresses/shapes', {
         codes: codes.toString(),
+        limit: ADDRESS_LIMIT,
       })
       const shapeRes = await shapeApi.get()
       this.geojsons = []
