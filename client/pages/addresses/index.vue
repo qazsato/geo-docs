@@ -46,6 +46,7 @@
 <script>
 import { mapActions } from 'vuex'
 import GeoApi from '@/requests/geo-api'
+import { ADDRESS } from '@/constants/address'
 const ADDRESS_LIMIT = 100
 
 export default {
@@ -54,17 +55,21 @@ export default {
     const page = query.page ? Number(query.page) : 1
     const offset = (page - 1) * limit
 
-    const searchApi = new GeoApi('/addresses/search', {
-      code: query.code,
+    let level = ADDRESS.LEVEL1.LEVEL
+    if (query.code && query.code.length === ADDRESS.LEVEL1.DIGIT) level = ADDRESS.LEVEL2.LEVEL
+    if (query.code && query.code.length === ADDRESS.LEVEL2.DIGIT) level = ADDRESS.LEVEL3.LEVEL
+    const addressApi = new GeoApi('/addresses', {
+      parent_code: query.code,
+      level,
       limit,
       offset,
     })
-    const searchRes = await searchApi.get()
-    const addresses = searchRes.data
+    const addressRes = await addressApi.get()
+    const addresses = addressRes.data
     const count = {
       limit,
       offset,
-      total: Number(searchRes.headers['x-total-count']),
+      total: Number(addressRes.headers['x-total-count']),
     }
 
     let address = null

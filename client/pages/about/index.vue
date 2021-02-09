@@ -9,7 +9,7 @@
         Geo API の利用にはアクセストークンが必要です。<br />
         下記のようにアクセストークンをクエリパラメータに含めることで API の利用が可能となります。
       </p>
-      <pre><code>$ curl https://api.geo.qazsato.com/v1/addresses/search?access_token={ACCESS_TOKEN}</code></pre>
+      <pre><code>$ curl https://api.geo.qazsato.com/v1/addresses?access_token={ACCESS_TOKEN}</code></pre>
       <p>
         アクセストークンの発行をご希望の方は、開発者へお問い合わせください。
       </p>
