@@ -156,7 +156,7 @@ export default {
 
       if (this.addresses.length > 0) {
         const codes = this.addresses.map((address) => address.code)
-        const shapeApi = new GeoApi('/addresses/shapes', {
+        const shapeApi = new GeoApi('/addresses/shape', {
           codes: codes.toString(),
           limit: ADDRESS_LIMIT,
         })

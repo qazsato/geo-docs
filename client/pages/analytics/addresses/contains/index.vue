@@ -144,7 +144,7 @@ export default {
       // 地図ポリゴン
       const max = Math.max(...res.data.map((d) => d.count))
       const codes = res.data.map((d) => d.address_code)
-      const shapeApi = new GeoApi('/addresses/shapes', {
+      const shapeApi = new GeoApi('/addresses/shape', {
         codes: codes.toString(),
         limit: ADDRESS_LIMIT,
       })
