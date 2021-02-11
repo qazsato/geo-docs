@@ -150,7 +150,7 @@ export default {
       })
       const shapeRes = await shapeApi.get()
       this.geojsons = []
-      shapeRes.data.forEach((geojson) => {
+      shapeRes.data.features.forEach((geojson) => {
         const d = res.data.filter((d) => d.address_code === geojson.properties.code)[0]
         const opacity = (d.count / max) * 0.9
         geojson.properties.count = d.count

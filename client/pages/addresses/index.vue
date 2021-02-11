@@ -161,7 +161,7 @@ export default {
           limit: ADDRESS_LIMIT,
         })
         const shapeRes = await shapeApi.get()
-        this.childAddressShapes = shapeRes.data
+        this.childAddressShapes = shapeRes.data.features
       }
       this.loading = false
     },
