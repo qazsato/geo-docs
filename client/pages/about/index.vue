@@ -82,6 +82,14 @@ X-Rate-Limit-Remaining: 100 # 次の期間までにリクエストできる回�
     "message": "access_token の指定が必要です。"
   }
 }</code></pre>
+      <h2>緯度経度の形式</h2>
+      <p>Geo API で扱う緯度経度の形式は、 WGS84 (世界測地系) の 10 進数形式です。</p>
+      <pre><code>{
+  "location": {
+    "lat": 35.68151,
+    "lng": 139.76699
+  }
+}</code></pre>
     </article>
   </Page>
 </template>
