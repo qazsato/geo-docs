@@ -5,16 +5,27 @@
     </template>
     <el-row>
       <div class="title-container">
-        <h2 class="address-title">{{ addressTitle }}</h2>
+        <h2 class="address-title">
+          <span>{{ addressTitle }}</span>
+          <span>{{ totalPopulation }}</span>
+        </h2>
         <el-input v-model="query" placeholder="住所コード" prefix-icon="el-icon-search" @change="searchAddressCode">
         </el-input>
       </div>
-      <canvas ref="chart" class="chart"></canvas>
+    </el-row>
+    <el-row>
+      <el-col :sm="24" :md="12" class="chart-col">
+        <canvas ref="chart"></canvas>
+      </el-col>
+      <el-col :sm="24" :md="12" class="map-col">
+        <GoogleMap height="400px" :default-zoom="4" :geojsons="geojsons" />
+      </el-col>
     </el-row>
   </Page>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import Chart from 'chart.js'
 import GeoApi from '@/requests/geo-api'
 
@@ -34,6 +45,8 @@ export default {
       title: '住所毎の人口統計',
       chart: null,
       query: null,
+      geojsons: [],
+      population: null,
     }
   },
 
@@ -43,6 +56,15 @@ export default {
         return '全国'
       }
       return this.address.name
+    },
+
+    totalPopulation() {
+      if (!this.population) {
+        return ''
+      }
+      const values = [...Object.values(this.population.male), ...Object.values(this.population.female)]
+      const total = values.reduce((sum, element) => sum + element, 0)
+      return `${total.toLocaleString()}人`
     },
   },
 
@@ -54,18 +76,28 @@ export default {
   },
 
   async mounted() {
+    await this.loadMap()
+    this.google = this.$store.state.map.google
     await this.fetch()
     this.drawChart()
   },
 
   methods: {
+    ...mapActions('map', { loadMap: 'load' }),
+
     async fetch() {
       const code = this.address ? this.address.code : null
-      const populationApi = new GeoApi('/statistics/addresses/populations', {
+      const populationApi = new GeoApi('/statistics/addresses/population', {
         address_code: code,
       })
       const populationRes = await populationApi.get()
       this.population = populationRes.data
+
+      if (code) {
+        const shapeApi = new GeoApi(`/addresses/${code}/shape`)
+        const shapeRes = await shapeApi.get()
+        this.geojsons = [shapeRes.data]
+      }
     },
 
     drawChart() {
@@ -139,7 +171,7 @@ export default {
         ],
       }
 
-      const option = {
+      const graph = {
         type: 'horizontalBar',
         data: barChartData,
         options: {
@@ -178,7 +210,7 @@ export default {
           },
         },
       }
-      this.chart = new Chart(this.$refs.chart, option)
+      this.chart = new Chart(this.$refs.chart, graph)
     },
 
     searchAddressCode() {
@@ -230,8 +262,19 @@ export default {
   }
 }
 
-.chart {
-  width: 100%;
-  height: 100px;
+.chart-col {
+  padding: 15px 10px 15px 0;
+
+  @include sm() {
+    padding: 15px 0;
+  }
+}
+
+.map-col {
+  padding: 15px 0 15px 10px;
+
+  @include sm() {
+    padding: 15px 0;
+  }
 }
 </style>

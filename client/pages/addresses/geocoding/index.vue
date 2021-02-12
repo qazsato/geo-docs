@@ -3,7 +3,7 @@
     <template v-slot:header>
       <Header :title="title" active="/addresses/geocoding" />
     </template>
-    <GoogleMap height="500px" :markers="markers" @click="onClick" />
+    <GoogleMap height="500px" :markers="markers" :auto-adjust="false" @click="onClick" />
     <el-table :data="tableData" :default-sort="{ prop: 'index', order: 'descending' }" style="width: 100%;">
       <el-table-column prop="index" label="#" width="100" sortable></el-table-column>
       <el-table-column prop="location" label="LatLng" sortable></el-table-column>
