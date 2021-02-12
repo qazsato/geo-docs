@@ -3,16 +3,194 @@
     <template v-slot:header>
       <Header :title="title" active="/statistics/addresses/population" />
     </template>
-    <div>WIP</div>
+    <el-row>
+      <div class="title-container">
+        <h2 class="address-title">{{ addressTitle }}</h2>
+        <el-input v-model="query" placeholder="住所コード" prefix-icon="el-icon-search" @change="searchAddressCode">
+        </el-input>
+      </div>
+      <canvas ref="chart" class="chart"></canvas>
+    </el-row>
   </Page>
 </template>
 
 <script>
+import Chart from 'chart.js'
+import GeoApi from '@/requests/geo-api'
+
 export default {
+  async asyncData({ query }) {
+    let address
+    if (query.address_code) {
+      const addressApi = new GeoApi(`/addresses/${query.address_code}`)
+      const addressRes = await addressApi.get()
+      address = addressRes.data
+    }
+    return { address }
+  },
+
   data() {
     return {
       title: '住所毎の人口統計',
+      chart: null,
+      query: null,
     }
+  },
+
+  computed: {
+    addressTitle() {
+      if (!this.address) {
+        return '全国'
+      }
+      return this.address.name
+    },
+  },
+
+  watch: {
+    async address() {
+      await this.fetch()
+      this.drawChart()
+    },
+  },
+
+  async mounted() {
+    await this.fetch()
+    this.drawChart()
+  },
+
+  methods: {
+    async fetch() {
+      const populationApi = new GeoApi('/statistics/addresses/populations', {
+        address_code: this.address.code,
+      })
+      const populationRes = await populationApi.get()
+      this.population = populationRes.data
+    },
+
+    drawChart() {
+      const m = this.population.male
+      const f = this.population.female
+      const max = this.getMaxValue(this.population)
+      const barChartData = {
+        labels: [
+          '75歳以上',
+          '70~74歳',
+          '65~69歳',
+          '60~64歳',
+          '55~59歳',
+          '50~54歳',
+          '45~49歳',
+          '40~44歳',
+          '35~39歳',
+          '30~34歳',
+          '25~29歳',
+          '20~24歳',
+          '15~19歳',
+          '10~14歳',
+          '5~9歳',
+          '0~4歳',
+        ],
+        datasets: [
+          {
+            label: 'Male',
+            backgroundColor: 'rgb(54, 162, 235)',
+            data: [
+              -1 * m.age_75,
+              -1 * m.age_70_74,
+              -1 * m.age_65_69,
+              -1 * m.age_60_64,
+              -1 * m.age_55_59,
+              -1 * m.age_50_54,
+              -1 * m.age_45_49,
+              -1 * m.age_40_44,
+              -1 * m.age_35_39,
+              -1 * m.age_30_34,
+              -1 * m.age_25_29,
+              -1 * m.age_20_24,
+              -1 * m.age_15_19,
+              -1 * m.age_10_14,
+              -1 * m.age_5_9,
+              -1 * m.age_0_4,
+            ],
+          },
+          {
+            label: 'Female',
+            backgroundColor: 'rgb(255, 99, 132)',
+            data: [
+              f.age_75,
+              f.age_70_74,
+              f.age_65_69,
+              f.age_60_64,
+              f.age_55_59,
+              f.age_50_54,
+              f.age_45_49,
+              f.age_40_44,
+              f.age_35_39,
+              f.age_30_34,
+              f.age_25_29,
+              f.age_20_24,
+              f.age_15_19,
+              f.age_10_14,
+              f.age_5_9,
+              f.age_0_4,
+            ],
+          },
+        ],
+      }
+
+      const option = {
+        type: 'horizontalBar',
+        data: barChartData,
+        options: {
+          title: {
+            display: true,
+            text: '人口ピラミッド',
+          },
+          tooltips: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label(tooltipItem, data) {
+                const label = data.datasets[tooltipItem.datasetIndex].label
+                const value = Math.abs(Number(tooltipItem.value)).toLocaleString()
+                return `${label} : ${value}`
+              },
+            },
+          },
+          responsive: true,
+          scales: {
+            xAxes: [
+              {
+                stacked: true,
+                ticks: {
+                  display: false,
+                  min: -1 * max,
+                  max,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                stacked: true,
+              },
+            ],
+          },
+        },
+      }
+      this.chart = new Chart(this.$refs.chart, option)
+    },
+
+    searchAddressCode() {
+      if (this.chart) {
+        this.chart.destroy()
+      }
+      this.$router.push({ path: '/statistics/addresses/population', query: { address_code: this.query } })
+    },
+
+    getMaxValue(population) {
+      const values = [...Object.values(population.male), ...Object.values(population.female)]
+      return Math.max(...values) * 1.1
+    },
   },
 
   head() {
@@ -20,5 +198,39 @@ export default {
       title: this.title,
     }
   },
+
+  watchQuery: ['address_code'],
 }
 </script>
+
+<style lang="scss" scoped>
+.title-container {
+  display: flex;
+  align-items: center;
+  padding-bottom: 5px;
+  @include xs() {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .address-title {
+    flex: 1;
+    font-size: 18px;
+    color: #303133;
+    padding-top: 5px;
+  }
+
+  .el-input {
+    width: 200px;
+    @include xs() {
+      margin: 10px 0 5px;
+      width: 100%;
+    }
+  }
+}
+
+.chart {
+  width: 100%;
+  height: 100px;
+}
+</style>
