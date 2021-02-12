@@ -60,8 +60,9 @@ export default {
 
   methods: {
     async fetch() {
+      const code = this.address ? this.address.code : null
       const populationApi = new GeoApi('/statistics/addresses/populations', {
-        address_code: this.address.code,
+        address_code: code,
       })
       const populationRes = await populationApi.get()
       this.population = populationRes.data
