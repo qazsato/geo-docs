@@ -232,7 +232,7 @@ export default {
       }
 
       if (this.autoAdjustHeatmap && this.heatmap) {
-        const locations = this.heatmap.data.i.map((p) => {
+        const locations = this.heatmap.data.Kb.map((p) => {
           return { lat: p.lat(), lng: p.lng() }
         })
         if (locations.length > 0) {
