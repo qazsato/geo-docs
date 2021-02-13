@@ -9,8 +9,20 @@
           <span>{{ addressTitle }}</span>
           <span>{{ totalPopulation }}</span>
         </h2>
-        <el-input v-model="query" placeholder="住所コード" prefix-icon="el-icon-search" @change="searchAddressCode">
-        </el-input>
+        <el-select v-model="level" placeholder="住所レベル" class="level-input">
+          <el-option :value="null" label="指定なし"></el-option>
+          <el-option :value="1" label="都道府県"></el-option>
+          <el-option :value="2" label="市区町村"></el-option>
+          <el-option :value="3" label="町丁・字等"></el-option>
+        </el-select>
+        <el-autocomplete
+          v-model="word"
+          :fetch-suggestions="querySearch"
+          placeholder="住所名"
+          prefix-icon="el-icon-search"
+          class="address-input"
+          @select="handleSelect"
+        ></el-autocomplete>
       </div>
     </el-row>
     <el-row>
@@ -32,19 +44,24 @@ import GeoApi from '@/requests/geo-api'
 export default {
   async asyncData({ query }) {
     let address
+    let word
     if (query.address_code) {
       const addressApi = new GeoApi(`/addresses/${query.address_code}`)
       const addressRes = await addressApi.get()
       address = addressRes.data
+      word = address.name
     }
-    return { address }
+    return {
+      address,
+      word,
+    }
   },
 
   data() {
     return {
       title: '住所毎の人口統計',
+      level: 1,
       chart: null,
-      query: null,
       geojsons: [],
       population: null,
     }
@@ -70,6 +87,7 @@ export default {
 
   watch: {
     async address() {
+      console.log('change address', this.address)
       await this.fetch()
       this.drawChart()
     },
@@ -213,16 +231,25 @@ export default {
       this.chart = new Chart(this.$refs.chart, graph)
     },
 
-    searchAddressCode() {
-      if (this.chart) {
-        this.chart.destroy()
-      }
-      this.$router.push({ path: '/statistics/addresses/population', query: { address_code: this.query } })
-    },
-
     getMaxValue(population) {
       const values = [...Object.values(population.male), ...Object.values(population.female)]
       return Math.max(...values) * 1.1
+    },
+
+    async querySearch(queryString, cb) {
+      const addressApi = new GeoApi('/addresses', { name: queryString, level: this.level })
+      const addressRes = await addressApi.get()
+      const results = addressRes.data.map((a) => {
+        return { value: a.name, code: a.code }
+      })
+      cb(results)
+    },
+
+    handleSelect(item) {
+      if (this.chart) {
+        this.chart.destroy()
+      }
+      this.$router.push({ path: '/statistics/addresses/population', query: { address_code: item.code } })
     },
   },
 
@@ -253,8 +280,18 @@ export default {
     padding-top: 5px;
   }
 
-  .el-input {
-    width: 200px;
+  .level-input {
+    width: 120px;
+    margin-right: 10px;
+
+    @include xs() {
+      margin: 10px 0 5px;
+      width: 100%;
+    }
+  }
+
+  .address-input {
+    width: 240px;
     @include xs() {
       margin: 10px 0 5px;
       width: 100%;
