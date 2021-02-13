@@ -54,7 +54,7 @@ X-Rate-Limit-Remaining: 100 # 次の期間までにリクエストできる回�
           <tr>
             <td>404</td>
             <td>Not Found</td>
-            <td>指定したリソースが存在しない</td>
+            <td>指定したパスが存在しない</td>
           </tr>
           <tr>
             <td>429</td>
