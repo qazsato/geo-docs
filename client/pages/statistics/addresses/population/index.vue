@@ -30,7 +30,7 @@
         <canvas ref="chart"></canvas>
       </el-col>
       <el-col :sm="24" :md="12" class="map-col">
-        <GoogleMap height="400px" :default-zoom="4" :geojsons="geojsons" />
+        <GoogleMap height="400px" :default-zoom="4" :geojsons="geojsons" auto-adjust-geojsons />
       </el-col>
     </el-row>
   </Page>
@@ -45,22 +45,24 @@ export default {
   async asyncData({ query }) {
     let address
     let word
+    let level = 1
     if (query.address_code) {
       const addressApi = new GeoApi(`/addresses/${query.address_code}`)
       const addressRes = await addressApi.get()
       address = addressRes.data
       word = address.name
+      level = address.level
     }
     return {
       address,
       word,
+      level,
     }
   },
 
   data() {
     return {
       title: '住所毎の人口統計',
-      level: 1,
       chart: null,
       geojsons: [],
       population: null,

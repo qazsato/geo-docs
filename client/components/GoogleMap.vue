@@ -19,7 +19,7 @@
 </template>
 
 <script>
-// import MarkerClusterer from '@google/markerclustererplus'
+import MarkerClusterer from '@google/markerclustererplus'
 import _ from 'lodash'
 import ls from 'local-storage'
 import config from '@/config'
@@ -101,10 +101,28 @@ export default {
       default: null,
     },
 
-    autoAdjust: {
+    enableMarkerCluster: {
       required: false,
       type: Boolean,
-      default: true,
+      default: false,
+    },
+
+    autoAdjustMarkers: {
+      required: false,
+      type: Boolean,
+      default: false,
+    },
+
+    autoAdjustGeojsons: {
+      required: false,
+      type: Boolean,
+      default: false,
+    },
+
+    autoAdjustHeatmap: {
+      required: false,
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -119,7 +137,6 @@ export default {
       localMarkers: [],
       localInfowindows: [],
       localHeatmap: null,
-      localMarkerClusterer: null,
     }
   },
 
@@ -147,9 +164,9 @@ export default {
     },
 
     markers(val) {
-      // if (this.markerClusterer) {
-      //   this.markerClusterer.clearMarkers()
-      // }
+      if (this.markerClusterer) {
+        this.markerClusterer.clearMarkers()
+      }
 
       const diffMarkers = _.difference(this.localMarkers, this.markers)
       diffMarkers.forEach((marker) => marker.setMap(null))
@@ -159,11 +176,13 @@ export default {
       })
       this.localMarkers = this.markers
 
-      // this.markerClusterer = new MarkerClusterer(this.map, this.markers, {
-      //   imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-      // })
+      if (this.enableMarkerCluster) {
+        this.markerClusterer = new MarkerClusterer(this.map, this.markers, {
+          imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+        })
+      }
 
-      if (this.autoAdjust) {
+      if (this.autoAdjustMarkers) {
         const locations = this.markers.map((m) => {
           return { lat: m.position.lat(), lng: m.position.lng() }
         })
@@ -195,7 +214,7 @@ export default {
 
       this.drawData()
 
-      if (this.autoAdjust) {
+      if (this.autoAdjustGeojsons) {
         const locations = this.getVisibleLocations()
         if (locations.length > 0) {
           adjustViewPort(this.google, this.map, locations)
@@ -212,7 +231,7 @@ export default {
         this.localHeatmap = null
       }
 
-      if (this.autoAdjust && this.heatmap) {
+      if (this.autoAdjustHeatmap && this.heatmap) {
         const locations = this.heatmap.data.i.map((p) => {
           return { lat: p.lat(), lng: p.lng() }
         })

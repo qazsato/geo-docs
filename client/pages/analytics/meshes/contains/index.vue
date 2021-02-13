@@ -8,7 +8,7 @@
       :geojsons="geojsons"
       :markers="markers"
       :infowindows="infowindows"
-      :auto-adjust="false"
+      auto-adjust-geojsons
       @click="onClick"
       @mouseoutData="onMouseoutData"
       @mouseoverData="onMouseoverData"

@@ -22,6 +22,7 @@
         height="500px"
         :geojsons="geojsons"
         :infowindows="infowindows"
+        auto-adjust-geojsons
         @clickData="onClickData"
         @mouseoutData="onMouseoutData"
         @mouseoverData="onMouseoverData"
