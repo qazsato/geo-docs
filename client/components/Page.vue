@@ -1,18 +1,18 @@
 <template>
-  <el-container>
-    <el-header height="90px">
+  <div>
+    <header>
       <slot name="header"></slot>
-    </el-header>
-    <el-main>
+    </header>
+    <main>
       <slot></slot>
-    </el-main>
-    <el-footer height="70px">
+    </main>
+    <footer>
       <div class="github">
         <img src="~/assets/images/github.png" />
         <Logo href="https://github.com/qazsato/geo-docs" target="_blank" />
       </div>
-    </el-footer>
-  </el-container>
+    </footer>
+  </div>
 </template>
 
 <script>
@@ -26,25 +26,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-main {
-  min-height: 100vh;
+header {
+  height: 90px;
+  padding: 0 20px;
 }
 
-.el-footer {
+main {
+  min-height: 100vh;
+  padding: 20px;
+}
+
+footer {
+  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #fff;
   background-color: #3b4151;
-}
 
-.github {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  .github {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-  img {
-    width: 20px;
+    img {
+      width: 20px;
+    }
   }
 }
 </style>
