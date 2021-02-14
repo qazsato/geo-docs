@@ -146,7 +146,7 @@ export default {
       const max = Math.max(...res.data.map((d) => d.count))
       const codes = res.data.map((d) => d.address_code)
       const shapeApi = new GeoApi('/addresses/shape', {
-        codes: codes.toString(),
+        code: codes.toString(),
         limit: ADDRESS_LIMIT,
       })
       const shapeRes = await shapeApi.get()
