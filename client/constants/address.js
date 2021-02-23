@@ -9,6 +9,10 @@ export const ADDRESS = {
   },
   LEVEL3: {
     LEVEL: 3,
+    DIGIT: 9,
+  },
+  LEVEL4: {
+    LEVEL: 4,
     DIGIT: 11,
   },
 }
