@@ -27,6 +27,8 @@
           <el-table-column prop="code" label="Code" width="130"></el-table-column>
           <el-table-column prop="level" label="Level" width="80"></el-table-column>
           <el-table-column prop="name" label="Name"></el-table-column>
+          <el-table-column prop="kana" label="Kana"></el-table-column>
+          <el-table-column prop="area" label="Area [㎡]"></el-table-column>
         </el-table>
       </el-row>
       <el-row>
@@ -66,7 +68,17 @@ export default {
       offset,
     })
     const addressRes = await addressApi.get()
-    const addresses = addressRes.data
+    const addresses = addressRes.data.map((d) => {
+      return {
+        code: d.code,
+        level: d.level,
+        name: d.details[d.details.length - 1].name,
+        kana: d.details[d.details.length - 1].kana,
+        area: d.area,
+        details: d.details,
+      }
+    })
+
     const count = {
       limit,
       offset,
