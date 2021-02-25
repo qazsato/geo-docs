@@ -38,7 +38,7 @@
           </tr>
           <tr>
             <td>4</td>
-            <td>丁目等</td>
+            <td>丁目・字等</td>
             <td>11桁</td>
             <td>13101001001, 東京都千代田区丸の内１丁目</td>
           </tr>
@@ -91,7 +91,7 @@
           </tr>
           <tr>
             <td>4</td>
-            <td>丁目等</td>
+            <td>丁目・字等</td>
             <td>11桁</td>
             <td>
               <a href="https://gist.github.com/qazsato/84a1c676f539b3340d4572a1c67cca3b" target="_blank"
