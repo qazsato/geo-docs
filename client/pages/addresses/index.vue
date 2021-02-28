@@ -61,6 +61,7 @@ export default {
     let level = ADDRESS.LEVEL1.LEVEL
     if (query.code && query.code.length === ADDRESS.LEVEL1.DIGIT) level = ADDRESS.LEVEL2.LEVEL
     if (query.code && query.code.length === ADDRESS.LEVEL2.DIGIT) level = ADDRESS.LEVEL3.LEVEL
+    if (query.code && query.code.length === ADDRESS.LEVEL3.DIGIT) level = ADDRESS.LEVEL4.LEVEL
     const addressApi = new GeoApi('/addresses', {
       parent_code: query.code,
       level,
@@ -230,8 +231,8 @@ export default {
         if (this.address && this.address.code === code) {
           strokeWeight = 2
           zIndex = 1
-          // 最下層(レベル3)以外は中身を塗らない
-          if (this.address.level !== 3) {
+          // 最下層(レベル4)以外は中身を塗らない
+          if (this.address.level !== 4) {
             fillOpacity = 0
           }
           address = this.address

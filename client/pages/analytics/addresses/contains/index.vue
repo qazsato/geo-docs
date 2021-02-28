@@ -19,7 +19,8 @@
         <div class="radio-area">
           <el-radio v-model="level" label="1">Lv.1 都道府県</el-radio>
           <el-radio v-model="level" label="2">Lv.2 市区町村</el-radio>
-          <el-radio v-model="level" label="3">Lv.3 町丁・字等</el-radio>
+          <el-radio v-model="level" label="3">Lv.3 大字・町</el-radio>
+          <el-radio v-model="level" label="4">Lv.4 丁目・字等</el-radio>
         </div>
         <div v-if="tableData.length > 0">
           <el-switch v-model="isVisiblePolygon" active-text="ポリゴン"></el-switch>
