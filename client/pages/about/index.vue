@@ -57,6 +57,11 @@ X-Rate-Limit-Remaining: 100 # 次の期間までにリクエストできる回�
             <td>指定したパスが存在しない</td>
           </tr>
           <tr>
+            <td>414</td>
+            <td>URI Too Long</td>
+            <td>リクエスト長の上限を超えている</td>
+          </tr>
+          <tr>
             <td>429</td>
             <td>Too Many Request</td>
             <td>期間内のリクエスト数を超過した</td>
