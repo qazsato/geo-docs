@@ -44,26 +44,21 @@ import GeoApi from '@/requests/geo-api'
 
 export default {
   async asyncData({ query }) {
-    let address
-    let word
-    let level = 1
-    if (query.address_code) {
-      const addressApi = new GeoApi(`/addresses/${query.address_code}`)
-      const addressRes = await addressApi.get()
-      address = addressRes.data
-      word = address.name
-      level = address.level
-    }
+    const code = query.address_code || '01'
+    const addressApi = new GeoApi(`/addresses/${code}`)
+    const addressRes = await addressApi.get()
+    const address = addressRes.data
+    const word = address.name
     return {
       address,
       word,
-      level,
     }
   },
 
   data() {
     return {
       title: '住所毎の人口統計',
+      level: null,
       chart: null,
       geojsons: [],
       population: null,
@@ -72,9 +67,6 @@ export default {
 
   computed: {
     addressTitle() {
-      if (!this.address) {
-        return '全国'
-      }
       return this.address.name
     },
 
@@ -90,7 +82,6 @@ export default {
 
   watch: {
     async address() {
-      console.log('change address', this.address)
       await this.fetch()
       this.drawChart()
     },
@@ -108,11 +99,11 @@ export default {
 
     async fetch() {
       const code = this.address ? this.address.code : null
-      const populationApi = new GeoApi('/statistics/addresses/population', {
+      const populationApi = new GeoApi('/statistics/addresses/populations', {
         address_code: code,
       })
       const populationRes = await populationApi.get()
-      this.population = populationRes.data
+      this.population = populationRes.data[0]
 
       if (code) {
         const shapeApi = new GeoApi(`/addresses/${code}/shape`)
