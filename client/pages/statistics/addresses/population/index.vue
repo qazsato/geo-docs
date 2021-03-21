@@ -13,8 +13,8 @@
           <el-option :value="null" label="指定なし"></el-option>
           <el-option :value="1" label="都道府県"></el-option>
           <el-option :value="2" label="市区町村"></el-option>
-          <el-option :value="3" label="大字・町"></el-option>
-          <el-option :value="4" label="丁目・字等"></el-option>
+          <el-option :value="3" label="大字・町名"></el-option>
+          <el-option :value="4" label="字・丁目"></el-option>
         </el-select>
         <el-autocomplete
           v-model="word"

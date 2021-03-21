@@ -32,13 +32,13 @@
           </tr>
           <tr>
             <td>3</td>
-            <td>大字・町</td>
+            <td>大字・町名</td>
             <td>9桁</td>
             <td>131010010, 東京都千代田区丸の内</td>
           </tr>
           <tr>
             <td>4</td>
-            <td>丁目・字等</td>
+            <td>字・丁目</td>
             <td>11桁</td>
             <td>13101001001, 東京都千代田区丸の内１丁目</td>
           </tr>
@@ -81,7 +81,7 @@
           </tr>
           <tr>
             <td>3</td>
-            <td>大字・町</td>
+            <td>大字・町名</td>
             <td>9桁</td>
             <td>
               <a href="https://gist.github.com/qazsato/4bf08dfc5bd12748b1daec54143c1acd" target="_blank"
@@ -91,7 +91,7 @@
           </tr>
           <tr>
             <td>4</td>
-            <td>丁目・字等</td>
+            <td>字・丁目</td>
             <td>11桁</td>
             <td>
               <a href="https://gist.github.com/qazsato/84a1c676f539b3340d4572a1c67cca3b" target="_blank"
