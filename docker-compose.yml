@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  geo_docs:
+    build: .
+    tty: true
+    stdin_open: true
+    image: geo-docs
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    container_name: geo-docs
+    ports:
+      - 3000:3000
