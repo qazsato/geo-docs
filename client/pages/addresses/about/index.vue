@@ -1,13 +1,11 @@
 <template>
   <Page>
-    <template v-slot:header>
+    <template #header>
       <Header :title="title" active="/addresses/about" />
     </template>
     <article class="markdown-body">
       <h2>住所データ</h2>
-      <p>
-        Geo APIで扱う住所データは、<b>4段階の住所レベル</b>に区分されており、下記のデータ階層となっています。
-      </p>
+      <p>Geo APIで扱う住所データは、<b>4段階の住所レベル</b>に区分されており、下記のデータ階層となっています。</p>
       <table>
         <thead>
           <tr>
@@ -109,18 +107,14 @@
           >）
         </li>
         <ul>
-          <li>
-            「国土数値情報 行政区域データ, 位置参照情報」（国土交通省）を加工して作成
-          </li>
+          <li>「国土数値情報 行政区域データ, 位置参照情報」（国土交通省）を加工して作成</li>
         </ul>
         <li>
           政府統計の総合窓口(e-Stat)（<a href="https://www.e-stat.go.jp/" target="_blank">https://www.e-stat.go.jp/</a
           >）
         </li>
         <ul>
-          <li>
-            「国勢調査」（総務省）を加工して作成
-          </li>
+          <li>「国勢調査」（総務省）を加工して作成</li>
         </ul>
       </ul>
     </article>

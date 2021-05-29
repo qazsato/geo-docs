@@ -1,6 +1,6 @@
 <template>
   <Page>
-    <template v-slot:header>
+    <template #header>
       <Header :title="title" />
     </template>
     <article class="markdown-body">
@@ -10,9 +10,7 @@
         下記のようにアクセストークンをクエリパラメータに含めることで API の利用が可能となります。
       </p>
       <pre><code>$ curl https://api.geo.qazsato.com/v1/addresses?access_token={ACCESS_TOKEN}</code></pre>
-      <p>
-        アクセストークンの発行をご希望の方は、開発者へお問い合わせください。
-      </p>
+      <p>アクセストークンの発行をご希望の方は、開発者へお問い合わせください。</p>
 
       <h2>リクエスト制限</h2>
       <p>
@@ -22,9 +20,7 @@
       <pre><code>X-Rate-Limit-Limit: 1000 # 期間内でリクエストできる最大回数
 X-Rate-Limit-Reset: 3000 # 次の期間が来るまでの秒数
 X-Rate-Limit-Remaining: 100 # 次の期間までにリクエストできる回数</code></pre>
-      <p>
-        リクエスト回数は、<b>毎時00分00秒</b>のタイミングでリセットされます。
-      </p>
+      <p>リクエスト回数は、<b>毎時00分00秒</b>のタイミングでリセットされます。</p>
       <h2>ステータスコード</h2>
       <p>Geo API が返却する HTTP ステータスコードは、下記の通りです。</p>
       <table>

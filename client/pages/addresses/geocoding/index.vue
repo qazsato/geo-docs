@@ -1,10 +1,10 @@
 <template>
   <Page>
-    <template v-slot:header>
+    <template #header>
       <Header :title="title" active="/addresses/geocoding" />
     </template>
     <GoogleMap height="500px" :markers="markers" @click="onClick" />
-    <el-table :data="tableData" :default-sort="{ prop: 'index', order: 'descending' }" style="width: 100%;">
+    <el-table :data="tableData" :default-sort="{ prop: 'index', order: 'descending' }" style="width: 100%">
       <el-table-column prop="index" label="#" width="100" sortable></el-table-column>
       <el-table-column prop="location" label="LatLng" sortable></el-table-column>
       <el-table-column prop="name" label="Name" sortable></el-table-column>
@@ -26,6 +26,12 @@ export default {
       tableData: [],
       google: null,
       markers: [],
+    }
+  },
+
+  head() {
+    return {
+      title: this.title,
     }
   },
 
@@ -61,12 +67,6 @@ export default {
     onClick(e) {
       this.latLng = e.latLng
     },
-  },
-
-  head() {
-    return {
-      title: this.title,
-    }
   },
 }
 </script>
