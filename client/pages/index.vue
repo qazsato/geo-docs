@@ -1,6 +1,6 @@
 <template>
   <Page>
-    <template v-slot:header>
+    <template #header>
       <Header :title="title" active="/" />
     </template>
     <div id="swagger-ui"></div>
@@ -20,6 +20,12 @@ export default {
     }
   },
 
+  head() {
+    return {
+      title: this.title,
+    }
+  },
+
   mounted() {
     const SwaggerUIBundle = SwaggerUI.SwaggerUIBundle
     const SwaggerUIStandalonePreset = SwaggerUI.SwaggerUIStandalonePreset
@@ -31,12 +37,6 @@ export default {
       layout: 'StandaloneLayout',
       deepLinking: true,
     })
-  },
-
-  head() {
-    return {
-      title: this.title,
-    }
   },
 }
 </script>
@@ -86,6 +86,10 @@ export default {
 
   .swagger-ui .auth-btn-wrapper .btn {
     margin: 5px 10px;
+  }
+
+  .swagger-ui .opblock-summary-control:focus {
+    outline: none;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <Page>
-    <template v-slot:header>
+    <template #header>
       <Header :title="title" />
     </template>
     <article class="markdown-body">

@@ -1,6 +1,6 @@
 <template>
   <Page>
-    <template v-slot:header>
+    <template #header>
       <Header :title="title" active="/analytics/meshes/contains" />
     </template>
     <GoogleMap
@@ -38,7 +38,7 @@
         </div>
       </el-row>
     </section>
-    <el-table :data="tableData" :default-sort="{ prop: 'count', order: 'descending' }" style="width: 100%;">
+    <el-table :data="tableData" :default-sort="{ prop: 'count', order: 'descending' }" style="width: 100%">
       <el-table-column prop="code" label="Code" sortable></el-table-column>
       <el-table-column prop="count" label="count" sortable></el-table-column>
     </el-table>
@@ -63,6 +63,12 @@ export default {
       level: '3',
       isVisiblePolygon: false,
       isVisibleMarker: false,
+    }
+  },
+
+  head() {
+    return {
+      title: this.title,
     }
   },
 
@@ -199,12 +205,6 @@ export default {
         marker.setVisible(this.isVisibleMarker)
       })
     },
-  },
-
-  head() {
-    return {
-      title: this.title,
-    }
   },
 }
 </script>

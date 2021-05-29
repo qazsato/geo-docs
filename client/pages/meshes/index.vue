@@ -1,6 +1,6 @@
 <template>
   <Page>
-    <template v-slot:header>
+    <template #header>
       <Header :title="title" active="/meshes" />
     </template>
     <el-row>
@@ -62,6 +62,12 @@ export default {
       query: null,
       geojsons: [],
       infowindows: [],
+    }
+  },
+
+  head() {
+    return {
+      title: this.title,
     }
   },
 
@@ -149,6 +155,8 @@ export default {
     },
   },
 
+  watchQuery: ['code'],
+
   async mounted() {
     await this.loadMap()
     this.google = this.$store.state.map.google
@@ -217,14 +225,6 @@ export default {
       this.$router.push({ path: '/meshes', query: { code: this.query } })
     },
   },
-
-  head() {
-    return {
-      title: this.title,
-    }
-  },
-
-  watchQuery: ['code'],
 }
 </script>
 

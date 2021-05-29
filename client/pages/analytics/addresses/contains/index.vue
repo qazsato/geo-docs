@@ -1,6 +1,6 @@
 <template>
   <Page>
-    <template v-slot:header>
+    <template #header>
       <Header :title="title" active="/analytics/addresses/contains" />
     </template>
     <GoogleMap
@@ -33,7 +33,7 @@
         <el-button type="danger" :disabled="latLngs.length === 0" @click="onClickResetButton">削除する</el-button>
       </el-row>
     </section>
-    <el-table :data="tableData" :default-sort="{ prop: 'count', order: 'descending' }" style="width: 100%;">
+    <el-table :data="tableData" :default-sort="{ prop: 'count', order: 'descending' }" style="width: 100%">
       <el-table-column prop="code" label="Code" sortable></el-table-column>
       <el-table-column prop="name" label="Name" sortable></el-table-column>
       <el-table-column prop="count" label="Count" sortable></el-table-column>
@@ -60,6 +60,12 @@ export default {
       isVisiblePolygon: false,
       isVisibleMarker: false,
       loading: false,
+    }
+  },
+
+  head() {
+    return {
+      title: this.title,
     }
   },
 
@@ -190,12 +196,6 @@ export default {
         marker.setVisible(this.isVisibleMarker)
       })
     },
-  },
-
-  head() {
-    return {
-      title: this.title,
-    }
   },
 }
 </script>

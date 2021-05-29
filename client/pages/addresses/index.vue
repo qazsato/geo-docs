@@ -1,6 +1,6 @@
 <template>
   <Page>
-    <template v-slot:header>
+    <template #header>
       <Header :title="title" active="/addresses" />
     </template>
     <el-row>
@@ -114,6 +114,12 @@ export default {
     }
   },
 
+  head() {
+    return {
+      title: this.title,
+    }
+  },
+
   computed: {
     addressTitle() {
       if (!this.address) {
@@ -149,6 +155,8 @@ export default {
       this.drawAddress()
     },
   },
+
+  watchQuery: ['code', 'page'],
 
   async mounted() {
     await this.fetch()
@@ -251,14 +259,6 @@ export default {
       this.$router.push({ path: '/addresses', query: { code: this.query } })
     },
   },
-
-  head() {
-    return {
-      title: this.title,
-    }
-  },
-
-  watchQuery: ['code', 'page'],
 }
 </script>
 
