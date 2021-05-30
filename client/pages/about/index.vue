@@ -4,13 +4,12 @@
       <Header :title="title" />
     </template>
     <article class="markdown-body">
-      <h2>API 認証手段</h2>
+      <h2>利用方法</h2>
       <p>
-        Geo API の利用にはアクセストークンが必要です。<br />
-        下記のようにアクセストークンをクエリパラメータに含めることで API の利用が可能となります。
+        Geo API の利用には API キーが必要です。<br />
+        下記のように API キーをクエリパラメータに含めることで API の利用が可能となります。
       </p>
-      <pre><code>$ curl https://api.geo.qazsato.com/v1/addresses?access_token={ACCESS_TOKEN}</code></pre>
-      <p>アクセストークンの発行をご希望の方は、開発者へお問い合わせください。</p>
+      <pre><code>$ curl https://api.geo.qazsato.com/v1/addresses?api_key={YOUR_API_KEY}</code></pre>
 
       <h2>リクエスト制限</h2>
       <p>
@@ -45,7 +44,7 @@ X-Rate-Limit-Remaining: 100 # 次の期間までにリクエストできる回�
           <tr>
             <td>401</td>
             <td>Unauthorized</td>
-            <td>アクセストークンが無効である</td>
+            <td>API キーが無効である</td>
           </tr>
           <tr>
             <td>404</td>
@@ -113,7 +112,7 @@ GET /addresses?sort=level,-area // 住所レベルの小さい順で、面積が
   "error": {
     "code": 1002,
     "type": "required_param",
-    "message": "access_token の指定が必要です。"
+    "message": "api_key の指定が必要です。"
   }
 }</code></pre>
     </article>
