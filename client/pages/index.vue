@@ -90,6 +90,8 @@ export default {
     margin: 5px 10px;
   }
 
+  .swagger-ui .models-control:focus,
+  .swagger-ui .model-box-control:focus,
   .swagger-ui .opblock-summary-control:focus {
     outline: none;
   }
