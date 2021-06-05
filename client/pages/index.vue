@@ -49,6 +49,8 @@ export default {
 
 <style lang="scss">
 #swagger-ui {
+  min-width: 640px;
+
   .swagger-ui .info .title small {
     top: 5px;
     left: 5px;
