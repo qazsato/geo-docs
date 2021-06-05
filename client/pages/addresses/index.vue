@@ -198,8 +198,10 @@ export default {
     },
 
     onMousemoveData(event) {
-      this.infowindows = []
       const addressName = event.feature.getProperty('addressName')
+      if (!addressName) {
+        return
+      }
       const infowindow = new this.google.maps.InfoWindow({
         content: addressName,
         position: event.latLng,
