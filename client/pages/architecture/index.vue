@@ -5,7 +5,7 @@
     </template>
     <article class="markdown-body">
       <h2>システム構成図</h2>
-      <img src="~/assets/images/geo_aws.png" height="500px" />
+      <img class="geo-aws" src="~/assets/images/geo_aws.png" />
       <h2>データベース構成</h2>
       <p><a href="https://docs.geo.qazsato.com/database" target="_blank">DB 定義書</a>を参照ください。</p>
       <h2>リポジトリ構成</h2>
@@ -65,5 +65,9 @@ export default {
 <style lang="scss" scoped>
 .markdown-body {
   font-size: 14px;
+
+  .geo-aws {
+    max-height: 500px;
+  }
 }
 </style>
