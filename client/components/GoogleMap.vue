@@ -359,7 +359,7 @@ export default {
   bottom: 30px;
   width: 110px;
 
-  ::v-deep .el-input {
+  /deep/ .el-input {
     @include xs() {
       font-size: 16px;
     }
