@@ -1,6 +1,5 @@
 {
   "name": "geo-docs",
-  "version": "1.0.3",
   "private": true,
   "scripts": {
     "dev": "nuxt",
