@@ -3,6 +3,8 @@
     <div class="flex">
       <Logo href="/" />
       <h1 class="title">{{ title }}</h1>
+      <div class="spacer"></div>
+      <slot></slot>
     </div>
     <el-menu :default-active="active" mode="horizontal" class="menu" :router="true">
       <el-menu-item index="/">API 仕様書</el-menu-item>
@@ -56,6 +58,10 @@ export default {
 .flex {
   display: flex;
   align-items: center;
+}
+
+.spacer {
+  flex: 1;
 }
 
 .title {
