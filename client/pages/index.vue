@@ -1,5 +1,5 @@
 <template>
-  <Page>
+  <Page id="top">
     <template #header>
       <Header :title="title" active="/">
         <el-radio-group v-model="radio" size="mini">
@@ -43,8 +43,10 @@ export default {
 </script>
 
 <style lang="scss">
-main {
-  padding: 0 !important;
+#top {
+  main {
+    padding: 0 !important;
+  }
 }
 
 .swagger-ui {
