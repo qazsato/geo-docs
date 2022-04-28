@@ -7,7 +7,11 @@
       <h2>システム構成図</h2>
       <img class="geo-aws" src="~/assets/images/geo_aws.png" />
       <h2>データベース構成</h2>
-      <p><a href="https://docs.geo.qazsato.com/database" target="_blank">DB 定義書</a>を参照ください。</p>
+      <p>
+        <a href="https://geo-db-docs.s3.ap-northeast-1.amazonaws.com/schemaspy/output/index.html" target="_blank"
+          >DB 定義書</a
+        >を参照ください。
+      </p>
       <h2>リポジトリ構成</h2>
       <p>Geo サービスは 4 つのリポジトリで構成されています。</p>
 

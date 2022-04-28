@@ -88,7 +88,3 @@ sw.*
 
 # Vim swap files
 *.swp
-
-# SchemaSpy files
-/client/static/database
-/client/static/mysql
