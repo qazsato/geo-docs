@@ -1,25 +1,25 @@
 export const MESH = {
-  LEVEL1: {
+  LEVEL_80000: {
     TYPE: '第１次地域区画',
     DIGIT: 4,
   },
-  LEVEL2: {
+  LEVEL_10000: {
     TYPE: '第２次地域区画',
     DIGIT: 6,
   },
-  LEVEL3: {
+  LEVEL_1000: {
     TYPE: '基準地域メッシュ(第３次地域区画)',
     DIGIT: 8,
   },
-  LEVEL4: {
+  LEVEL_500: {
     TYPE: '２分の１地域メッシュ',
     DIGIT: 9,
   },
-  LEVEL5: {
+  LEVEL_250: {
     TYPE: '４分の１地域メッシュ',
     DIGIT: 10,
   },
-  LEVEL6: {
+  LEVEL_125: {
     TYPE: '８分の１地域メッシュ',
     DIGIT: 11,
   },

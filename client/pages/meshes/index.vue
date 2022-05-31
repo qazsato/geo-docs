@@ -84,7 +84,7 @@ export default {
       if (!this.mesh) {
         return title
       }
-      title = MESH[`LEVEL${this.mesh.level}`].TYPE
+      title = MESH[`LEVEL_${this.mesh.level}`].TYPE
       return `(${title})`
     },
 
@@ -99,43 +99,43 @@ export default {
         return breadcrumbs
       }
 
-      if (this.code.length >= MESH.LEVEL1.DIGIT) {
+      if (this.code.length >= MESH.LEVEL_80000.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL1.DIGIT)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL_80000.DIGIT)}`,
           name: '1次メッシュ(80km)',
         })
       }
-      if (this.code.length >= MESH.LEVEL2.DIGIT) {
+      if (this.code.length >= MESH.LEVEL_10000.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL2.DIGIT)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL_10000.DIGIT)}`,
           name: '2次メッシュ(10km)',
         })
       }
 
-      if (this.code.length >= MESH.LEVEL3.DIGIT) {
+      if (this.code.length >= MESH.LEVEL_1000.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL3.DIGIT)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL_1000.DIGIT)}`,
           name: '3次メッシュ(1km)',
         })
       }
 
-      if (this.code.length >= MESH.LEVEL4.DIGIT) {
+      if (this.code.length >= MESH.LEVEL_500.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL4.DIGIT)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL_500.DIGIT)}`,
           name: '4次メッシュ(500m)',
         })
       }
 
-      if (this.code.length >= MESH.LEVEL5.DIGIT) {
+      if (this.code.length >= MESH.LEVEL_250.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL5.DIGIT)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL_250.DIGIT)}`,
           name: '5次メッシュ(250m)',
         })
       }
 
-      if (this.code.length >= MESH.LEVEL6.DIGIT) {
+      if (this.code.length >= MESH.LEVEL_125.DIGIT) {
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL6.DIGIT)}`,
+          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL_125.DIGIT)}`,
           name: '6次メッシュ(125m)',
         })
       }
@@ -178,7 +178,7 @@ export default {
           strokeWeight = 2
           zIndex = 1
           // 最下層(6次メッシュ)以外は中身を塗らない
-          if (japanmesh.getLevel(code) !== 6) {
+          if (japanmesh.getLevel(code) !== 125) {
             fillOpacity = 0
           }
         }
