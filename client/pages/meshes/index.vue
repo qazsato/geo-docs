@@ -33,15 +33,26 @@
 
 <script>
 import { mapActions } from 'vuex'
-import japanmesh from 'japanmesh'
 import _ from 'lodash'
+import { japanmesh } from 'japanmesh'
 import { MESH } from '@/constants/mesh'
 
 export default {
   asyncData({ query }) {
     const code = query.code || null
-    const mesh = code ? { code, level: japanmesh.getLevel(code) } : null
-    const codes = japanmesh.getCodes(code)
+    const level = code ? japanmesh.getLevel(code) : null
+    const mesh = code ? { code, level } : null
+    const levels = Object.values(MESH).map((m) => m.LEVEL)
+    let nextLevel = null
+    levels.forEach((l, i) => {
+      if (l === level && i < levels.length) {
+        nextLevel = levels[i + 1]
+      }
+    })
+    let codes = []
+    if (level !== MESH.LEVEL_125.LEVEL) {
+      codes = japanmesh.getCodes(code, nextLevel)
+    }
     const meshShapes = []
     if (code) {
       meshShapes.push(japanmesh.toGeoJSON(code, { code }))
@@ -84,8 +95,8 @@ export default {
       if (!this.mesh) {
         return title
       }
-      title = MESH[`LEVEL${this.mesh.level}`].TYPE
-      return `(${title})`
+      title = MESH[`LEVEL_${this.mesh.level}`].TYPE
+      return title
     },
 
     breadcrumbs() {
@@ -99,44 +110,73 @@ export default {
         return breadcrumbs
       }
 
-      if (this.code.length >= MESH.LEVEL1.DIGIT) {
+      const geojson = japanmesh.toGeoJSON(this.code)
+      const coord = geojson.geometry.coordinates[0]
+      const centerLat = (coord[0][1] + coord[2][1]) / 2
+      const centerLng = (coord[0][0] + coord[1][0]) / 2
+
+      const level = japanmesh.getLevel(this.code)
+      if (level <= MESH.LEVEL_80000.LEVEL) {
+        const code = japanmesh.toCode(centerLat, centerLng, MESH.LEVEL_80000.LEVEL)
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL1.DIGIT)}`,
-          name: '1次メッシュ(80km)',
-        })
-      }
-      if (this.code.length >= MESH.LEVEL2.DIGIT) {
-        breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL2.DIGIT)}`,
-          name: '2次メッシュ(10km)',
+          path: `/meshes?code=${code}`,
+          name: '80kmメッシュ',
         })
       }
 
-      if (this.code.length >= MESH.LEVEL3.DIGIT) {
+      if (level <= MESH.LEVEL_10000.LEVEL) {
+        const code = japanmesh.toCode(centerLat, centerLng, MESH.LEVEL_10000.LEVEL)
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL3.DIGIT)}`,
-          name: '3次メッシュ(1km)',
+          path: `/meshes?code=${code}`,
+          name: '10kmメッシュ',
         })
       }
 
-      if (this.code.length >= MESH.LEVEL4.DIGIT) {
+      if (level <= MESH.LEVEL_5000.LEVEL) {
+        const code = japanmesh.toCode(centerLat, centerLng, MESH.LEVEL_5000.LEVEL)
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL4.DIGIT)}`,
-          name: '4次メッシュ(500m)',
+          path: `/meshes?code=${code}`,
+          name: '5kmメッシュ',
         })
       }
 
-      if (this.code.length >= MESH.LEVEL5.DIGIT) {
+      if (level <= MESH.LEVEL_2000.LEVEL) {
+        const code = japanmesh.toCode(centerLat, centerLng, MESH.LEVEL_2000.LEVEL)
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL5.DIGIT)}`,
-          name: '5次メッシュ(250m)',
+          path: `/meshes?code=${code}`,
+          name: '2kmメッシュ',
         })
       }
 
-      if (this.code.length >= MESH.LEVEL6.DIGIT) {
+      if (level <= MESH.LEVEL_1000.LEVEL) {
+        const code = japanmesh.toCode(centerLat, centerLng, MESH.LEVEL_1000.LEVEL)
         breadcrumbs.push({
-          path: `/meshes?code=${this.code.slice(0, MESH.LEVEL6.DIGIT)}`,
-          name: '6次メッシュ(125m)',
+          path: `/meshes?code=${code}`,
+          name: '1kmメッシュ',
+        })
+      }
+
+      if (level <= MESH.LEVEL_500.LEVEL) {
+        const code = japanmesh.toCode(centerLat, centerLng, MESH.LEVEL_500.LEVEL)
+        breadcrumbs.push({
+          path: `/meshes?code=${code}`,
+          name: '500mメッシュ',
+        })
+      }
+
+      if (level <= MESH.LEVEL_250.LEVEL) {
+        const code = japanmesh.toCode(centerLat, centerLng, MESH.LEVEL_250.LEVEL)
+        breadcrumbs.push({
+          path: `/meshes?code=${code}`,
+          name: '250mメッシュ',
+        })
+      }
+
+      if (level <= MESH.LEVEL_125.LEVEL) {
+        const code = japanmesh.toCode(centerLat, centerLng, MESH.LEVEL_125.LEVEL)
+        breadcrumbs.push({
+          path: `/meshes?code=${code}`,
+          name: '125mメッシュ',
         })
       }
 
@@ -178,7 +218,7 @@ export default {
           strokeWeight = 2
           zIndex = 1
           // 最下層(6次メッシュ)以外は中身を塗らない
-          if (japanmesh.getLevel(code) !== 6) {
+          if (japanmesh.getLevel(code) !== 125) {
             fillOpacity = 0
           }
         }

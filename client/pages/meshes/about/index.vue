@@ -22,17 +22,17 @@
             <tr>
               <th>レベル</th>
               <th>区画の種類</th>
-              <th>コード桁数</th>
               <th>一辺の長さ</th>
-              <th>出力例</th>
+              <th>コード桁数</th>
+              <th>コード例</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>1</td>
-              <td>第１次地域区画</td>
-              <td>4桁</td>
+              <td>80000</td>
+              <td>第1次地域区画</td>
               <td>約80km</td>
+              <td>4桁</td>
               <td>
                 <a href="https://gist.github.com/qazsato/fb26be6de0ecbefd107d7c1eff35cc5e" target="_blank"
                   >5339のポリゴンデータ</a
@@ -40,10 +40,10 @@
               </td>
             </tr>
             <tr>
-              <td>2</td>
-              <td>第２次地域区画</td>
-              <td>6桁</td>
+              <td>10000</td>
+              <td>10倍地域メッシュ (第2次地域区画)</td>
               <td>約10km</td>
+              <td>6桁</td>
               <td>
                 <a href="https://gist.github.com/qazsato/027f8dca59b2895d1040adc7e8621cc4" target="_blank"
                   >533945のポリゴンデータ</a
@@ -51,10 +51,32 @@
               </td>
             </tr>
             <tr>
-              <td>3</td>
-              <td>基準地域メッシュ(第３次地域区画)</td>
-              <td>8桁</td>
+              <td>5000</td>
+              <td>5倍地域メッシュ</td>
+              <td>約5km</td>
+              <td>7桁</td>
+              <td>
+                <a href="https://gist.github.com/qazsato/f9b7660c672c62a84febab62cbb29138" target="_blank"
+                  >5339452のポリゴンデータ</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>2000</td>
+              <td>2倍地域メッシュ</td>
+              <td>約2km</td>
+              <td>9桁 (末尾5固定)</td>
+              <td>
+                <a href="https://gist.github.com/qazsato/f5d511b69fa2ef81cab60777c50b3269" target="_blank"
+                  >533945465のポリゴンデータ</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>1000</td>
+              <td>基準地域メッシュ(第3次地域区画)</td>
               <td>約1km</td>
+              <td>8桁</td>
               <td>
                 <a href="https://gist.github.com/qazsato/d9f219ba60e2d5193a8c1d65bce39fed" target="_blank"
                   >53394529のポリゴンデータ</a
@@ -62,10 +84,10 @@
               </td>
             </tr>
             <tr>
-              <td>4</td>
-              <td>２分の１地域メッシュ</td>
-              <td>9桁</td>
+              <td>500</td>
+              <td>2分の1地域メッシュ</td>
               <td>約500m</td>
+              <td>9桁</td>
               <td>
                 <a href="https://gist.github.com/qazsato/bd3fe7aa7fbff441fd543a92814692b5" target="_blank"
                   >533945292のポリゴンデータ</a
@@ -73,10 +95,10 @@
               </td>
             </tr>
             <tr>
-              <td>5</td>
-              <td>４分の１地域メッシュ</td>
-              <td>10桁</td>
+              <td>250</td>
+              <td>4分の1地域メッシュ</td>
               <td>約250m</td>
+              <td>10桁</td>
               <td>
                 <a href="https://gist.github.com/qazsato/557430aaf0504f558b5cc45fcbe257b0" target="_blank"
                   >5339452922のポリゴンデータ</a
@@ -84,10 +106,10 @@
               </td>
             </tr>
             <tr>
-              <td>6</td>
-              <td>８分の１地域メッシュ</td>
-              <td>11桁</td>
+              <td>125</td>
+              <td>8分の1地域メッシュ</td>
               <td>約125m</td>
+              <td>11桁</td>
               <td>
                 <a href="https://gist.github.com/qazsato/443642c41a6b074d7ec2bf3d5204bb56" target="_blank"
                   >53394529221のポリゴンデータ</a
