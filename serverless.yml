@@ -16,8 +16,8 @@ functions:
   nuxt:
     handler: server/index.nuxt
     events:
-      - http: ANY /
-      - http: ANY /{proxy+}
+      - httpApi: ANY /
+      - httpApi: ANY /{proxy+}
 
 plugins:
   - serverless-apigw-binary
