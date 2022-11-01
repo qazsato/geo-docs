@@ -32,6 +32,7 @@ custom:
     prod: ${file(./config/production.yml)}
   customDomain:
     domainName: ${self:custom.environment.${self:provider.stage}.domain}
+    autoDomain: true
     basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
