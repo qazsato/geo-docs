@@ -11,6 +11,9 @@ provider:
   lambdaHashingVersion: 20201221
   environment:
     NODE_ENV: ${self:provider.stage}
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
 
 functions:
   nuxt:
@@ -19,7 +22,6 @@ functions:
       - httpApi: '*'
 
 plugins:
-  - serverless-apigw-binary
   - serverless-domain-manager
   - serverless-offline
 
@@ -28,9 +30,6 @@ custom:
   environment:
     dev: ${file(./config/development.yml)}
     prod: ${file(./config/production.yml)}
-  apigwBinary:
-    types:
-      - '*/*'
   customDomain:
     domainName: ${self:custom.environment.${self:provider.stage}.domain}
     basePath: ''
