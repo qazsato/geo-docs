@@ -37,4 +37,3 @@ custom:
     createRoute53Record: true
     endpointType: regional
     apiType: http
-    allowPathMatching: true
