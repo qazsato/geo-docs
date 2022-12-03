@@ -119,20 +119,11 @@ GET /addresses?sort=level,-area // 住所レベルの小さい順で、面積が
   </Page>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      title: 'API 共通仕様',
-    }
-  },
-
-  head() {
-    return {
-      title: this.title,
-    }
-  },
-}
+<script lang="ts" setup>
+const title = ref('API 共通仕様')
+useHead({
+  title
+})
 </script>
 
 <style lang="scss" scoped>

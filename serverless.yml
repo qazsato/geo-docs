@@ -17,7 +17,7 @@ provider:
 
 functions:
   nuxt:
-    handler: server/index.nuxt
+    handler: index.handler
     url: true
 
 custom:

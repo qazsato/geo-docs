@@ -2,18 +2,18 @@
   <Page id="top">
     <template #header>
       <Header :title="title" active="/">
-        <el-radio-group v-model="radio" size="mini">
+        <!-- <el-radio-group v-model="radio" size="mini">
           <el-radio-button label="Redoc"></el-radio-button>
           <el-radio-button label="Swagger"></el-radio-button>
-        </el-radio-group>
+        </el-radio-group> -->
       </Header>
     </template>
-    <template v-if="radio === 'Redoc'">
+    <!-- <template v-if="radio === 'Redoc'">
       <RedocUi :spec-url="specUrl" />
     </template>
     <template v-else>
       <SwaggerUi :spec-url="specUrl" />
-    </template>
+    </template> -->
   </Page>
 </template>
 
