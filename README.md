@@ -1,16 +1,17 @@
-<a href="https://docs.geo.qazsato.com" target="_blank">
-  <img src="./client/assets/images/logo.svg" alt="Geo API" width="250px">
-</a>
-
 ## 本リポジトリについて
 
-国土交通省と総務省が公開している、住所や地域メッシュといった地理情報を元にした API 群のドキュメントです。  
-主に GIS による分析での利用を想定しています。
+[Geo API](https://github.com/qazsato/geo-api) の API 仕様書や利用方法をまとめたドキュメントです。
 
-ドキュメントは下記から閲覧できます。  
+下記から閲覧できます。  
 https://docs.geo.qazsato.com
 
-## セットアップ
+<a href="https://github.com/qazsato/geo-api" target="_blank">
+  <img src="./client/assets/images/logo.svg" alt="Geo API" width="200px">
+</a>
+
+## ローカル環境
+
+### セットアップ
 
 .env を作成し、各 API キー情報を設定。
 
