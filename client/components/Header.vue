@@ -58,6 +58,8 @@ export default {
 .flex {
   display: flex;
   align-items: center;
+  margin-top: 10px;
+  height: 40px;
 }
 
 .spacer {
@@ -65,10 +67,12 @@ export default {
 }
 
 .title {
-  margin-left: 10px;
+  margin: 0;
+  padding-left: 10px;
   display: inline-block;
   text-decoration: none;
   font-size: 18px;
+  line-height: 1;
   font-weight: normal;
   color: #303133;
   flex: 1;
