@@ -1,24 +1,31 @@
-# Geo API ドキュメント
-
-<img src="./client/assets/images/logo.svg" alt="Geo API" width="250px">
-
-## Setup
-
-```bash
-$ docker-compose build --no-cache
-$ docker-compose up -d
-$ docker-compose exec geo_docs /bin/bash -c 'npm run dev:host'
-```
-
-http://localhost:3000 でアクセスして画面が表示されれば ok
+<a href="https://docs.geo.qazsato.com" target="_blank">
+  <img src="./client/assets/images/logo.svg" alt="Geo API" width="250px">
+</a>
 
 ## 本リポジトリについて
 
 国土交通省と総務省が公開している、住所や地域メッシュといった地理情報を元にした API 群のドキュメントです。
 主に GIS による分析での利用を想定しています。
 
-ドキュメントは下記からご覧になれます。
+ドキュメントは下記から閲覧できます。
 https://docs.geo.qazsato.com
+
+## セットアップ
+
+.env を作成し、各 API キー情報を設定。
+
+```
+GOOGLE_MAPS_API_KEY={YOUR_API_KEY}
+GEO_API_KEY={YOUR_API_KEY}
+```
+
+```bash
+$ docker-compose build
+$ docker-compose up -d
+$ docker-compose exec geo_docs /bin/bash -c 'npm run dev:host'
+```
+
+http://localhost:3000 でアクセスして画面が表示されれば OK。
 
 ## データの出典
 
