@@ -1,6 +1,6 @@
 # Geo API ドキュメント
 
-<img src="./clients/assets/images/logo.svg" alt="Geo API" width="250px">
+<img src="./client/assets/images/logo.svg" alt="Geo API" width="250px">
 
 ## Setup
 
