@@ -8,8 +8,8 @@
     </main>
     <footer>
       <div class="github">
-        <img src="~/assets/images/github.png" />
         <Logo href="https://github.com/qazsato/geo-docs" target="_blank" />
+        <img src="~/assets/images/github.png" />
       </div>
     </footer>
   </div>
@@ -27,7 +27,6 @@ export default {
 
 <style lang="scss" scoped>
 header {
-  height: 90px;
   padding: 0 20px;
 }
 
