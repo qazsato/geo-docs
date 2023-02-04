@@ -45,21 +45,24 @@ module.exports = {
 
   components: true,
 
-  buildModules: [
-    '@nuxtjs/eslint-module',
-    '@nuxtjs/stylelint-module',
-    '@nuxtjs/style-resources',
-    [
-      '@nuxtjs/google-analytics',
-      {
-        id: 'UA-51346952-5',
-      },
-    ],
-  ],
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/stylelint-module', '@nuxtjs/style-resources'],
 
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/google-gtag'],
 
   axios: {},
+
+  'google-gtag': {
+    id: 'UA-51346952-5', // GA
+    debug: false,
+    config: {
+      send_page_view: false, // PVの重複送信防止
+    },
+    additionalAccounts: [
+      {
+        id: 'G-W9P6XK7L1H', // GA4
+      },
+    ],
+  },
 
   build: {
     transpile: [/^element-ui/],
