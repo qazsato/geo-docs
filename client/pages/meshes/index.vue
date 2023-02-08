@@ -33,7 +33,6 @@
 
 <script>
 import { mapActions } from 'vuex'
-import _ from 'lodash'
 import { japanmesh } from 'japanmesh'
 import { MESH } from '@/constants/mesh'
 
@@ -110,10 +109,10 @@ export default {
         return breadcrumbs
       }
 
-      const geojson = japanmesh.toGeoJSON(this.code)
-      const coord = geojson.geometry.coordinates[0]
-      const centerLat = (coord[0][1] + coord[2][1]) / 2
-      const centerLng = (coord[0][0] + coord[1][0]) / 2
+      const bounds = japanmesh.toLatLngBounds(this.code)
+      const center = bounds.getCenter()
+      const centerLat = center.lat
+      const centerLng = center.lng
 
       const level = japanmesh.getLevel(this.code)
       if (level <= MESH.LEVEL_80000.LEVEL) {
@@ -252,13 +251,8 @@ export default {
     },
 
     getInfowindowPosition(code) {
-      const shape = this.meshShapes.filter((m) => m.properties.code === code)[0]
-      const coords = _.flatten(shape.geometry.coordinates)
-      const northernmost = _.maxBy(coords, (c) => c[1])
-      const westernmost = _.minBy(coords, (c) => c[0])
-      const easternmost = _.maxBy(coords, (c) => c[0])
-
-      return new this.google.maps.LatLng(northernmost[1], (westernmost[0] + easternmost[0]) / 2)
+      const bounds = japanmesh.toLatLngBounds(code)
+      return new this.google.maps.LatLng(bounds.getNorthEast().lat, bounds.getCenter().lng)
     },
 
     searchMeshCode() {
