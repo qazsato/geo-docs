@@ -2,13 +2,13 @@
   <Page id="top">
     <template #header>
       <Header :title="title" active="/">
-        <el-radio-group v-model="radio" size="mini">
-          <el-radio-button label="Redoc"></el-radio-button>
-          <el-radio-button label="Swagger"></el-radio-button>
+        <el-radio-group v-model="ui" size="mini">
+          <el-radio-button label="redoc"></el-radio-button>
+          <el-radio-button label="swagger"></el-radio-button>
         </el-radio-group>
       </Header>
     </template>
-    <template v-if="radio === 'Redoc'">
+    <template v-if="ui === 'redoc'">
       <RedocUi :spec-url="specUrl" />
     </template>
     <template v-else>
@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       title: 'API 仕様書',
-      radio: 'Redoc',
+      ui: 'redoc',
     }
   },
 
@@ -38,6 +38,11 @@ export default {
     specUrl() {
       return config.geo.api_docs_url
     },
+  },
+
+  mounted() {
+    const params = new URLSearchParams(window.location.search)
+    this.ui = params.get('ui')
   },
 }
 </script>
