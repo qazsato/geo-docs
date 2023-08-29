@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       title: 'API 仕様書',
-      ui: 'redoc',
+      ui: null,
     }
   },
 
@@ -42,7 +42,7 @@ export default {
 
   mounted() {
     const params = new URLSearchParams(window.location.search)
-    this.ui = params.get('ui')
+    this.ui = params.get('ui') || 'redoc'
   },
 }
 </script>
