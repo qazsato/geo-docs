@@ -8,22 +8,13 @@
     </main>
     <footer>
       <div class="github">
-        <Logo href="https://github.com/qazsato/geo-docs" target="_blank" />
-        <img src="~/assets/images/github.png" />
+        <a href="https://github.com/qazsato/geo-docs" target="_blank">
+          <img src="~/assets/images/github.png" />
+        </a>
       </div>
     </footer>
   </div>
 </template>
-
-<script>
-import Logo from '@/components/Logo'
-
-export default {
-  components: {
-    Logo,
-  },
-}
-</script>
 
 <style lang="scss" scoped>
 header {
@@ -44,12 +35,8 @@ footer {
   background-color: #3b4151;
 
   .github {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
     img {
-      width: 20px;
+      width: 26px;
     }
   }
 }
