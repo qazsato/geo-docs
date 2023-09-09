@@ -3,12 +3,16 @@
     <template #header>
       <Header :title="title" active="/">
         <el-radio-group v-model="ui" size="mini">
+          <el-radio-button label="stoplight"></el-radio-button>
           <el-radio-button label="redoc"></el-radio-button>
           <el-radio-button label="swagger"></el-radio-button>
         </el-radio-group>
       </Header>
     </template>
-    <template v-if="ui === 'redoc'">
+    <template v-if="ui === 'stoplight'">
+      <StoplightUi :spec-url="specUrl" />
+    </template>
+    <template v-else-if="ui === 'redoc'">
       <RedocUi :spec-url="specUrl" />
     </template>
     <template v-else>
@@ -40,9 +44,16 @@ export default {
     },
   },
 
+  watch: {
+    ui(val, oldVal) {
+      if (oldVal === null) return
+      this.$router.push({ path: '/', query: { ui: val } })
+    },
+  },
+
   mounted() {
     const params = new URLSearchParams(window.location.search)
-    this.ui = params.get('ui') || 'redoc'
+    this.ui = params.get('ui') || 'stoplight'
   },
 }
 </script>

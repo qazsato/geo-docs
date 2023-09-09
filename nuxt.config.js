@@ -30,7 +30,9 @@ module.exports = {
         sizes: '180x180',
         href: '/apple-touch-icon.png',
       },
+      { rel: 'stylesheet', href: 'https://unpkg.com/@stoplight/elements/styles.min.css' },
     ],
+    script: [{ src: 'https://unpkg.com/@stoplight/elements/web-components.min.js' }],
   },
 
   loading: { color: '#00CED1' },
