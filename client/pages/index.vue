@@ -35,14 +35,19 @@ export default {
   head() {
     return {
       title: this.title,
-      script: [{ src: 'https://unpkg.com/@stoplight/elements/web-components.min.js' }],
-      link: [{ rel: 'stylesheet', href: 'https://unpkg.com/@stoplight/elements/styles.min.css' }],
     }
   },
 
   computed: {
     specUrl() {
       return config.geo.api_docs_url
+    },
+  },
+
+  watch: {
+    ui(val, oldVal) {
+      if (oldVal === null) return
+      this.$router.push({ path: '/', query: { ui: val } })
     },
   },
 
