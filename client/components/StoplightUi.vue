@@ -2,7 +2,7 @@
   <div>
     <!-- cf. https://docs.stoplight.io/docs/elements/a71d7fcfefcd6-elements-in-html -->
     <!-- eslint-disable -->
-    <elements-api :apiDescriptionUrl="specUrl" />
+    <elements-api :apiDescriptionUrl="specUrl" router="hash" />
   </div>
 </template>
 

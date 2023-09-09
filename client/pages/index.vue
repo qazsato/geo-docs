@@ -47,7 +47,7 @@ export default {
   watch: {
     ui(val, oldVal) {
       if (oldVal === null) return
-      this.$router.push({ path: '/', query: { ui: val } })
+      this.$nextTick(() => this.$router.push({ path: '/', query: { ui: val } }))
     },
   },
 
