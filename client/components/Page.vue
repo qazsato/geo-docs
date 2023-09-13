@@ -6,7 +6,7 @@
     <main>
       <slot></slot>
     </main>
-    <footer>
+    <footer v-if="showFooter">
       <div class="github">
         <a href="https://github.com/qazsato/geo-docs" target="_blank">
           <img src="~/assets/images/github.png" />
@@ -16,13 +16,24 @@
   </div>
 </template>
 
+<script>
+export default {
+  props: {
+    showFooter: {
+      required: true,
+      type: Boolean,
+      default: true,
+    },
+  },
+}
+</script>
+
 <style lang="scss" scoped>
 header {
   padding: 0 20px;
 }
 
 main {
-  min-height: 100vh;
   padding: 20px;
 }
 

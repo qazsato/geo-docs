@@ -1,23 +1,23 @@
 @mixin xs() {
-  @media screen and (max-width: $bp_xs) {
+  @media screen and (max-width: $bp-xs) {
     @content;
   }
 }
 
 @mixin sm() {
-  @media screen and (max-width: $bp_sm) {
+  @media screen and (max-width: $bp-sm) {
     @content;
   }
 }
 
 @mixin md() {
-  @media screen and (max-width: $bp_md) {
+  @media screen and (max-width: $bp-md) {
     @content;
   }
 }
 
 @mixin lg() {
-  @media screen and (max-width: $bp_lg) {
+  @media screen and (max-width: $bp-lg) {
     @content;
   }
 }
