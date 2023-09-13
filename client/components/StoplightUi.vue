@@ -16,10 +16,6 @@ export default {
   },
 
   mounted() {
-    const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('theme') === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark')
-    }
     document.getElementsByTagName('body')[0].setAttribute('style', 'overflow:hidden;') // スクロール非許可
   },
 

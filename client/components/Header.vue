@@ -5,6 +5,7 @@
       <h1 class="title">{{ title }}</h1>
       <div class="spacer"></div>
       <slot></slot>
+      <el-switch v-model="darkTheme" size="small" active-text="☾" inactive-text="☀️" class="theme-switch" />
     </div>
     <el-menu :default-active="active" mode="horizontal" class="menu" :router="true">
       <el-menu-item index="/">API 仕様書</el-menu-item>
@@ -51,6 +52,29 @@ export default {
       default: null,
     },
   },
+
+  data() {
+    return {
+      darkTheme: false,
+    }
+  },
+
+  watch: {
+    darkTheme(val) {
+      if (val) {
+        document.documentElement.setAttribute('data-theme', 'dark')
+      } else {
+        document.documentElement.removeAttribute('data-theme')
+      }
+    },
+  },
+
+  mounted() {
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('theme') === 'dark') {
+      this.darkTheme = true
+    }
+  },
 }
 </script>
 
@@ -61,8 +85,7 @@ export default {
   .flex {
     display: flex;
     align-items: center;
-    padding-top: 10px;
-    height: 40px;
+    padding-top: 8px;
   }
 
   .spacer {
@@ -89,6 +112,10 @@ export default {
     flex: 1;
     width: 100%;
     overflow-x: auto;
+  }
+
+  .theme-switch {
+    margin-left: 16px;
   }
 }
 </style>
