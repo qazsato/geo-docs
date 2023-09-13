@@ -1,5 +1,5 @@
 <template>
-  <Page id="top">
+  <Page id="top" :show-footer="false">
     <template #header>
       <Header :title="title" active="/">
         <el-radio-group v-model="ui" size="mini">

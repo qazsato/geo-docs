@@ -55,44 +55,48 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.flex {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-  height: 40px;
-}
+.header {
+  height: $header-height;
 
-.spacer {
-  flex: 1;
-}
+  .flex {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    height: 40px;
+  }
 
-.title {
-  margin: 0;
-  padding-left: 10px;
-  display: inline-block;
-  text-decoration: none;
-  font-size: 18px;
-  line-height: 1;
-  font-weight: normal;
-  color: #303133;
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .spacer {
+    flex: 1;
+  }
 
-.menu {
-  display: flex;
-  flex: 1;
-  width: 100%;
-  overflow-x: auto;
+  .title {
+    margin: 0;
+    padding-left: 10px;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 1;
+    font-weight: normal;
+    color: #303133;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .menu {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    overflow-x: auto;
+  }
 }
 </style>
 
 <style lang="scss">
 .header .el-menu--horizontal > .el-menu-item,
 .header .el-menu--horizontal > .el-submenu .el-submenu__title {
-  height: 40px;
-  line-height: 40px;
+  height: 39px;
+  line-height: 39px;
 }
 </style>
