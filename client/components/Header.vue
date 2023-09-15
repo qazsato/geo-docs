@@ -7,7 +7,15 @@
       <slot></slot>
       <el-switch v-model="darkTheme" size="small" active-text="☾" inactive-text="☀️" class="theme-switch" />
     </div>
-    <el-menu :default-active="active" mode="horizontal" class="menu" :router="true">
+    <el-menu
+      :default-active="active"
+      mode="horizontal"
+      class="menu"
+      :router="true"
+      :background-color="backgroundColor"
+      :text-color="textColor"
+      active-text-color="#00ced1"
+    >
       <el-menu-item index="/">API 仕様書</el-menu-item>
       <el-submenu index="/addresses">
         <template slot="title">Address</template>
@@ -59,6 +67,16 @@ export default {
     }
   },
 
+  computed: {
+    backgroundColor() {
+      return this.darkTheme ? '#1a212d' : '#fff'
+    },
+
+    textColor() {
+      return this.darkTheme ? '#fff' : '#303133'
+    },
+  },
+
   watch: {
     darkTheme(val) {
       if (val) {
@@ -100,7 +118,6 @@ export default {
     font-size: 18px;
     line-height: 1;
     font-weight: normal;
-    color: #303133;
     flex: 1;
     white-space: nowrap;
     overflow: hidden;
@@ -121,6 +138,10 @@ export default {
 </style>
 
 <style lang="scss">
+.header .el-menu.el-menu--horizontal {
+  border-bottom: none;
+}
+
 .header .el-menu--horizontal > .el-menu-item,
 .header .el-menu--horizontal > .el-submenu .el-submenu__title {
   height: 39px;
