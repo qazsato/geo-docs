@@ -79,17 +79,15 @@ export default {
 
   watch: {
     darkTheme(val) {
-      if (val) {
-        document.documentElement.setAttribute('data-theme', 'dark')
-      } else {
-        document.documentElement.removeAttribute('data-theme')
-      }
+      const theme = val ? 'dark' : 'light'
+      document.documentElement.setAttribute('data-theme', theme)
+      localStorage.setItem('theme', theme)
     },
   },
 
   mounted() {
-    const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('theme') === 'dark') {
+    const theme = localStorage.getItem('theme')
+    if (theme === 'dark') {
       this.darkTheme = true
     }
   },

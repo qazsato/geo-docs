@@ -2,11 +2,11 @@
   <Page id="top" :show-footer="false">
     <template #header>
       <Header :title="title" active="/">
-        <el-select v-model="ui" size="small">
+        <!-- <el-select v-model="ui" size="small">
           <el-option key="stoplight" label="stoplight" value="stoplight" />
           <el-option key="redoc" label="redoc" value="redoc" />
           <el-option key="swagger" label="swagger" value="swagger" />
-        </el-select>
+        </el-select> -->
       </Header>
     </template>
     <template v-if="ui === 'stoplight'">
