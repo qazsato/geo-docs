@@ -2,11 +2,11 @@
   <Page id="top" :show-footer="false">
     <template #header>
       <Header :title="title" active="/">
-        <el-radio-group v-model="ui" size="mini">
-          <el-radio-button label="stoplight"></el-radio-button>
-          <el-radio-button label="redoc"></el-radio-button>
-          <el-radio-button label="swagger"></el-radio-button>
-        </el-radio-group>
+        <!-- <el-select v-model="ui" size="small">
+          <el-option key="stoplight" label="stoplight" value="stoplight" />
+          <el-option key="redoc" label="redoc" value="redoc" />
+          <el-option key="swagger" label="swagger" value="swagger" />
+        </el-select> -->
       </Header>
     </template>
     <template v-if="ui === 'stoplight'">

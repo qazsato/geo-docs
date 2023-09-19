@@ -5,8 +5,24 @@
       <h1 class="title">{{ title }}</h1>
       <div class="spacer"></div>
       <slot></slot>
+      <el-switch
+        v-if="$route.path === '/'"
+        v-model="darkTheme"
+        size="small"
+        active-text="☾"
+        inactive-text="☀️"
+        class="theme-switch"
+      />
     </div>
-    <el-menu :default-active="active" mode="horizontal" class="menu" :router="true">
+    <el-menu
+      :default-active="active"
+      mode="horizontal"
+      class="menu"
+      :router="true"
+      :background-color="backgroundColor"
+      :text-color="textColor"
+      :active-text-color="activeTextColor"
+    >
       <el-menu-item index="/">API 仕様書</el-menu-item>
       <el-submenu index="/addresses">
         <template slot="title">Address</template>
@@ -51,6 +67,45 @@ export default {
       default: null,
     },
   },
+
+  data() {
+    return {
+      darkTheme: false,
+    }
+  },
+
+  computed: {
+    backgroundColor() {
+      return this.darkTheme ? '#1a212d' : '#ffffff'
+    },
+
+    textColor() {
+      return this.darkTheme ? '#ffffff' : '#303133'
+    },
+
+    activeTextColor() {
+      return '#00ced1'
+    },
+  },
+
+  watch: {
+    darkTheme(val) {
+      const theme = val ? 'dark' : 'light'
+      document.documentElement.setAttribute('data-theme', theme)
+      localStorage.setItem('theme', theme)
+    },
+  },
+
+  mounted() {
+    const theme = localStorage.getItem('theme')
+    if (this.$route.path === '/' && theme === 'dark') {
+      this.darkTheme = true
+    }
+  },
+
+  destroyed() {
+    document.documentElement.removeAttribute('data-theme')
+  },
 }
 </script>
 
@@ -61,8 +116,7 @@ export default {
   .flex {
     display: flex;
     align-items: center;
-    padding-top: 10px;
-    height: 40px;
+    padding-top: 11px;
   }
 
   .spacer {
@@ -77,7 +131,6 @@ export default {
     font-size: 18px;
     line-height: 1;
     font-weight: normal;
-    color: #303133;
     flex: 1;
     white-space: nowrap;
     overflow: hidden;
@@ -90,10 +143,18 @@ export default {
     width: 100%;
     overflow-x: auto;
   }
+
+  .theme-switch {
+    margin-left: 16px;
+  }
 }
 </style>
 
 <style lang="scss">
+.header .el-menu.el-menu--horizontal {
+  border-bottom: none;
+}
+
 .header .el-menu--horizontal > .el-menu-item,
 .header .el-menu--horizontal > .el-submenu .el-submenu__title {
   height: 39px;

@@ -20,7 +20,7 @@
 export default {
   props: {
     showFooter: {
-      required: true,
+      required: false,
       type: Boolean,
       default: true,
     },
