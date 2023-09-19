@@ -5,7 +5,14 @@
       <h1 class="title">{{ title }}</h1>
       <div class="spacer"></div>
       <slot></slot>
-      <el-switch v-model="darkTheme" size="small" active-text="☾" inactive-text="☀️" class="theme-switch" />
+      <el-switch
+        v-if="$route.path === '/'"
+        v-model="darkTheme"
+        size="small"
+        active-text="☾"
+        inactive-text="☀️"
+        class="theme-switch"
+      />
     </div>
     <el-menu
       :default-active="active"
@@ -14,7 +21,7 @@
       :router="true"
       :background-color="backgroundColor"
       :text-color="textColor"
-      active-text-color="#00ced1"
+      :active-text-color="activeTextColor"
     >
       <el-menu-item index="/">API 仕様書</el-menu-item>
       <el-submenu index="/addresses">
@@ -69,11 +76,15 @@ export default {
 
   computed: {
     backgroundColor() {
-      return this.darkTheme ? '#1a212d' : '#fff'
+      return this.darkTheme ? '#1a212d' : '#ffffff'
     },
 
     textColor() {
-      return this.darkTheme ? '#fff' : '#303133'
+      return this.darkTheme ? '#ffffff' : '#303133'
+    },
+
+    activeTextColor() {
+      return '#00ced1'
     },
   },
 
@@ -87,9 +98,13 @@ export default {
 
   mounted() {
     const theme = localStorage.getItem('theme')
-    if (theme === 'dark') {
+    if (this.$route.path === '/' && theme === 'dark') {
       this.darkTheme = true
     }
+  },
+
+  destroyed() {
+    document.documentElement.removeAttribute('data-theme')
   },
 }
 </script>
@@ -101,7 +116,7 @@ export default {
   .flex {
     display: flex;
     align-items: center;
-    padding-top: 8px;
+    padding-top: 11px;
   }
 
   .spacer {
