@@ -10,7 +10,7 @@
         v-model="darkTheme"
         size="small"
         active-text="☾"
-        inactive-text="☀️"
+        inactive-text="☀︎"
         class="theme-switch"
       />
     </div>
