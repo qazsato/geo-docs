@@ -1,5 +1,5 @@
 <template>
-  <Page id="top" :show-footer="false">
+  <Page id="top">
     <template #header>
       <Header :title="title" active="/">
         <!-- <el-select v-model="ui" size="small">

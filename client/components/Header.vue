@@ -13,6 +13,7 @@
         inactive-text="☀︎"
         class="theme-switch"
       />
+      <GithubCorner fill="#bbb" />
     </div>
     <el-menu
       :default-active="active"
