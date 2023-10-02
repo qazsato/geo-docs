@@ -62,6 +62,11 @@ export default {
 #top {
   main {
     padding: 0 !important;
+    overflow-x: auto;
+
+    > div {
+      min-width: 1200px;
+    }
   }
 }
 
