@@ -5,7 +5,7 @@ export default class GeoApi {
   constructor(api, params = {}) {
     this.path = `${config.geo.api_url}${api}`
     this.headers = { Authorization: `Bearer ${process.env.GEO_API_KEY}` }
-    this.params = { ...params }
+    this.params = params
   }
 
   /**
