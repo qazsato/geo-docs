@@ -1,7 +1,7 @@
 {
   "geo": {
-    "api_url": "https://api.geo.qazsato.com/v1",
-    "api_docs_url": "https://api.geo.qazsato.com/v1/apidocs"
+    "api_url": "https://api.geodig.jp/v1",
+    "api_docs_url": "https://api.geodig.jp/v1/apidocs"
   },
   "default_location": {
     "lat": 35.689568,

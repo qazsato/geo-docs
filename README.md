@@ -3,7 +3,7 @@
 [Geo API](https://github.com/qazsato/geo-api) の API 仕様書や利用方法をまとめたドキュメントです。
 
 下記から閲覧できます。  
-https://docs.geo.qazsato.com
+https://docs.geodig.jp
 
 <a href="https://github.com/qazsato/geo-api" target="_blank">
   <img src="./client/assets/images/logo.svg" alt="Geo API" width="200px">
